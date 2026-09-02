@@ -1,0 +1,63 @@
+{
+  "name": "unimert-next-ts",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "dev:webpack": "next dev --webpack",
+    "build": "next build",
+    "analyze": "cross-env ANALYZE=true next build --webpack",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@cloudimage/360-view": "^4.10.0",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-popover": "^1.1.15",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "bootstrap": "^5.3.8",
+    "drift-zoom": "^1.5.1",
+    "gsap": "^3.15.0",
+    "imagesloaded": "^5.0.0",
+    "isotope-layout": "^3.0.6",
+    "lightgallery": "^2.9.0",
+    "matter-js": "^0.20.0",
+    "next": "^16.3.4",
+    "odometer": "^0.4.8",
+    "rc-slider": "^11.1.9",
+    "react": "19.2.3",
+    "react-datepicker": "^9.1.0",
+    "react-dom": "19.2.3",
+    "sass": "^1.97.3",
+    "swiper": "^12.1.1",
+    "zustand": "^5.0.11"
+  },
+  "devDependencies": {
+    "@next/bundle-analyzer": "^16.2.2",
+    "@types/bootstrap": "^5.2.10",
+    "@types/imagesloaded": "^4.1.7",
+    "@types/isotope-layout": "^3.0.15",
+    "@types/matter-js": "^0.20.2",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "cross-env": "^10.1.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "typescript": "^5"
+  },
+  "browserslist": [
+    "chrome >= 111",
+    "edge >= 111",
+    "firefox >= 111",
+    "safari >= 16.4"
+  ],
+  "trustedDependencies": [
+    "@parcel/watcher",
+    "unrs-resolver"
+  ],
+  "engines": {
+    "node": "20.x.x"
+  }
+}

@@ -1,0 +1,83 @@
+@use "../default/variables" as *; // Importing all the variables
+@use "../default/extend" as *; // Importing all the extend
+@use "../default/mixins" as *; // Importing all the mixins
+
+.rbt-nav-box {
+    height: 100%;
+    .inner {
+        padding: 24px;
+        background: var(--color-white);
+        border-radius: var(--radius-md);
+        height: 100%;
+
+        @media #{$sm-layout} {
+            padding: 20px;
+        }
+
+        .rbt-nav-box-top {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            justify-content: space-between;
+
+            .rbt-nav-box-title {
+                color: var(--color-heading);
+                font-family: var(--font-family);
+                font-size: var(--font-size-b1);
+                font-weight: var(--f-semi-bold);
+                line-height: var(--line-height-b1);
+                margin-bottom: 4px;
+            }
+
+            .rbt-categories-box-img {
+                width: 72px;
+                height: 72px;
+
+                img {
+                    object-fit: cover;
+                }
+            }
+        }
+
+        .rbt-nav-items {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(2, 1fr);
+
+            &.rbt-nav-items-1 {
+                grid-template-columns: repeat(1, 1fr);
+            }
+
+            @media #{$sm-layout} {
+                grid-template-columns: repeat(1, 1fr);
+            }
+
+            .rbt-nav-item-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: grid;
+                gap: 12px;
+
+                li {
+                    padding: 0;
+                    margin: 0;
+
+                    a {
+                        color: var(--color-gray-700);
+                        font-family: var(--font-primary);
+                        font-size: var(--font-size-b3);
+                        line-height: var(--line-height-b3);
+                        font-weight: var(--f-regular);
+
+                        &.rbt-btn-link {
+                            &::after {
+                                background: var(--color-primary);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,125 @@
+@use "../default/variables" as *; // Importing all the variables
+@use "../default/extend" as *; // Importing all the extend
+@use "../default/mixins" as *; // Importing all the mixins
+
+/*----------------------
+   Timeline Styles  
+-----------------------*/
+.rbt-timeline{
+    &.rbt-timeline-style-one{
+        padding: 0 28px;
+        @media #{$md-layout,$sm-layout} {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        .rbt-timeline-single-element{
+            display: flex;
+            gap: 144px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            transition: var(--transition);
+            @media #{$md-layout,$sm-layout} {
+                flex-wrap: wrap;
+                gap: 24px;
+            }
+            &::after{
+                content: '';
+                position: absolute;
+                width: 2px;
+                height: 100%;
+                background-image: linear-gradient(var(--color-brand-300) 33%, rgba(255, 255, 255, 0) 0%);
+                background-position: right;
+                background-size: 2px 20px;
+                background-repeat: repeat-y;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: -2;
+                @media #{$md-layout,$sm-layout} {
+                   opacity: 0;
+                   visibility: hidden;
+                }
+            }
+            &:first-child{
+                &::after{
+                    height: 50%;
+                    top: 50%;
+                }
+            }
+            &:last-child{
+                &::after{
+                    height: 50%;
+                }
+            }
+            
+            .rbt-timeline-image{
+                flex-basis: 45%;
+                border-radius: 12px;
+                position: relative;
+                overflow: hidden;
+                @media #{$md-layout,$sm-layout} {
+                    flex-basis: 100%;
+                }
+                img{
+                    transition: var(--transition);
+                }
+            }
+            .rbt-timeline-content{
+                flex-basis: 45%;
+                @media #{$md-layout,$sm-layout} {
+                    flex-basis: 100%;
+                    order: 2;
+                }
+                .rbt-timeline-count-digit{
+                    height: 64px;
+                    width: 64px;
+                    border-radius: var(--radius-full);
+                    font-size: var(--h5);
+                    line-height: 1.1;
+                    background: var(--color-brand-300);
+                    color: var(--color-primary);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 700;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    transition: var(--transition);
+                    @media #{$md-layout,$sm-layout} {
+                        position: static;
+                        margin-bottom: 12px;
+                        transform: none;
+                    }
+                }
+                .rbt-timeline-title{
+                    margin-bottom: 24px;
+                }
+                .rbt-timeline-info-list{
+                    li{
+                        margin: 12px 0;
+                        &::marker{
+                            color: var(--color-primary);
+                            font-size: 16px;
+                            line-height: 1.5;
+                        }
+                    }
+                }
+            }
+            &:hover{
+                .rbt-timeline-count-digit{
+                    background: var(--color-primary);
+                    color: var(--color-white);
+                }
+                .rbt-timeline-image{
+                    img{
+                        transform: scale(1.02);
+                    }
+                }
+            }
+        }
+    }
+}

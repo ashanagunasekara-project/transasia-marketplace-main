@@ -1,0 +1,139 @@
+@use "../default/variables" as *; // Importing all the variables
+@use "../default/extend" as *; // Importing all the extend
+@use "../default/mixins" as *; // Importing all the mixins
+
+/*----------------------------- 
+    Image Gallary Styles
+-------------------------------*/
+.rbt-gallary-img{
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: zoom-in;
+    img{
+        transition:var(--transition);
+    }
+    &:hover{
+        img{
+            transform: scale(1.03);
+        }
+    }
+    &.rbt-gallary-img-style-one{
+        transition: var(--transition);
+        &.rounded{
+            border-radius: var(--radius-full) !important;
+            position: relative;
+            overflow: hidden;
+            .instapost-img{
+                img{
+                    border-radius: var(--radius-full) !important;
+                    height: 200px;
+                    width: 200px;
+                    border-radius: var(--radius-full) !important;
+                    @media #{$sm-layout} {
+                        height: 100px;
+                        width: 100px;
+                    }
+                }
+            }
+        }
+        &.rbt-gallary-img-boxed-round-style{
+            border-radius: 0;
+            img{
+                transition:var(--transition);
+            }
+        }
+    }
+}
+
+.rbt-image-gallery-1 {
+    position: relative;
+    @media #{$lg-layout} {
+        padding-right: 40px;
+    }
+    @media #{$md-layout} {
+        padding-right: 40px;
+    }
+    @media #{$sm-layout} {
+        padding-right: 40px;
+    }
+    @media #{$large-mobile} {
+        padding-right: 0;
+        margin-bottom: 0 !important;
+    }
+    .image-1 {
+        max-height: 600px;
+        @media #{$large-mobile} {
+            width: 100%;
+            transform: none !important;
+        }
+        @media #{$md-layout} {
+            object-fit: contain;
+            width: auto;
+            max-width: 100%;
+        }
+    }
+    .image-2 {
+        max-height: 500px;
+        position: absolute;
+        right: 10%;
+        top: 30%;
+        @media #{$lg-layout} {
+            right: 0;
+            top: 18%;
+        }
+        @media #{$md-layout} {
+            top: 16%;
+        }
+        @media #{$sm-layout} {
+            top: 16%;
+            right: -1%;
+        }
+        @media #{$large-mobile} {
+            display: none;
+        }
+    }
+    &.text-end {
+        @media #{$md-layout} {
+            text-align: left !important;
+        }
+        .image-2 {
+            left: 10%;
+            right: auto;
+            top: 30%;
+            @media #{$lg-layout} {
+                top: 18%;
+                width: 90%;
+            }
+            @media #{$md-layout} {
+                top: 25%;
+                left: auto;
+                object-fit: contain;
+                width: auto;
+                max-width: 100%;
+                right: -20px;
+            }
+            @media #{$sm-layout} {
+                top: 25%;
+                left: auto;
+                object-fit: contain;
+                width: auto;
+                max-width: 100%;
+                right: -20px;
+            }
+            @media #{$large-mobile} {
+                display: none;
+            }
+        }
+    }
+}
+
+.rbt-gallery img {
+	width: 100%;
+	object-fit: cover;
+}
+.insta-post-min-height {
+    img {
+        min-height: 275px;
+    }
+}

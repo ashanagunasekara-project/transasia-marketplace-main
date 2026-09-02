@@ -1,0 +1,95 @@
+@use "../default/variables" as *; // Importing all the variables
+@use "../default/extend" as *; // Importing all the extend
+@use "../default/mixins" as *; // Importing all the mixins
+
+// recent blog post style
+.rbt-blog-post-card {
+  .rbt-blog-thumbnail {
+    display: inline-block;
+    position: relative;
+    border-radius: var(--radius-12);
+    overflow: hidden;
+    &.rbt-curved-style-box {
+      background-image: url(/assets/images/system/blog-thumbmail-top-mask.webp);
+      -webkit-mask-image: url(/assets/images/system/blog-thumbmail-top-mask.webp);
+      mask-image: url(/assets/images/system/blog-thumbmail-top-mask.webp);
+      border-radius: var(--radius-12) 0 var(--radius-12) var(--radius-12);
+    }
+    img {
+      transition: var(--transition);
+    }
+  }
+
+  .rbt-blog-meta-area {
+    .rbt-blog-details-meta-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+
+      li {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        a {
+          color: var(--color-gray-400);
+          font-family: var(--font-primary);
+          font-size: var(--font-size-b4);
+          line-height: var(--line-height-b4);
+          font-weight: var(--f-medium);
+
+          &:hover {
+            color: var(--color-primary);
+          }
+        }
+        p {
+          color: var(--color-gray-400);
+          font-family: var(--font-primary);
+          font-size: var(--font-size-b4);
+          line-height: var(--line-height-b4);
+          font-weight: var(--f-medium);
+        }
+
+        & + li {
+          margin-left: 8px;
+
+          &::before {
+            content: "/";
+            margin-right: 4px;
+          }
+        }
+      }
+      &.has-no-separator {
+        li + li {
+          &::before {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  .rbt-blog-title {
+    font-size: var(--font-size-b1);
+    line-height: var(--line-height-b1);
+    margin-bottom: 0;
+  }
+
+  &:hover {
+    .rbt-blog-thumbnail {
+      img {
+        scale: 1.05;
+      }
+    }
+  }
+}
+.rbt-blog-post-margin {
+    @media #{$small-mobile} {
+      .row--12>[class*="col"].mt--24 {
+          margin-top: 24px !important;
+      }
+  }
+}

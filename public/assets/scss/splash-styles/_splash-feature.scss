@@ -1,0 +1,201 @@
+@use "../default/variables" as *; // Importing all the variables
+@use "../default/extend" as *; // Importing all the extend
+@use "../default/mixins" as *; // Importing all the mixins
+
+/**************************************
+        Feature navigation area
+***************************************/
+.rbt-feature-navigation-card {
+  display: block;
+  position: relative;
+  border-radius: 20px;
+  min-height: 270px;
+  box-shadow: var(--shadow-3);
+  perspective: 200px;
+  transition: var(--transition);
+
+  &.rbt-color-var-1 {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5) 32%,
+      rgba(33, 218, 166, 0.3) 63%,
+      rgba(255, 255, 255, 0.8) 75%
+    );
+  }
+
+  &.rbt-color-var-2 {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5) 32%,
+      rgba(175, 33, 218, 0.3) 63%,
+      rgba(255, 255, 255, 0.8) 75%
+    );
+  }
+
+  &.rbt-color-var-3 {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5) 32%,
+      rgba(39, 218, 33, 0.3) 63%,
+      rgba(255, 255, 255, 0.8) 75%
+    );
+  }
+
+  &.rbt-color-var-4 {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5) 32%,
+      rgba(33, 172, 218, 0.3) 63%,
+      rgba(255, 255, 255, 0.8) 75%
+    );
+  }
+
+  &.rbt-color-var-5 {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5) 32%,
+      rgba(212, 218, 33, 0.3) 63%,
+      rgba(255, 255, 255, 0.8) 75%
+    );
+  }
+
+  &.rbt-color-var-6 {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5) 32%,
+      rgba(33, 89, 218, 0.3) 63%,
+      rgba(255, 255, 255, 0.8) 75%
+    );
+  }
+
+  &.rbt-color-var-7 {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5) 32%,
+      rgba(218, 33, 119, 0.3) 63%,
+      rgba(255, 255, 255, 0.8) 75%
+    );
+  }
+
+  &.rbt-color-var-8 {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5) 32%,
+      rgba(79, 33, 218, 0.3) 63%,
+      rgba(255, 255, 255, 0.8) 75%
+    );
+  }
+
+  &.rbt-color-var-9 {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5) 32%,
+      rgba(218, 122, 33, 0.3) 63%,
+      rgba(255, 255, 255, 0.8) 75%
+    );
+  }
+
+  &.rbt-color-var-10 {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5) 32%,
+      rgba(237, 255, 40, 0.3) 63%,
+      rgba(255, 255, 255, 0.8) 75%
+    );
+  }
+
+  .rbt-card-top {
+    border-radius: var(--radius-12) var(--radius-12) 0 0;
+    padding: 12px 16px;
+
+    figure {
+      width: fit-content;
+      margin: 0 auto;
+    }
+  }
+
+  .rbt-shape {
+    -webkit-mask-position: 0% 0%;
+    -webkit-mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    background-image: url(/assets/images/splash/feature/feature-card-shape.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    -webkit-mask-image: url(/assets/images/splash/feature/feature-card-shape.png);
+    mask-image: url(/assets/images/splash/feature/feature-card-shape.png);
+    opacity: 0.7;
+    backdrop-filter: blur(10px);
+    height: 120px;
+    width: calc(100% + 1px);
+    position: absolute;
+    bottom: 0;
+    transform-origin: bottom;
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    transition: var(--transition);
+  }
+
+  .rbt-card-bottom {
+    border-radius: 0 0 var(--radius-12) var(--radius-12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0 24px;
+    position: relative;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+    .rbt-inner {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 24px;
+      @media #{$xl-layout} {
+        padding: 0 16px;
+        gap: 16px;
+      }
+    }
+
+    .rbt-feature-info {
+      .rbt-title {
+        margin-bottom: 0;
+
+        & + span {
+          font-size: var(--font-size-b4);
+          line-height: 1.5;
+          color: var(--color-black);
+        }
+      }
+    }
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+
+    .rbt-shape {
+      transform: rotateX(-10deg) rotateY(0deg) rotateZ(0deg);
+    }
+
+    .rbt-icon-overlay-link-btn {
+      color: var(--color-white);
+
+      &::after {
+        background: var(--color-primary);
+        border: 2px solid var(--color-primary);
+      }
+
+      i.rbt-icon {
+        transform: translateY(-300%) translateX(475%);
+      }
+
+      i.rbt-icon-bottom {
+        transform: translateY(0) translateX(0) scale(1.1);
+      }
+    }
+  }
+}

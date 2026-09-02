@@ -1,0 +1,397 @@
+@use "../default/variables" as *; // Importing all the variables
+@use "../default/extend" as *; // Importing all the extend
+@use "../default/mixins" as *; // Importing all the mixins
+
+.rbt-wider-container {
+  max-width: 1622px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 56px 116px;
+  background: var(--color-gray-light);
+  border-radius: var(--radius-12);
+
+  @media #{$laptop-device} {
+    padding: 32px;
+    margin: 0 12px;
+  }
+
+  @media #{$lg-layout} {
+    padding: 32px;
+    margin: 0 12px;
+  }
+
+  @media #{$sm-layout, $md-layout} {
+    padding: 20px 20px;
+    margin: 0 8px;
+  }
+}
+
+// banner style for kids cloth
+.rbt-kids-hero-section-area {
+  .rbt-wider-container {
+    background: url(/assets/images/product-banner/product-banner-bg-kids-cloth.webp);
+    background-repeat: no-repeat;
+    background-size: 100% 250%;
+    border-radius: var(--radius-12) var(--radius-12) 0 0;
+  }
+}
+
+.rbt-product-banner {
+  &.rbt-product-banner-style-six {
+    border: none;
+
+    .rbt-banner-content {
+      .rbt-banner-subtitle {
+        font-size: var(--h4);
+        line-height: 1.5;
+        font-weight: var(--f-regular);
+
+        @media #{$sm-layout} {
+          font-size: var(--h6);
+        }
+      }
+
+      .rbt-banner-title {
+        font-size: 64px;
+        line-height: 1.16;
+        margin: 0;
+
+        @media #{$xl-layout} {
+          font-size: 52px;
+        }
+
+        @media #{$lg-layout} {
+          font-size: 40px;
+        }
+
+        @media #{$md-layout} {
+          font-size: 36px;
+        }
+
+        @media #{$sm-layout} {
+          font-size: 28px;
+        }
+      }
+
+      .rbt-banner-description {
+        font-size: var(--h6);
+        margin-bottom: 32px;
+
+        @media #{$sm-layout, $md-layout} {
+          font-size: var(--font-size-b1);
+        }
+      }
+
+      .rbt-banner-btn-grp {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+
+        @media #{$md-layout} {
+          gap: 8px;
+        }
+      }
+    }
+  }
+}
+
+// banner style for fashion three
+.rbt-fashion-hero-section-area {
+  .rbt-gray-contain-box {
+    padding-top: 116px;
+    padding-bottom: 116px;
+    min-height: 590px;
+    background: url(/assets/images/product-banner/product-banner-fashion-3-bg.webp);
+    background-size: cover;
+
+    @media #{$sm-layout, $md-layout} {
+      min-height: auto;
+    }
+
+    @media #{$lgtolp-device} {
+      background-size: 100% 100%;
+    }
+
+    .rbt-banner-img {
+      position: absolute;
+      top: 0;
+      left: 40%;
+      max-height: 711px;
+
+      @media #{$md-layout} {
+        left: auto;
+        right: 0;
+        max-height: 420px;
+      }
+
+      @media #{$sm-layout} {
+        max-height: 400px;
+      }
+
+      @media #{$large-mobile} {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+
+    .rbt-banner-btn-grp {
+      margin-top: 24px;
+
+      .rbt-btn {
+        @media #{$lgtolp-device} {
+          position: absolute;
+          top: 150%;
+          right: 0;
+        }
+      }
+    }
+  }
+}
+
+// banner style for home tennis accessories page
+.rbt-tennis-hero-section-area {
+  .rbt-banner-media {
+    height: 100%;
+
+    img {
+      object-fit: cover;
+      height: 100%;
+    }
+  }
+
+  .rbt-banner-content {
+    height: 100%;
+
+    .rbt-product-slider-activation-1 {
+      height: 100%;
+    }
+  }
+}
+
+.rbt-large-product-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
+  figure {
+    max-width: 600px;
+    max-height: 590px;
+    margin: auto;
+
+    @media #{$lg-layout} {
+      max-height: 348px;
+    }
+
+    img {
+      max-height: 100%;
+    }
+  }
+
+  .rbt-product-card-content {
+    padding: 24px 32px;
+    background: var(--color-brand-100);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    @media #{$sm-layout, $lg-layout} {
+      flex-direction: column;
+      text-align: center;
+      gap: 8px;
+    }
+
+    .rbt-card-element {
+      .rbt-card-title {
+        margin: 0;
+      }
+    }
+
+    .pricing-part {
+      del.price-text {
+        font-size: var(--h6);
+      }
+
+      .price-text {
+        font-size: var(--h5);
+      }
+
+      .rbt-offer-badge {
+        font-size: var(--font-size-b4);
+      }
+    }
+  }
+}
+
+.rbt-product-banner-var-classic {
+  position: relative;
+  padding: 252px 0 144px;
+
+  @media #{$lg-layout} {
+    padding: 188px 0 108px;
+  }
+
+  @media #{$md-layout} {
+    padding: 168px 0 80px;
+  }
+
+  @media #{$sm-layout} {
+    padding: 116px 0 24px;
+  }
+
+  .rbt-hero-banner-content {
+    position: relative;
+    z-index: 1;
+
+    .subtitle {
+      font-size: var(--h1);
+      font-weight: var(--f-bold);
+      color: var(--color-extra-eight);
+
+      @media #{$md-layout} {
+        font-size: var(--h2);
+      }
+
+      @media #{$sm-layout} {
+        font-size: var(--h4);
+      }
+    }
+
+    .title {
+      font-size: 140px;
+      font-weight: var(--f-bold);
+      color: var(--color-white);
+      line-height: 1;
+
+      @media #{$lg-layout} {
+        font-size: 108px;
+      }
+
+      @media #{$md-layout} {
+        font-size: 88px;
+      }
+
+      @media #{$sm-layout} {
+        font-size: 52px;
+      }
+    }
+
+    .rbt-desc-list {
+      li {
+        color: var(--color-white);
+
+        &::before {
+          background: var(--color-white);
+        }
+
+        @media #{$md-layout} {
+          font-size: var(--h5);
+        }
+      }
+    }
+
+    .rbt-content-shape {
+      position: absolute;
+      top: -16px;
+      left: -100px;
+      @media #{$sm-layout} {
+        left: -10px;
+      }
+    }
+  }
+
+  .rbt-hero-bg-image {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+  }
+}
+
+.rbt-tea-hero-section-area,
+.rbt-jewellery-hero-section-area,
+.rbt-cosmetic-hero-section-area,
+.rbt-paddle-hero-section-area,
+.rbt-headphone-hero-section-area,
+.rbt-hijab-hero-section-area {
+  .rbt-product-banner-style-four {
+    &.rbt-product-banner-style-four-hv-one {
+      .rbt-product-banner-content {
+        @media #{$lg-layout} {
+          padding: 132px 150px 100px;
+        }
+        @media #{$sm-layout, $md-layout} {
+          padding: 120px 20px 60px;
+        }
+      }
+    }
+  }
+}
+
+.rbt-black-friday-hero-section-area {
+  .rbt-product-banner-content {
+    @media #{$sm-layout, $md-layout, $lg-layout} {
+      padding: 88px 0 0;
+    }
+  }
+}
+
+.rbt-dog-hero-section-area {
+  .rbt-product-banner-style-four {
+    &.rbt-banner-four-var-two {
+      &.rbt-banner-four-var-two-larger-static {
+        .rbt-product-banner-content {
+          @media #{$laptop-device} {
+            min-height: 555px;
+          }
+          @media #{$xl-layout} {
+            min-height: 432px;
+          }
+          @media #{$lg-layout} {
+            min-height: 400px;
+            padding: 70px 80px;
+          }
+          @media #{$md-layout} {
+            min-height: 380px;
+            padding: 32px;
+          }
+          @media #{$sm-layout} {
+            min-height: 380px;
+            padding: 32px;
+          }
+        }
+      }
+      .rbt-product-img {
+        img {
+          object-fit: contain;
+        }
+      }
+    }
+  }
+}
+
+.rbt-hero-slider-banner {
+  &.has-rounded-banner {
+    img {
+      border-radius: 16px;
+      @media #{$md-layout} {
+        border-radius: 12px;
+      }
+
+      @media #{$sm-layout} {
+        border-radius: 8px;
+      }
+    }
+  }
+
+  &.rbt-has-min-height {
+    img {
+      min-height: 320px;
+      object-fit: cover;
+    }
+  }
+}

@@ -1,0 +1,62 @@
+@use "../default/variables" as *; // Importing all the variables
+@use "../default/extend" as *; // Importing all the extend
+@use "../default/mixins" as *; // Importing all the mixins
+
+.rbt-find-locate-input-area {
+    .rbt-location-search-title {
+        color: var(--color-heading);
+        font-family: var(--font-primary);
+        font-size: var(--font-size-b3);
+        line-height: var(--line-height-b3);
+        font-weight: var(--f-medium);
+        margin-bottom: 8px;
+        text-align: start;
+        display: block;
+    }
+
+    .rbt-btn {
+        display: block;
+        min-width: 200px;
+        margin-top: 24px;
+        font-size: var(--font-size-b3);
+        line-height: var(--line-height-b3);
+        white-space: nowrap;
+        border-radius: var(--radius-md);
+    }
+    .rbt-modern-select .bootstrap-select button.btn-light{
+        border: var(--border-width) solid var(--color-gray-200);
+        &:focus,
+        &:active{
+            border-color: var(--color-primary);
+        }
+    }
+}
+
+.rbt-found-location-card {
+    text-align: center;
+    padding: 24px 32px;
+    background: var(--color-gray-light);
+    border-radius: var(--radius-md);
+
+    .rbt-location-icon {
+        color: var(--color-primary);
+        font-size: var(--h3);
+    }
+
+    .rbt-found-location-name {
+        color: var(--color-heading);
+        font-family: var(--font-primary);
+        font-size: var(--font-size-b3);
+        line-height: var(--line-height-b3);
+        font-weight: var(--f-medium);
+        margin: 4px 0 8px;
+    }
+
+    .rbt-found-location {
+        color: var(--color-gray-400);
+        font-family: var(--font-primary);
+        font-size: var(--font-size-b3);
+        line-height: var(--line-height-b3);
+        font-weight: var(--f-regular);
+    }
+}

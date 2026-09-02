@@ -1,0 +1,51 @@
+@use "../default/variables" as *; // Importing all the variables
+@use "../default/extend" as *; // Importing all the extend
+@use "../default/mixins" as *; // Importing all the mixins
+
+.rbt-offer-card {
+    height: unset;
+    transition: var(--transition);
+
+    &:hover {
+        .rbt-card-img {
+            img {
+                transform: scale(1.04);
+            }
+        }
+    }
+
+    .inner {
+        padding: 16px;
+        border-radius: var(--radius-12);
+        background: var(--color-white);
+        transition: var(--transition);
+        border: 2px solid #F5F5F5;
+    }
+
+    .rbt-card-img {
+        background: var(--color-white);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .rbt-card-body {
+        padding: 16px 0 0 0;
+
+        .ofr-meta-part {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .single-meta {
+                color: var(--color-gray-500);
+                font-family: var(--font-primary);
+                font-size: var(--font-size-b3);
+                font-weight: var(--f-medium);
+                line-height: var(--line-height-b3);
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+        }
+    }
+}

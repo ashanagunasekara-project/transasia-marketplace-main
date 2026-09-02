@@ -1,0 +1,49 @@
+@use "../default/variables" as *; // Importing all the variables
+@use "../default/extend" as *; // Importing all the extend
+@use "../default/mixins" as *; // Importing all the mixins
+
+.rbt-counterup-wrapper {
+  display: flex;
+  column-gap: 60px;
+  row-gap: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+
+  @media #{$laptop-device} {
+    column-gap: 24px;
+  }
+  @media #{$md-layout} {
+    column-gap: 24px;
+  }
+
+  @media #{$sm-layout} {
+    column-gap: 24px;
+  }
+
+  .rbt-counterup-single {
+    max-width: 196px;
+
+    .rbt-counterup {
+      position: relative;
+      width: fit-content;
+      font-size: var(--h1);
+      margin-bottom: 12px;
+
+      &.has-formatting-mark {
+        .odometer-formatting-mark {
+          display: inline-block;
+        }
+      }
+
+      &::after {
+        content: attr(data-text);
+        position: absolute;
+      }
+
+      .odometer-formatting-mark {
+        display: none;
+      }
+    }
+  }
+}
