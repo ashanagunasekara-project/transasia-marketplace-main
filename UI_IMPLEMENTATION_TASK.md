@@ -57,7 +57,7 @@
 ---
 
 ## 5. Verification & Clean Build Checklist
-- [ ] Run `npm run dev` and confirm `/`, `/shop`, `/categories`, and `/contact` render as expected.
-- [ ] Confirm product cards on the Home and Shop pages link correctly to the single product page.
-- [ ] Ensure mobile menu opens and contains only: `Home`, `Shop`, `Categories`, `Contact Us`.
-- [ ] Run `npm run lint` and `npm run build` to confirm there are no broken TypeScript imports or missing module errors.
+- [x] Run `npm run dev` and confirm `/`, `/shop`, `/categories`, and `/contact` render as expected.
+- [x] Confirm product cards on the Home and Shop pages link correctly to the single product page.
+- [x] Ensure mobile menu opens and contains only: `Home`, `Shop`, `Categories`, `Contact Us`.
+- [x] Run `npm run lint` and `npm run build` to confirm there are no broken TypeScript imports or missing module errors.
