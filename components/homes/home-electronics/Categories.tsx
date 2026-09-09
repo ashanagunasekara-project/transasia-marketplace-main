@@ -15,7 +15,7 @@ export default function Categories() {
               </h4>
               <Link
                 className="rbt-btn rbt-btn-secondary rbt-btn-sm-2 rbt-scroll-trigger fade_in animation-order-2 animated-icon-btn default-secondary-bg"
-                href={`/categories-list`}
+                href={`/categories`}
               >
                 <span className="btn-text">View All Categories</span>
                 <span className="animated-icon ml--4">
@@ -71,7 +71,7 @@ export default function Categories() {
                             />
                           </Link>
                           <Link
-                            href={`/categories-list`}
+                            href={`/categories`}
                             className="rbt-icon-overlay-link-btn"
                           >
                             <span className="rbt-btn-overlay">

@@ -38,7 +38,7 @@ export default function BottomStickyProduct() {
             <div className="rbt-prd-info-section">
               <div className="rbt-prd-img">
                 <Link
-                  href={`/product-single-default/${stickyBottomProducts[0].id}`}
+                  href={`/product/${stickyBottomProducts[0].id}`}
                 >
                   <Image
                     alt="Ecommerce Product Image"
@@ -51,7 +51,7 @@ export default function BottomStickyProduct() {
               <div className="rbt-content">
                 <h6 className="rbt-title mb--0 rbt-text-bold">
                   <Link
-                    href={`/product-single-default/${stickyBottomProducts[0].id}`}
+                    href={`/product/${stickyBottomProducts[0].id}`}
                   >
                     {stickyBottomProducts[0].title}
                   </Link>

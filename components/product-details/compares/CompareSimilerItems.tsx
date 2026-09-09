@@ -69,7 +69,7 @@ export default function CompareSimilerItems({
                               <i className="fa-sharp fa-solid fa-xmark" />
                             </button>
                             <a
-                              href={`/product-single-default/${product.id}`}
+                              href={`/product/${product.id}`}
                               className={`rbt-product-item-img rbt-bg-color-brand-100 rbt-scroll-trigger fade_in animation-order-${
                                 idx + 1
                               }`}
@@ -90,7 +90,7 @@ export default function CompareSimilerItems({
                               </Link>
                               <h6 className="rbt-product-item-title">
                                 <a
-                                  href={`/product-single-default/${product.id}`}
+                                  href={`/product/${product.id}`}
                                 >
                                   {product.title}
                                 </a>
