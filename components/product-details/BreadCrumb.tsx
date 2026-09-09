@@ -72,7 +72,7 @@ export default function BreadCrumb({
                   <div className="rbt-event-hover">
                     <Link
                       className="rbt-product-nav-btn rbt-round-btn rbt-btn-prev"
-                      href={`/product-single-default/${prevProduct.id}`}
+                      href={`/product/${prevProduct.id}`}
                       aria-label="Previous product"
                     >
                       <i className="fa-regular fa-chevron-left" />
@@ -84,7 +84,7 @@ export default function BreadCrumb({
                             <ProductRating product={prevProduct} />
                             <h6 className="rbt-card-title">
                               <Link
-                                href={`/product-single-default/${prevProduct.id}`}
+                                href={`/product/${prevProduct.id}`}
                               >
                                 {prevProduct.title}
                               </Link>
@@ -101,7 +101,7 @@ export default function BreadCrumb({
                             </div>
                           </div>
                           <div className="rbt-card-img rbt-bg-color-default">
-                            <Link href={`/product-single-default/${prevProduct.id}`}>
+                            <Link href={`/product/${prevProduct.id}`}>
                               <Image
                                 alt="Card Image"
                                 src={prevProduct.imgSrc}
@@ -125,7 +125,7 @@ export default function BreadCrumb({
                   <div className="rbt-event-hover">
                     <Link
                       className="rbt-product-nav-btn rbt-round-btn rbt-btn-next"
-                      href={`/product-single-default/${nextProduct.id}`}
+                      href={`/product/${nextProduct.id}`}
                       aria-label="Next product"
                     >
                       <i className="fa-regular fa-chevron-right" />
@@ -137,7 +137,7 @@ export default function BreadCrumb({
                             <ProductRating product={nextProduct} />
                             <h6 className="rbt-card-title">
                               <Link
-                                href={`/product-single-default/${nextProduct.id}`}
+                                href={`/product/${nextProduct.id}`}
                               >
                                 {nextProduct.title}
                               </Link>
@@ -154,7 +154,7 @@ export default function BreadCrumb({
                             </div>
                           </div>
                           <div className="rbt-card-img rbt-bg-color-default">
-                            <Link href={`/product-single-default/${nextProduct.id}`}>
+                            <Link href={`/product/${nextProduct.id}`}>
                               <Image
                                 alt="Card Image"
                                 src={nextProduct.imgSrc}

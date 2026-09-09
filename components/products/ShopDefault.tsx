@@ -311,6 +311,7 @@ export default function ShopDefault({
                     }
                   >
                     <ProductCardComponent
+                      detailsPageUrl="/product"
                       showBestSellerBadge={showBestSellerBadge}
                       showPricingBadge={shouldShowPricingBadge}
                       shouldShowTimer={shouldShowTimer}

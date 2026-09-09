@@ -15,7 +15,7 @@ import AddToQuickViewOne from "../action-buttons/AddToQuickViewOne";
 import ModalTriggerButton from "../action-buttons/ModalTriggerButton";
 export default function ProductCard10({
   product,
-  detailsPageUrl = "/product-single-default",
+  detailsPageUrl = "/product",
   animationOrder = 1,
 }: {
   product: Product;

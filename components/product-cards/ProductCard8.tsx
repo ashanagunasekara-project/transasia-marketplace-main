@@ -11,7 +11,7 @@ import AddToWishlistTwo from "../action-buttons/AddToWishlistTwo";
 
 export default function ProductCard8({
   product,
-  detailsPageUrl = "/product-single-default",
+  detailsPageUrl = "/product",
   imgBgColor = "",
   btnClass = "rbt-btn hover-appear-element bottom-position text-center rbt-btn-sm rbt-square-btn d-block has-left-icon rbt-cart-sidenav-activation",
 

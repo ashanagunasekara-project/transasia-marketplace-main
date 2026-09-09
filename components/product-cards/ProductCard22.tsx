@@ -8,7 +8,7 @@ import ModalTriggerButton from "@/components/action-buttons/ModalTriggerButton";
 
 export default function ProductCard22({
   product,
-  detailsPageUrl = "/product-single-default",
+  detailsPageUrl = "/product",
   imbBgClass = "",
   contentBgClass = "",
   starClass = "",

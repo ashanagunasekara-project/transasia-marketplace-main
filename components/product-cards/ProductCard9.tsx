@@ -16,7 +16,7 @@ import ModalTriggerButton from "../action-buttons/ModalTriggerButton";
 
 export default function ProductCard9({
   product,
-  detailsPageUrl = "/product-single-default",
+  detailsPageUrl = "/product",
   showPricingBadge = true,
   shouldShowTimer = true,
   countdownStyle = "default",

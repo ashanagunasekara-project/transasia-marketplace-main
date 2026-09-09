@@ -51,7 +51,7 @@ export default function Products4() {
               <div className="col-xxl-8 col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12 mt--24">
                 {
                   <ProductCard11
-                    detailsPageUrl="/product-single-electronics"
+                    detailsPageUrl="/product"
                     product={electronicsListViewData[0]}
                   />
                 }
@@ -82,7 +82,7 @@ export default function Products4() {
                               </div>
                               <h6 className="rbt-card-title">
                                 <Link
-                                  href={`/product-single-electronics/${product.id}`}
+                                  href={`/product/${product.id}`}
                                 >
                                   {product.title}
                                 </Link>
@@ -98,7 +98,7 @@ export default function Products4() {
                             </div>
                             <div className="rbt-card-img rbt-bg-color-default rbt-curved-style-box">
                               <Link
-                                href={`/product-single-electronics/${product.id}`}
+                                href={`/product/${product.id}`}
                               >
                                 <Image
                                   alt="Card Image"

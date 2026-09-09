@@ -83,7 +83,7 @@ export default function Products2() {
                   className="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mt--24"
                 >
                   <ProductCard10
-                    detailsPageUrl="/product-single-electronics"
+                    detailsPageUrl="/product"
                     product={product}
                   />
                   {/* Product details area not present in the provided HTML */}

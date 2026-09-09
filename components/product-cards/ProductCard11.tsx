@@ -14,7 +14,7 @@ import ModalTriggerButton from "../action-buttons/ModalTriggerButton";
 
 export default function ProductCard11({
   product,
-  detailsPageUrl = "/product-single-default",
+  detailsPageUrl = "/product",
   bgClass = "",
   animationOrder = 1,
 }: {

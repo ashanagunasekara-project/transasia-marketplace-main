@@ -38,7 +38,7 @@ export default function Products3() {
                       className="col-lg-6 col-md-6 col-sm-6 col-12 mt--24"
                     >
                       <ProductSmallCard
-                        detailsPageUrl="/product-single-electronics"
+                        detailsPageUrl="/product"
                         product={product}
                         animationOrder={i + 1}
                       />

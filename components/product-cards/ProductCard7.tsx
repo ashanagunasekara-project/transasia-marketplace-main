@@ -10,7 +10,7 @@ import AddToWishlistTwo from "../action-buttons/AddToWishlistTwo";
 
 const ProductCard7 = ({
   product,
-  detailsPageUrl = "/product-single-default",
+  detailsPageUrl = "/product",
   animationOrder = 1,
 }: {
   product: Product;
