@@ -6,7 +6,6 @@ import Products from "@/components/homes/home-electronics/Products";
 import Products3 from "@/components/homes/home-electronics/Products3";
 import Products4 from "@/components/homes/home-electronics/Products4";
 import Brands from "@/components/homes/home-electronics/Brands";
-import Banner from "@/components/homes/home-electronics/Banner";
 import Footer1 from "@/components/footers/Footer1";
 
 import { Metadata } from "next";
@@ -27,7 +26,6 @@ export default function Home() {
       <Products3 />
       <Products4 />
       <Brands />
-      <Banner />
       <Footer1 />
     </>
   );

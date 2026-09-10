@@ -2,8 +2,6 @@
 import Nav from "./Nav";
 import Image from "next/image";
 import Link from "next/link";
-import LanguageSelect from "../common/select/LanguageSelect";
-import CurrencySelect from "../common/select/CurrencySelect";
 import CompareItemLength from "../store/CompareItemLength";
 import CartItemsLength from "../store/CartItemsLength";
 import WishlistLength from "../store/WishlistLength";
@@ -12,14 +10,12 @@ import CategorySidebarToggler from "./headerComponents/CategorySidebarToggler";
 import SearchDropdownCommon from "./headerComponents/SearchDropdownCommon";
 import SearchWithCategory from "./headerComponents/SearchWithCategory";
 import TopbarSwiper from "./headerComponents/TopbarSwiper";
-import PromoTextScroller from "./headerComponents/PromoTextScroller";
 import CommonSearchToggler from "./headerComponents/CommonSearchToggler";
 import CartSidebarToggler from "./headerComponents/CartSidebarToggler";
 import TopbarRemover from "./headerComponents/TopbarRemover";
 import { useSticky } from "@/hooks/useSticky";
 import MobileMenuToggler from "../action-buttons/MobileMenuToggler";
 import Tooltip from "@/components/common/ui/Tooltip";
-import OfferSideMenuToggler from "../action-buttons/OfferSideMenuToggler";
 import ModalTriggerButton from "@/components/action-buttons/ModalTriggerButton";
 
 export default function Header2({ sticky = false }) {
@@ -31,55 +27,6 @@ export default function Header2({ sticky = false }) {
       <div
         className={`rbt-header-wrapper rbt-header-sticky-activation rbt-header-wrapper-one header-space-between rbt-bg-color-white header-not-transparent header-sticky plr--0${stickyClass}`}
       >
-        <div className="rbt-topbar-section rbt-topbar-one">
-          <div className="container">
-            <div className="row align-items-center d-none d-md-flex mlr--0 row--0">
-              <div className="col-lg-6 col-md-6 col-12">
-                <div className="rbt-fancy-item fancy-menu-text fancy-menu-start">
-                  <div className="rbt-fancy-text">
-                    <strong>Trending Now :</strong>
-                    <PromoTextScroller />
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-6 col-md-6 col-12">
-                <div className="rbt-header-sec-col rbt-header-right rbt-fancy-item fancy-menu-address fancy-menu-end">
-                  <div className="rbt-header-content m--0">
-                    <ul className="rbt-quick-access d-none d-lg-flex">
-                      <li className="rbt-access-box">
-                        <div className="header-info">
-                          <Link
-                            href={`/find-store`}
-                            className="rbt-access-link"
-                          >
-                            Store Location
-                          </Link>
-                        </div>
-                        <div className="header-info">
-                          <Link
-                            href={`/my-order-history`}
-                            className="rbt-access-link"
-                          >
-                            Track Your Order
-                          </Link>
-                        </div>
-                        <div className="header-info">
-                          <CurrencySelect />
-                        </div>
-                        <div className="header-info">
-                          <LanguageSelect />
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="rbt-separator-mid">
-          <hr className="rbt-separator rbt-separator-gray100 m-0" />
-        </div>
         <div className="rbt-wrapper-middle rbt-header-middle-one">
           <div className="container">
             <div className="mainbar-row @@navigationEnd align-items-center">
@@ -105,6 +52,7 @@ export default function Header2({ sticky = false }) {
                     </div>
                   </div>
                   <div className="header-info p-0 d-none d-xl-block ml--28">
+                    {/* Category Dropdown Area */}
                     {!isStickyActive && (
                       <CategorySidebarToggler parentClass="rbt-offcanvas-trigger-btn rbt-offcanvas-trigger-transparent-btn rbt-cat-offcanvas-activation rbt-burger-menu-bar" />
                     )}
@@ -123,7 +71,7 @@ export default function Header2({ sticky = false }) {
                 <ul className="rbt-quick-access">
                   <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-1 rbt-access-box-has-bg-hover d-none d-lg-flex">
                     <a
-                      href="tel:+800300-353-569"
+                      href="tel:0773392727"
                       className="rbt-access-box-wrapper"
                     >
                       <div className="rbt-round-btn rbt-bg-static-gray">
@@ -131,7 +79,7 @@ export default function Header2({ sticky = false }) {
                       </div>
                       <div className="content p-0">
                         <p>Hotline</p>
-                        <span>+800 300-353-569</span>
+                        <span>077 339 2727</span>
                       </div>
                     </a>
                   </li>
@@ -186,14 +134,22 @@ export default function Header2({ sticky = false }) {
             <div className="rbt-header-sec-col rbt-header-right">
               <div className="rbt-header-content m--0">
                 <ul className="rbt-quick-access rbt-quick-access-var-one">
-                  <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-1 rbt-access-box-link ">
-                    <OfferSideMenuToggler />
-                    <ModalTriggerButton
-                      className="text-portion  header-info text-white"
-                      openModalName="recent-viewModal"
+                  <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-1 rbt-access-box-link d-flex align-items-center">
+                    <Link
+                      href="/find-store"
+                      className="text-portion header-info text-white d-flex align-items-center"
                     >
-                      <span>Recent Viewed</span>
-                    </ModalTriggerButton>
+                      <i className="fa-regular fa-location-dot mr--6" />
+                      <span>Store Location</span>
+                    </Link>
+                    <span className="text-white opacity-50 mlr--12">|</span>
+                    <Link
+                      href="/my-order-history"
+                      className="text-portion header-info text-white d-flex align-items-center"
+                    >
+                      <i className="fa-regular fa-truck-fast mr--6" />
+                      <span>Track Your Order</span>
+                    </Link>
                   </li>
                 </ul>
               </div>

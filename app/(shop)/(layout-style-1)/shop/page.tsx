@@ -1,4 +1,3 @@
-import Banner from "@/components/products/Banner";
 import Breadcrumb from "@/components/products/Breadcrumb";
 import CategoriesWider from "@/components/products/CategoriesWider";
 import ShopDefault from "@/components/products/ShopDefault";
@@ -16,7 +15,6 @@ export default function page() {
   return (
     <>
       <Breadcrumb containerFull title={pageTitle} />
-      <Banner containerFull />
       <CategoriesWider />
       <div className="rbt-component-area ptb--32 ptb_sm--12">
         <div className="rbt-full-width-wrapper">
