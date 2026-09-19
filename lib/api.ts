@@ -102,6 +102,14 @@ export function mapBackendProductToStorefront(item: BackendProduct): Product {
     reviewCount: 15,
     demoTab: ["best-sellers", "new-arrivals", "on-sale", "view-all"],
     badges: [
+      ...(item.isWholesalePricingApplied
+        ? [
+            {
+              text: "Wholesale Price",
+              bg: "rbt-product-badge-bg-primary",
+            },
+          ]
+        : []),
       {
         text: isInStock ? "In Stock" : "Out of Stock",
         bg: isInStock ? "rbt-product-badge-bg-green" : "rbt-product-badge-bg-gray",
@@ -157,10 +165,22 @@ export function mapBackendCategoryToStorefront(cat: BackendCategory, index: numb
   };
 }
 
-export async function fetchStorefrontProducts(): Promise<Product[]> {
+export async function fetchStorefrontProducts(options?: {
+  token?: string | null;
+  viewMode?: string;
+}): Promise<Product[]> {
   try {
+    const headers: Record<string, string> = {};
+    if (options?.token) {
+      headers["Authorization"] = `Bearer ${options.token}`;
+    }
+    if (options?.viewMode) {
+      headers["x-customer-view"] = options.viewMode;
+    }
+
     const res = await fetch(`${API_BASE_URL}/api/products?limit=100`, {
       cache: "no-store",
+      headers,
     });
     if (!res.ok) {
       console.error(`Failed to fetch products: ${res.status} ${res.statusText}`);
@@ -194,11 +214,24 @@ export async function fetchStorefrontCategories(): Promise<Category[]> {
 }
 
 export async function fetchStorefrontProductByIdOrSlug(
-  idOrSlug: string
+  idOrSlug: string,
+  options?: {
+    token?: string | null;
+    viewMode?: string;
+  }
 ): Promise<Product | null> {
   try {
+    const headers: Record<string, string> = {};
+    if (options?.token) {
+      headers["Authorization"] = `Bearer ${options.token}`;
+    }
+    if (options?.viewMode) {
+      headers["x-customer-view"] = options.viewMode;
+    }
+
     const res = await fetch(`${API_BASE_URL}/api/products/${encodeURIComponent(idOrSlug)}`, {
       cache: "no-store",
+      headers,
     });
     if (!res.ok) {
       return null;

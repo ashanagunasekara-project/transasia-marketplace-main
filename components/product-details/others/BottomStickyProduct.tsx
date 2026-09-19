@@ -7,13 +7,46 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { Product } from "@/types/product";
+import { useAuthStore } from "@/context/authStore";
+import { fetchStorefrontProductByIdOrSlug } from "@/lib/api";
 
 export default function BottomStickyProduct({ product }: { product?: Product }) {
   const { addProductToCart, isAddedToCartProducts } = useContextElement();
   const sectionRef = useRef(null);
   const [active, setActive] = useState(false);
+  const [liveProduct, setLiveProduct] = useState<Product | undefined>(product);
+  const { token, activeView } = useAuthStore();
 
-  const displayProduct = product || (stickyBottomProducts[0] as unknown as Product);
+  useEffect(() => {
+    let isMounted = true;
+    async function syncPrice() {
+      if (!product) return;
+      try {
+        const idOrSlug = String(product.id || product.slug);
+        const updated = await fetchStorefrontProductByIdOrSlug(idOrSlug, {
+          token,
+          viewMode: activeView,
+        });
+        if (isMounted && updated) {
+          setLiveProduct(updated);
+        }
+      } catch (err) {
+        // Fallback to initial
+      }
+    }
+
+    if (token || activeView === "WHOLESALE") {
+      syncPrice();
+    } else {
+      setLiveProduct(product);
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [token, activeView, product]);
+
+  const displayProduct = liveProduct || product || (stickyBottomProducts[0] as unknown as Product);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,10 +100,23 @@ export default function BottomStickyProduct({ product }: { product?: Product }) 
               </div>
             </div>
           </div>
-          <div className="col-lg-6 col-md-12 mt--12 d-flex align-items-center justify-content-end" style={{ gap: "16px" }}>
+          <div className="col-lg-6 col-md-12 mt--12 d-flex align-items-center justify-content-end" style={{ gap: "12px" }}>
             <span className="price-text" style={{ fontSize: "18px", fontWeight: "bold" }}>
               ${Number(displayProduct.price).toFixed(2)}
             </span>
+            {displayProduct.isWholesalePricingApplied && (
+              <span
+                className="badge bg-primary text-white"
+                style={{
+                  fontSize: "11px",
+                  fontWeight: 700,
+                  padding: "3px 6px",
+                  borderRadius: "4px",
+                }}
+              >
+                Wholesale Price
+              </span>
+            )}
             <button
               type="button"
               className="rbt-btn rbt-btn-sm"

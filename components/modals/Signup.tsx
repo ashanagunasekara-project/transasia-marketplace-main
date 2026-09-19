@@ -1,28 +1,93 @@
 "use client";
-import { CloseIcon } from "../svg-icons";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { CloseIcon } from "../svg-icons";
 import ReviewSlider from "../other-pages/ReviewSlider";
 import { useManagedModalPanel } from "@/hooks/useManagedModalPanel";
-import { useState } from "react";
 import ModalTriggerButton from "@/components/action-buttons/ModalTriggerButton";
 import {
   getPasswordStrength,
   getPasswordValidationError,
 } from "@/lib/passwordValidation";
 import PasswordStrengthIndicator from "@/components/common/forms/PasswordStrengthIndicator";
+import { useAuthStore } from "@/context/authStore";
+import { useUiStore } from "@/context/uiStore";
 
 export default function Signup() {
   const { close } = useManagedModalPanel("signupModal");
-  const [activeTab, setActiveTab] = useState<"phone" | "email">("phone");
+  const {
+    registerRegular,
+    registerWholesale,
+    isLoading,
+    error,
+    clearError,
+  } = useAuthStore();
+  const showToaster = useUiStore((s) => s.showToaster);
+
+  const [customerType, setCustomerType] = useState<"retail" | "wholesale">("retail");
+
+  // Common Fields
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Wholesale specific fields
+  const [businessName, setBusinessName] = useState("");
+  const [businessAddress, setBusinessAddress] = useState("");
+  const [ownerName, setOwnerName] = useState("");
+  const [brcDocumentUrl, setBrcDocumentUrl] = useState("");
+
   const passwordStrength = getPasswordStrength(password);
   const passwordError = getPasswordValidationError(password, confirmPassword, {
-    requireStrong: true,
+    requireStrong: false,
   });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearError();
+
+    if (passwordError || !password || !confirmPassword || !fullName || !phone) {
+      return;
+    }
+
+    if (customerType === "retail") {
+      const res = await registerRegular({
+        fullName,
+        phone,
+        email: email || undefined,
+        password,
+      });
+      if (res.success) {
+        showToaster("Retail account registered successfully! You are now logged in.");
+        close();
+      }
+    } else {
+      if (!businessName || !businessAddress) {
+        return;
+      }
+      const res = await registerWholesale({
+        fullName,
+        phone,
+        email: email || undefined,
+        password,
+        businessName,
+        businessAddress,
+        ownerName: ownerName || fullName,
+        brcDocumentUrl: brcDocumentUrl || undefined,
+      });
+      if (res.success) {
+        showToaster("Wholesale registration submitted! Pricing will update upon approval.");
+        close();
+      }
+    }
+  };
+
   return (
     <div
       className="rbt-default-modal has-rbt-top-folder-shape modal fade"
@@ -61,271 +126,296 @@ export default function Signup() {
                     </Link>
                   </div>
                   <h6
-                    className="rbt-title rbt-text-bold mb--16"
+                    className="rbt-title rbt-text-bold mb--12"
                     id="signupModalLabel"
                   >
-                    Create an Account
+                    Create Customer Account
                   </h6>
-                  <p className="description">I want grocery delivery for my:</p>
-                  <ul className="rbt-signup-radio-list">
-                    <li className="rbt-check-grp ml--0">
-                      <input
-                        id="rbt-signup-radio-1"
-                        type="radio"
-                        name="rbt-signup-radio"
-                      />
-                      <label htmlFor="rbt-signup-radio-1">
-                        <span className="rbt-label-text">Home</span>
-                      </label>
-                    </li>
-                    <li className="rbt-check-grp ml--0">
-                      <input
-                        id="rbt-signup-radio-2"
-                        type="radio"
-                        name="rbt-signup-radio"
-                      />
-                      <label htmlFor="rbt-signup-radio-2">
-                        <span className="rbt-label-text">Office</span>
-                      </label>
-                    </li>
-                    <li className="rbt-check-grp ml--0">
-                      <input
-                        id="rbt-signup-radio-3"
-                        type="radio"
-                        name="rbt-signup-radio"
-                      />
-                      <label htmlFor="rbt-signup-radio-3">
-                        <span className="rbt-label-text">Business</span>
-                      </label>
-                    </li>
-                    <li className="rbt-check-grp ml--0">
-                      <input
-                        id="rbt-signup-radio-4"
-                        type="radio"
-                        name="rbt-signup-radio"
-                      />
-                      <label htmlFor="rbt-signup-radio-4">
-                        <span className="rbt-label-text">Others</span>
-                      </label>
-                    </li>
-                  </ul>
-                  <div className="rbt-tab rbt-round-shape-tab">
-                    {/* Start tabs */}
-                    <ul
-                      className="nav nav-tabs"
-                      id="modal_signinTab"
-                      role="tablist"
+
+                  {/* Customer Type Selector */}
+                  <div className="d-flex rounded p--4 mb--16 bg-light gap-2">
+                    <button
+                      type="button"
+                      className={`rbt-btn rbt-btn-sm flex-grow-1 ${
+                        customerType === "retail"
+                          ? "rbt-btn-gradient text-white"
+                          : "bg-transparent text-dark border-0"
+                      }`}
+                      style={{ borderRadius: "8px", fontWeight: 600 }}
+                      onClick={() => {
+                        setCustomerType("retail");
+                        clearError();
+                      }}
                     >
-                      <li className="nav-item" role="presentation">
-                        <button
-                          className={`nav-link${activeTab === "phone" ? " active" : ""}`}
-                          id="rbt-form-tab-id-3"
-                          type="button"
-                          onClick={() => setActiveTab("phone")}
-                        >
-                          <i className="fa-sharp fa-regular fa-phone" />
-                          Phone Number
-                        </button>
-                      </li>
-                      <li className="nav-item" role="presentation">
-                        <button
-                          className={`nav-link${activeTab === "email" ? " active" : ""}`}
-                          id="rbt-form-tab-id-4"
-                          type="button"
-                          onClick={() => setActiveTab("email")}
-                        >
-                          <i className="fa-sharp fa-regular fa-envelope" />
-                          Email
-                        </button>
-                      </li>
-                    </ul>
-                    {/* End tabs */}
-                    {/* Start tabs content */}
-                    <form onSubmit={(e) => e.preventDefault()}>
-                      <div className="tab-content">
-                        {activeTab === "phone" && (
-                          <div className="tab-pane fade show active">
+                      <i className="fa-solid fa-user mr--6" />
+                      Retail Customer
+                    </button>
+                    <button
+                      type="button"
+                      className={`rbt-btn rbt-btn-sm flex-grow-1 ${
+                        customerType === "wholesale"
+                          ? "rbt-btn-gradient text-white"
+                          : "bg-transparent text-dark border-0"
+                      }`}
+                      style={{ borderRadius: "8px", fontWeight: 600 }}
+                      onClick={() => {
+                        setCustomerType("wholesale");
+                        clearError();
+                      }}
+                    >
+                      <i className="fa-solid fa-store mr--6" />
+                      Wholesale Customer
+                    </button>
+                  </div>
+
+                  {error && (
+                    <div className="alert alert-danger p--10 rounded mb--16 b3">
+                      <i className="fa-solid fa-circle-exclamation mr--6" />
+                      {error}
+                    </div>
+                  )}
+
+                  {customerType === "wholesale" && (
+                    <div className="alert alert-warning p--10 rounded mb--16 b4">
+                      <i className="fa-solid fa-briefcase mr--6 text-primary" />
+                      Wholesale accounts require verification. Standard retail prices will display until your business application is approved.
+                    </div>
+                  )}
+
+                  <form onSubmit={handleSubmit}>
+                    {/* Common Fields */}
+                    <div className="rbt-input-field-grp mb--12">
+                      <label className="rbt-field-label" htmlFor="modal_reg_name">
+                        Full Name
+                        <span className="rbt-text-color-danger">*</span>
+                      </label>
+                      <input
+                        className="rbt-input-field"
+                        placeholder="Your full name"
+                        type="text"
+                        id="modal_reg_name"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <div className="row g-2 mb--12">
+                      <div className="col-md-6">
+                        <div className="rbt-input-field-grp">
+                          <label className="rbt-field-label" htmlFor="modal_reg_phone">
+                            Mobile Phone
+                            <span className="rbt-text-color-danger">*</span>
+                          </label>
+                          <input
+                            className="rbt-input-field"
+                            placeholder="e.g. 0771234567"
+                            type="text"
+                            id="modal_reg_phone"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className="rbt-input-field-grp">
+                          <label className="rbt-field-label" htmlFor="modal_reg_email">
+                            Email (Optional)
+                          </label>
+                          <input
+                            className="rbt-input-field"
+                            placeholder="email@example.com"
+                            type="email"
+                            id="modal_reg_email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Wholesale Specific Fields */}
+                    {customerType === "wholesale" && (
+                      <div className="wholesale-extra-fields p--12 rounded mb--12 bg-light border">
+                        <h6 className="b3 font-weight-bold mb--8 text-primary">
+                          <i className="fa-solid fa-building mr--6" />
+                          Business Verification Details
+                        </h6>
+
+                        <div className="rbt-input-field-grp mb--8">
+                          <label className="rbt-field-label" htmlFor="modal_reg_biz_name">
+                            Business / Company Name
+                            <span className="rbt-text-color-danger">*</span>
+                          </label>
+                          <input
+                            className="rbt-input-field"
+                            placeholder="e.g. Lanka Tech Traders (Pvt) Ltd"
+                            type="text"
+                            id="modal_reg_biz_name"
+                            value={businessName}
+                            onChange={(e) => setBusinessName(e.target.value)}
+                            required={customerType === "wholesale"}
+                          />
+                        </div>
+
+                        <div className="rbt-input-field-grp mb--8">
+                          <label className="rbt-field-label" htmlFor="modal_reg_biz_addr">
+                            Business Address
+                            <span className="rbt-text-color-danger">*</span>
+                          </label>
+                          <input
+                            className="rbt-input-field"
+                            placeholder="Store / office address"
+                            type="text"
+                            id="modal_reg_biz_addr"
+                            value={businessAddress}
+                            onChange={(e) => setBusinessAddress(e.target.value)}
+                            required={customerType === "wholesale"}
+                          />
+                        </div>
+
+                        <div className="row g-2">
+                          <div className="col-md-6">
                             <div className="rbt-input-field-grp">
-                              <label
-                                className="rbt-field-label"
-                                htmlFor="modal_register_number"
-                              >
-                                Your Number
-                                <span className="rbt-text-color-danger">*</span>
+                              <label className="rbt-field-label" htmlFor="modal_reg_owner">
+                                Owner Name
                               </label>
                               <input
                                 className="rbt-input-field"
-                                placeholder="Number"
+                                placeholder="Proprietor / Director"
                                 type="text"
-                                id="modal_register_number"
+                                id="modal_reg_owner"
+                                value={ownerName}
+                                onChange={(e) => setOwnerName(e.target.value)}
                               />
                             </div>
                           </div>
-                        )}
-                        {activeTab === "email" && (
-                          <div className="tab-pane fade show active">
+                          <div className="col-md-6">
                             <div className="rbt-input-field-grp">
-                              <label
-                                className="rbt-field-label"
-                                htmlFor="modal_register_email"
-                              >
-                                Your Email
-                                <span className="rbt-text-color-danger">*</span>
+                              <label className="rbt-field-label" htmlFor="modal_reg_brc">
+                                BRC Ref / Number
                               </label>
                               <input
                                 className="rbt-input-field"
-                                placeholder="Email"
-                                type="email"
-                                id="modal_register_email"
+                                placeholder="PV-XXXXX"
+                                type="text"
+                                id="modal_reg_brc"
+                                value={brcDocumentUrl}
+                                onChange={(e) => setBrcDocumentUrl(e.target.value)}
                               />
                             </div>
                           </div>
-                        )}
-                      </div>
-                      <div className="rbt-input-field-grp mt--16">
-                        <label
-                          className="rbt-field-label"
-                          htmlFor="modal_register_password"
-                        >
-                          Password
-                          <span className="rbt-text-color-danger">*</span>
-                        </label>
-                        <div className="position-relative">
-                          <input
-                            className="rbt-input-field"
-                            placeholder="Password"
-                            type={showPassword ? "text" : "password"}
-                            id="modal_register_password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword((prev) => !prev)}
-                            className="rbt-password-toggle-btn"
-                            aria-label={
-                              showPassword ? "Hide password" : "Show password"
-                            }
-                          >
-                            <i
-                              className={`fa-regular ${
-                                showPassword ? "fa-eye-slash" : "fa-eye"
-                              }`}
-                            />
-                          </button>
                         </div>
                       </div>
-                      <div className="rbt-input-field-grp mt--16">
-                        <label
-                          className="rbt-field-label"
-                          htmlFor="modal_register_confirm_password"
+                    )}
+
+                    {/* Password Fields */}
+                    <div className="rbt-input-field-grp mb--12">
+                      <label className="rbt-field-label" htmlFor="modal_reg_pass">
+                        Password
+                        <span className="rbt-text-color-danger">*</span>
+                      </label>
+                      <div className="position-relative">
+                        <input
+                          className="rbt-input-field"
+                          placeholder="Create password"
+                          type={showPassword ? "text" : "password"}
+                          id="modal_reg_pass"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                          className="rbt-password-toggle-btn"
+                          aria-label="Toggle password"
                         >
-                          Confirm Password
-                          <span className="rbt-text-color-danger">*</span>
-                        </label>
-                        <div className="position-relative">
-                          <input
-                            className="rbt-input-field"
-                            placeholder="Confirm Password"
-                            type={showConfirmPassword ? "text" : "password"}
-                            id="modal_register_confirm_password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
+                          <i
+                            className={`fa-regular ${
+                              showPassword ? "fa-eye-slash" : "fa-eye"
+                            }`}
                           />
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setShowConfirmPassword((prev) => !prev)
-                            }
-                            className="rbt-password-toggle-btn"
-                            aria-label={
-                              showConfirmPassword
-                                ? "Hide confirm password"
-                                : "Show confirm password"
-                            }
-                          >
-                            <i
-                              className={`fa-regular ${
-                                showConfirmPassword ? "fa-eye-slash" : "fa-eye"
-                              }`}
-                            />
-                          </button>
-                        </div>
+                        </button>
                       </div>
-                      {passwordError && (
-                        <p className="rbt-form-error mt--8 mb--0">{passwordError}</p>
-                      )}
-                      {password.length > 0 && (
+                    </div>
+
+                    <div className="rbt-input-field-grp mb--12">
+                      <label className="rbt-field-label" htmlFor="modal_reg_cpass">
+                        Confirm Password
+                        <span className="rbt-text-color-danger">*</span>
+                      </label>
+                      <div className="position-relative">
+                        <input
+                          className="rbt-input-field"
+                          placeholder="Confirm password"
+                          type={showConfirmPassword ? "text" : "password"}
+                          id="modal_reg_cpass"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword((prev) => !prev)}
+                          className="rbt-password-toggle-btn"
+                          aria-label="Toggle password"
+                        >
+                          <i
+                            className={`fa-regular ${
+                              showConfirmPassword ? "fa-eye-slash" : "fa-eye"
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </div>
+
+                    {passwordError && (
+                      <p className="rbt-form-error mb--12">{passwordError}</p>
+                    )}
+                    {password.length > 0 && (
+                      <div className="mb--12">
                         <PasswordStrengthIndicator
                           label={passwordStrength.label}
                           hint={`Password Strength: ${passwordStrength.label}`}
                         />
-                      )}
-                      <button
-                        type="submit"
-                        className="rbt-btn d-block w-100 mt--24 mb--16"
-                        disabled={Boolean(passwordError) || !password || !confirmPassword}
-                      >
-                        Continue
-                      </button>
-                      <div className="rbt-check-group">
-                        <input
-                          id="login_checked2"
-                          type="checkbox"
-                          name="login"
-                        />
-                        <label htmlFor="login_checked2">Stay Logged In</label>
                       </div>
-                    </form>
-                    {/* End tabs content */}
-                  </div>
-                  {/* Separator */}
-                  <div className="d-flex align-items-center justify-content-center mb--24 mt--24">
-                    <hr className="rbt-separator rbt-bg-color-gray-light mb--0" />
-                    <span className="pl--8 pr--8 b4 rbt-text-medium">OR</span>
-                    <hr className="rbt-separator rbt-bg-color-gray-light mb--0" />
-                  </div>
-                  {/* Start social login button */}
-                  <button
-                    type="submit"
-                    className="rbt-btn rbt-btn-border rbt-social-login-btn d-block w-100 mb--16 rbt-social-login-btn"
-                  >
-                    <Image
-                      className="icon"
-                      alt="Icon"
-                      src="/assets/images/icons/fb-icon.webp"
-                      width={37}
-                      height={36}
-                    />
-                    Continue with Facebook
-                  </button>
-                  <button
-                    type="submit"
-                    className="rbt-btn rbt-btn-border rbt-social-login-btn d-block w-100 rbt-social-login-btn"
-                  >
-                    <Image
-                      className="icon"
-                      alt="Icon"
-                      src="/assets/images/icons/google-icon.webp"
-                      width={36}
-                      height={36}
-                    />
-                    Continue with Google
-                  </button>
-                  {/* End social login button */}
-                  <div className="rbt-login-system-switch rbt-link-hover">
-                    Already a customer?
+                    )}
+
+                    <button
+                      type="submit"
+                      className="rbt-btn d-block w-100 mb--16"
+                      disabled={
+                        isLoading ||
+                        Boolean(passwordError) ||
+                        !password ||
+                        !confirmPassword ||
+                        !fullName ||
+                        !phone ||
+                        (customerType === "wholesale" && (!businessName || !businessAddress))
+                      }
+                    >
+                      {isLoading
+                        ? "Registering..."
+                        : customerType === "wholesale"
+                        ? "Register Wholesale Account"
+                        : "Create Retail Account"}
+                    </button>
+                  </form>
+
+                  <div className="rbt-login-system-switch rbt-link-hover text-center">
+                    Already have an account?
                     <ModalTriggerButton
                       openModalName="signinModal"
-                      className="rbt-switch-btn ml--4"
+                      className="rbt-switch-btn ml--6 text-primary font-weight-bold"
                     >
                       <span>Sign In</span>
                     </ModalTriggerButton>
                   </div>
                 </div>
-                {/* Start slider */}
+
                 <ReviewSlider />
-                {/* End slider */}
               </div>
             </div>
           </div>

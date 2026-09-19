@@ -17,6 +17,8 @@ import { useSticky } from "@/hooks/useSticky";
 import MobileMenuToggler from "../action-buttons/MobileMenuToggler";
 import Tooltip from "@/components/common/ui/Tooltip";
 import ModalTriggerButton from "@/components/action-buttons/ModalTriggerButton";
+import CustomerTypeSwitcher from "./headerComponents/CustomerTypeSwitcher";
+import UserAccountMenu from "./headerComponents/UserAccountMenu";
 
 export default function Header2({ sticky = false }) {
   const isSticky = useSticky();
@@ -83,20 +85,11 @@ export default function Header2({ sticky = false }) {
                       </div>
                     </a>
                   </li>
+                  <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-2 d-none d-md-flex align-items-center">
+                    <CustomerTypeSwitcher />
+                  </li>
                   <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-2 rbt-access-box-has-bg-hover">
-                    <ModalTriggerButton
-                      as="div"
-                      className="rbt-access-box-wrapper"
-                      openModalName="signinModal"
-                    >
-                      <div className="rbt-round-btn rbt-bg-static-gray">
-                        <i className="fa-regular fa-user" />
-                      </div>
-                      <div className="content">
-                        <p>Log in/Sign Up</p>
-                        <span>Access Account</span>
-                      </div>
-                    </ModalTriggerButton>
+                    <UserAccountMenu />
                   </li>
                   <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-3 rbt-access-box-has-bg-hover rbt-mini-cart">
                     <CartSidebarToggler className="rbt-access-box-wrapper rbt-cart-sidenav-activation">
@@ -233,15 +226,11 @@ export default function Header2({ sticky = false }) {
                     </div>
                   </Tooltip>
                 </li>
+                <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-2 d-none d-sm-flex align-items-center">
+                  <CustomerTypeSwitcher compact />
+                </li>
                 <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-3 d-none d-lg-flex">
-                  <Tooltip content="Sign In" placement="bottom">
-                    <ModalTriggerButton
-                      className="rbt-round-btn has-rbt-md-fsize tooltips tooltip-distance-lg"
-                      openModalName="signinModal"
-                    >
-                      <i className="fa-regular fa-user" />
-                    </ModalTriggerButton>
-                  </Tooltip>
+                  <UserAccountMenu isIconOnly />
                 </li>
                 <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-4 d-none d-lg-flex">
                   <Tooltip content="Compare" placement="bottom">
