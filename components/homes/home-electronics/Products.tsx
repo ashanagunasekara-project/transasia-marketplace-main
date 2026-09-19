@@ -5,6 +5,8 @@ import ProductCard9 from "@/components/product-cards/ProductCard9";
 import NavEffectTabs from "../../common/ui/NavEffectTabs";
 import { electronicsCardData } from "@/data/products/electronics";
 
+import { Product } from "@/types/product";
+
 const TABS = [
   { id: "best-sellers", label: "Best Sellers" },
   { id: "new-arrivals", label: "New Arrivals" },
@@ -12,16 +14,22 @@ const TABS = [
   { id: "view-all", label: "View All" },
 ];
 
-export default function Products() {
+export default function Products({
+  products,
+}: {
+  products?: Product[];
+}) {
   const [activeTab, setActiveTab] = useState<string>("best-sellers");
 
-  const filteredProducts = useMemo(() => {
-    if (activeTab === "view-all") return electronicsCardData;
+  const sourceProducts = products !== undefined ? products : electronicsCardData;
 
-    return electronicsCardData.filter((product) =>
-      product.demoTab?.includes(activeTab),
+  const filteredProducts = useMemo(() => {
+    if (activeTab === "view-all") return sourceProducts;
+
+    return sourceProducts.filter((product) =>
+      product.demoTab?.includes(activeTab) || true
     );
-  }, [activeTab]);
+  }, [activeTab, sourceProducts]);
 
   return (
     <div

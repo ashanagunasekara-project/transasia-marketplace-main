@@ -1,14 +1,24 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { widerSixCategories } from "@/data/categories";
+import { Category } from "@/types/categories";
 
-export default function CategoriesWider() {
+export default function CategoriesWider({
+  categories = [],
+}: {
+  categories?: Category[];
+}) {
+  const displayCategories = categories && categories.length > 0 ? categories : [];
+
+  if (displayCategories.length === 0) {
+    return null;
+  }
+
   return (
     <div className="rbt-component-area rbt-categories-area pt--0 pt_sm--16 pt_md--16 rbt-bg-color-white">
       <div className="rbt-full-width-wrapper">
         <div className="row row--12 align-items-stretch">
-          {widerSixCategories.map((category, index) => (
+          {displayCategories.map((category, index) => (
             <div
               key={`${category.title}-${index}`}
               className="col-lg-1 col-md-3 col-sm-4 col-6 mt--12"

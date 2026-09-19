@@ -1,9 +1,17 @@
 import { ExternalLinkAltIcon } from "../../svg-icons";
 import Image from "next/image";
 import Link from "next/link";
-import { classicBentoCategories } from "@/data/categories";
+import { Category } from "@/types/categories";
 
-export default function Categories() {
+export default function Categories({
+  categories = [],
+}: {
+  categories?: Category[];
+}) {
+  const displayCategories =
+    categories && categories.length > 0
+      ? categories.slice(0, 6)
+      : classicBentoCategories;
   return (
     <div className="rbt-component-area rbt-categories-area rbt-section-gap2 rbt-bg-color-white">
       <div className="container">
@@ -30,7 +38,7 @@ export default function Categories() {
           <div className="row row--12 mt_dec--24">
             <div className="col-xl-8 col-lg-12 col-12 mt--24">
               <div className="row row--12 mt_dec--24 rbt-mobile-row">
-                {classicBentoCategories.map((category, index) => (
+                {displayCategories.map((category, index) => (
                   <div
                     key={category.id}
                     className="col-lg-4 col-md-6 col-sm-6 col-6 mt--24"

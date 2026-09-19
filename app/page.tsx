@@ -9,19 +9,28 @@ import Brands from "@/components/homes/home-electronics/Brands";
 import Footer1 from "@/components/footers/Footer1";
 
 import { Metadata } from "next";
+import { fetchStorefrontCategories, fetchStorefrontProducts } from "@/lib/api";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "Transasia - Electronics Store",
   description: "Transasia Electronics Store - High quality gadgets and electronics",
 };
 
-export default function Home() {
+export default async function Home() {
+  const [products, categories] = await Promise.all([
+    fetchStorefrontProducts(),
+    fetchStorefrontCategories(),
+  ]);
+
   return (
     <>
       <Header2 sticky={true} />
       <Hero />
-      <Categories />
-      <Products />
+      <Categories categories={categories} />
+      <Products products={products} />
       <Products2 />
       <Products3 />
       <Products4 />

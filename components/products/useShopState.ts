@@ -23,7 +23,7 @@ export function useShopState({
   products,
 }: UseShopStateOptions) {
   const sourceProducts = (
-    products && products.length ? products : electronicsCardData
+    products !== undefined ? products : []
   ) as Product[];
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,

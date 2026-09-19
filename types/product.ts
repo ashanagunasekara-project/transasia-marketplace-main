@@ -81,6 +81,12 @@ export interface Product {
   imgSrc: string;
 
   // Optional Core Fields
+  description?: string;
+  sku?: string;
+  brandName?: string;
+  categoryName?: string;
+  gallery?: string[];
+  stockLabel?: string;
   oldPrice?: number | null;
   category?: string[];
   rating?: number;
