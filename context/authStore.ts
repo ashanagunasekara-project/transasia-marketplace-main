@@ -44,7 +44,9 @@ interface AuthState {
 
   // Actions
   loginPassword: (identifier: string, password: string) => Promise<{ success: boolean; message?: string }>;
-  sendOtp: (phone: string) => Promise<{ success: boolean; message?: string; debugOtp?: string; isLocked?: boolean }>;
+  sendOtp: (
+    target: string | { phone?: string; wholesaleCustomerId?: string }
+  ) => Promise<{ success: boolean; message?: string; debugOtp?: string; isLocked?: boolean; maskedPhone?: string }>;
   verifyOtp: (phone: string, otpCode: string) => Promise<{ success: boolean; message?: string; isLocked?: boolean }>;
   loginWholesale: (params: { wholesaleCustomerId: string; password?: string; otpCode?: string }) => Promise<{ success: boolean; message?: string }>;
   registerRegular: (data: {
@@ -123,13 +125,14 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      sendOtp: async (phone) => {
+      sendOtp: async (target) => {
         set({ isLoading: true, error: null });
         try {
+          const payload = typeof target === "string" ? { phone: target } : target;
           const res = await fetch(`${API_BASE_URL}/api/auth/send-otp`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ phone }),
+            body: JSON.stringify(payload),
           });
           const data = await res.json();
           set({ isLoading: false, error: data.success ? null : data.message });
@@ -138,6 +141,7 @@ export const useAuthStore = create<AuthState>()(
             message: data.message,
             debugOtp: data.debugOtp,
             isLocked: data.isLocked,
+            maskedPhone: data.maskedPhone,
           };
         } catch (err: any) {
           set({ isLoading: false, error: err.message || "Failed to send code" });

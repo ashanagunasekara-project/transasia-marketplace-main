@@ -1,24 +1,22 @@
 "use client";
 import Nav from "./Nav";
-import Image from "next/image";
 import Link from "next/link";
 import CompareItemLength from "../store/CompareItemLength";
 import CartItemsLength from "../store/CartItemsLength";
 import WishlistLength from "../store/WishlistLength";
 import CartItemsTotal from "../store/CartItemsTotal";
-import CategorySidebarToggler from "./headerComponents/CategorySidebarToggler";
-import SearchDropdownCommon from "./headerComponents/SearchDropdownCommon";
 import SearchWithCategory from "./headerComponents/SearchWithCategory";
-import TopbarSwiper from "./headerComponents/TopbarSwiper";
 import CommonSearchToggler from "./headerComponents/CommonSearchToggler";
 import CartSidebarToggler from "./headerComponents/CartSidebarToggler";
 import TopbarRemover from "./headerComponents/TopbarRemover";
+import TopbarSwiper from "./headerComponents/TopbarSwiper";
+import SearchDropdownCommon from "./headerComponents/SearchDropdownCommon";
 import { useSticky } from "@/hooks/useSticky";
 import MobileMenuToggler from "../action-buttons/MobileMenuToggler";
 import Tooltip from "@/components/common/ui/Tooltip";
 import ModalTriggerButton from "@/components/action-buttons/ModalTriggerButton";
-import CustomerTypeSwitcher from "./headerComponents/CustomerTypeSwitcher";
 import UserAccountMenu from "./headerComponents/UserAccountMenu";
+import StoreLogo from "@/components/common/StoreLogo";
 
 export default function Header2({ sticky = false }) {
   const isSticky = useSticky();
@@ -44,20 +42,9 @@ export default function Header2({ sticky = false }) {
                   <div className="header-info">
                     <div className="logo">
                       <Link href={`/`}>
-                        <Image
-                          alt="Ecommerce Logo Images"
-                          src="/assets/images/logo/logo.webp"
-                          width={1487}
-                          height={334}
-                        />
+                        <StoreLogo />
                       </Link>
                     </div>
-                  </div>
-                  <div className="header-info p-0 d-none d-xl-block ml--28">
-                    {/* Category Dropdown Area */}
-                    {!isStickyActive && (
-                      <CategorySidebarToggler parentClass="rbt-offcanvas-trigger-btn rbt-offcanvas-trigger-transparent-btn rbt-cat-offcanvas-activation rbt-burger-menu-bar" />
-                    )}
                   </div>
                 </div>
               </div>
@@ -84,9 +71,6 @@ export default function Header2({ sticky = false }) {
                         <span>077 339 2727</span>
                       </div>
                     </a>
-                  </li>
-                  <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-2 d-none d-md-flex align-items-center">
-                    <CustomerTypeSwitcher />
                   </li>
                   <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-2 rbt-access-box-has-bg-hover">
                     <UserAccountMenu />
@@ -135,7 +119,12 @@ export default function Header2({ sticky = false }) {
                       <i className="fa-regular fa-location-dot mr--6" />
                       <span>Store Location</span>
                     </Link>
-                    <span className="text-white opacity-50 mlr--12">|</span>
+                    <span
+                      className="text-white opacity-50"
+                      style={{ margin: "0 28px", fontSize: "16px", userSelect: "none" }}
+                    >
+                      |
+                    </span>
                     <Link
                       href="/my-order-history"
                       className="text-portion header-info text-white d-flex align-items-center"
@@ -177,12 +166,7 @@ export default function Header2({ sticky = false }) {
                 <div className="header-info d-xl-block d-none">
                   <div className="logo rbt-logo-height-sm">
                     <Link href={`/`}>
-                      <Image
-                        alt="Ecommerce Logo Images"
-                        src="/assets/images/logo/logo.webp"
-                        width={1487}
-                        height={334}
-                      />
+                      <StoreLogo />
                     </Link>
                   </div>
                 </div>
@@ -198,12 +182,7 @@ export default function Header2({ sticky = false }) {
             <div className="header-info d-xl-none d-block">
               <div className="logo">
                 <Link href={`/`}>
-                  <Image
-                    alt="Ecommerce Logo Images"
-                    src="/assets/images/logo/logo.webp"
-                    width={1487}
-                    height={334}
-                  />
+                  <StoreLogo />
                 </Link>
               </div>
             </div>
@@ -225,9 +204,6 @@ export default function Header2({ sticky = false }) {
                       <CommonSearchToggler />
                     </div>
                   </Tooltip>
-                </li>
-                <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-2 d-none d-sm-flex align-items-center">
-                  <CustomerTypeSwitcher compact />
                 </li>
                 <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-3 d-none d-lg-flex">
                   <UserAccountMenu isIconOnly />

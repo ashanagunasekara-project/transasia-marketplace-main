@@ -105,10 +105,8 @@ export const footerDataStores = {
 };
 
 export const socialLinks = [
-  { icon: "fa-twitter", href: "https://twitter.com/" },
-  { icon: "fa-youtube", href: "https://www.youtube.com/" },
-  { icon: "fa-facebook", href: "https://www.facebook.com/" },
-  { icon: "fa-whatsapp", href: "https://wa.me/" },
-  { icon: "fa-instagram", href: "https://www.instagram.com/" },
-  { icon: "fa-telegram", href: "https://t.me/" },
+  { icon: "fa-facebook-f", href: "https://web.facebook.com/transasia.lk?_rdc=1&_rdr" },
+  { icon: "fa-instagram", href: "https://www.instagram.com/transasia.lk" },
+  { icon: "fa-tiktok", href: "https://www.tiktok.com/@transasia.lk" },
+  { icon: "fa-telegram", href: "https://t.me/94773392727" },
 ];

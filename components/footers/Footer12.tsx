@@ -104,11 +104,8 @@ export default function Footer12() {
           <div className="container">
             <div className="row row--12 mt_dec--24 align-items-center justify-content-between">
               <div className="col-md-6 col-12 mt--24 d-flex justify-content-center justify-content-md-start">
-                <p className="rbt-link-hover text-center text-lg-start">
-                  Copyright {new Date().getFullYear()} ®
-                  <a href="https://rainbowthemes.net/" target="_blank"
-                    rel="noopener noreferrer" className="mr--4">Unimart</a> Nextjs
-                  Template.
+                <p className="text-center text-lg-start mb-0">
+                  Copyright &copy; 2026 Transasia.
                 </p>
               </div>
               <div className="col-md-6 col-12 mt--24">

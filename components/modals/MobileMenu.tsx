@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import StoreLogo from "@/components/common/StoreLogo";
 import { useManagedModalPanel } from "@/hooks/useManagedModalPanel";
 import { usePathname } from "next/navigation";
 import { isPathActive } from "@/lib/nav";
@@ -47,12 +48,7 @@ export default function MobileMenu() {
             <div className="content">
               <div className="logo">
                 <Link href={`/`} onClick={closeMenu}>
-                  <Image
-                    alt="Transasia Logo"
-                    src="/assets/images/logo/logo.webp"
-                    width={1487}
-                    height={334}
-                  />
+                  <StoreLogo />
                 </Link>
               </div>
               <div className="rbt-btn-close">
