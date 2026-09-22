@@ -31,12 +31,21 @@ export default function Footer1() {
                     <p className="b2 title">
                       Free from fixed and mobile phones.
                     </p>
-                    <a
-                      className="contact-link has-lg-fsize"
-                      href="tel:0800300353"
-                    >
-                      0 800 300-353
-                    </a>
+                    <div className="d-flex align-items-center flex-wrap gap-2">
+                      <a
+                        className="contact-link has-lg-fsize"
+                        href="tel:+94112332162"
+                      >
+                        +94 112 332 162
+                      </a>
+                      <span className="contact-link has-lg-fsize text-muted">/</span>
+                      <a
+                        className="contact-link has-lg-fsize"
+                        href="tel:+94773392727"
+                      >
+                        +94 773 392 727
+                      </a>
+                    </div>
                   </div>
                   <div className="rbt-quick-contact-info">
                     <p className="b2 title">Call Center hours</p>
@@ -71,7 +80,7 @@ export default function Footer1() {
                 </div>
               ))}
             </div>
-            <div className="row pb--40 pb_sm--24">
+            <div className="row pb--40 pb_sm--24 d-none">
               <div className="col-12">
                 <Link href={`/shop`}>
                   <Image
@@ -112,7 +121,7 @@ export default function Footer1() {
                 </div>
               </div>
               <div className="col-lg-6 mt--20">
-                <div className="rbt-app-store-area justify-content-center justify-content-lg-end">
+                <div className="rbt-app-store-area justify-content-center justify-content-lg-end d-none">
                   <p className="title">Download App :</p>
                   <ul className="rbt-app-store-list">
                     <li>

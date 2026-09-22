@@ -120,11 +120,10 @@ export default function Signin() {
                   <div className="d-flex rounded p--4 mb--16 bg-light gap-2">
                     <button
                       type="button"
-                      className={`rbt-btn rbt-btn-sm flex-grow-1 ${
-                        customerType === "retail"
-                          ? "rbt-btn-gradient text-white"
-                          : "bg-transparent text-dark border-0"
-                      }`}
+                      className={`rbt-btn rbt-btn-sm flex-grow-1 ${customerType === "retail"
+                        ? "rbt-btn-gradient text-white"
+                        : "bg-transparent text-dark border-0"
+                        }`}
                       style={{ borderRadius: "8px", fontWeight: 600 }}
                       onClick={() => {
                         setCustomerType("retail");
@@ -136,11 +135,10 @@ export default function Signin() {
                     </button>
                     <button
                       type="button"
-                      className={`rbt-btn rbt-btn-sm flex-grow-1 ${
-                        customerType === "wholesale"
-                          ? "rbt-btn-gradient text-white"
-                          : "bg-transparent text-dark border-0"
-                      }`}
+                      className={`rbt-btn rbt-btn-sm flex-grow-1 ${customerType === "wholesale"
+                        ? "rbt-btn-gradient text-white"
+                        : "bg-transparent text-dark border-0"
+                        }`}
                       style={{ borderRadius: "8px", fontWeight: 600 }}
                       onClick={() => {
                         setCustomerType("wholesale");
@@ -166,9 +164,8 @@ export default function Signin() {
                         <ul className="nav nav-tabs" role="tablist">
                           <li className="nav-item" role="presentation">
                             <button
-                              className={`nav-link${
-                                retailMethod === "otp" ? " active" : ""
-                              }`}
+                              className={`nav-link${retailMethod === "otp" ? " active" : ""
+                                }`}
                               type="button"
                               onClick={() => {
                                 setRetailMethod("otp");
@@ -181,9 +178,8 @@ export default function Signin() {
                           </li>
                           <li className="nav-item" role="presentation">
                             <button
-                              className={`nav-link${
-                                retailMethod === "password" ? " active" : ""
-                              }`}
+                              className={`nav-link${retailMethod === "password" ? " active" : ""
+                                }`}
                               type="button"
                               onClick={() => {
                                 setRetailMethod("password");
@@ -320,9 +316,8 @@ export default function Signin() {
                                 aria-label="Toggle password"
                               >
                                 <i
-                                  className={`fa-regular ${
-                                    showPassword ? "fa-eye-slash" : "fa-eye"
-                                  }`}
+                                  className={`fa-regular ${showPassword ? "fa-eye-slash" : "fa-eye"
+                                    }`}
                                 />
                               </button>
                             </div>
@@ -344,7 +339,7 @@ export default function Signin() {
                     <div className="wholesale-login-block">
                       <div className="alert alert-secondary p--10 rounded mb--16 b4">
                         <i className="fa-solid fa-info-circle mr--6 text-primary" />
-                        Enter your <strong>Wholesale Customer ID (e.g. WS-10025)</strong> or registered phone number.
+                        Enter your <strong>Wholesale Customer ID (e.g. WS-10025)</strong>.
                       </div>
                       <form onSubmit={handleWholesaleLogin}>
                         <div className="rbt-input-field-grp mb--12">
@@ -352,12 +347,12 @@ export default function Signin() {
                             className="rbt-field-label"
                             htmlFor="page_ws_id"
                           >
-                            Wholesale Customer ID / Phone
+                            Wholesale Customer ID
                             <span className="rbt-text-color-danger">*</span>
                           </label>
                           <input
                             className="rbt-input-field"
-                            placeholder="e.g. WS-10025 or 0719876543"
+                            placeholder="e.g. WS-10025"
                             type="text"
                             id="page_ws_id"
                             value={wholesaleId}

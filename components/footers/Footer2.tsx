@@ -94,7 +94,7 @@ export default function Footer2() {
                 </div>
               </div>
             ))}
-            <div className="col-xl-3 col-lg-5 col-md-6 col-sm-6 col-12 mt--24">
+            <div className="col-xl-3 col-lg-5 col-md-6 col-sm-6 col-12 mt--24 d-none">
               <div className="footer-widget">
                 <h5 className="ft-title rbt-text-color-white">
                   Download App on Mobile:

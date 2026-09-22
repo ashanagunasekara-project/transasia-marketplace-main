@@ -93,11 +93,10 @@ export default function CustomerTypeSwitcher({
         type="button"
         onClick={handleToggle}
         disabled={isLoading || localLoading}
-        className={`rbt-btn rbt-btn-sm d-inline-flex align-items-center gap-2 transition-all ${
-          isWholesaleActive
-            ? "rbt-btn-gradient text-white shadow-sm"
-            : "rbt-btn-border bg-white text-dark"
-        }`}
+        className={`rbt-btn rbt-btn-sm d-inline-flex align-items-center gap-2 transition-all ${isWholesaleActive
+          ? "rbt-btn-gradient text-white shadow-sm"
+          : "rbt-btn-border bg-white text-dark"
+          }`}
         style={{
           borderRadius: "50px",
           padding: compact ? "4px 12px" : "6px 16px",
@@ -115,9 +114,8 @@ export default function CustomerTypeSwitcher({
         }
       >
         <i
-          className={`fa-solid ${
-            isWholesaleActive ? "fa-tags text-warning" : "fa-store text-primary"
-          }`}
+          className={`fa-solid ${isWholesaleActive ? "fa-tags text-warning" : "fa-store text-primary"
+            }`}
         />
         <span>
           {isWholesaleActive ? "Wholesale View" : "Retail View"}

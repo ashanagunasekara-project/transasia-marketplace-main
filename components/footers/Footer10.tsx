@@ -42,7 +42,7 @@ export default function Footer10() {
                   designed to make online shopping simple, secure, and
                   convenient.
                 </p>
-                <div className="footer-widget mt--24">
+                <div className="footer-widget mt--24 d-none">
                   <h5 className="ft-title mb--0">Download App on Mobile:</h5>
                   <div className="rbt-app-store-area mt--16">
                     <ul className="rbt-app-store-list">
@@ -92,10 +92,16 @@ export default function Footer10() {
                             Need help? Call now!
                           </p>
                           <a
-                            href="tel:(500)80018588-5"
-                            className="rbt-text-color-heading rbt-text-bold rbt-link-hover"
+                            href="tel:+94112332162"
+                            className="rbt-text-color-heading rbt-text-bold rbt-link-hover d-block mb--4"
                           >
-                            (500) 8001 8588-5
+                            +94 112 332 162
+                          </a>
+                          <a
+                            href="tel:+94773392727"
+                            className="rbt-text-color-heading rbt-text-bold rbt-link-hover d-block"
+                          >
+                            +94 773 392 727
                           </a>
                         </div>
                       </div>
