@@ -38,6 +38,7 @@ const CookiesConsent = () => {
           alt="Cookie Icon"
           width={40}
           height={40}
+          style={{ width: "auto", height: "auto" }}
         />
       </div>
       <div className="rbt-content">

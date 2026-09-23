@@ -77,6 +77,7 @@ export default function Categories({
                               src={category.imgSrc}
                               width={93}
                               height={93}
+                              style={{ width: "auto", height: "auto", objectFit: "contain" }}
                             />
                           </Link>
                           <Link

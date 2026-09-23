@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import StoreLogo from "@/components/common/StoreLogo";
 import {
   footerData,
   footerDataB2B,
@@ -15,7 +16,7 @@ export default function Footer10() {
           <div className="row">
             <div className="col-12">
               <div className="rbt-watermark-text rbt-watermark-color-var-1 text-center">
-                <span>Follow Us@Unimart</span>
+                <span>Follow Us@Transasia</span>
               </div>
             </div>
           </div>
@@ -27,20 +28,15 @@ export default function Footer10() {
           <div className="row row--16 justify-content-between pt--32 rbt-footer-nav-wrapper">
             <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt--24">
               <div className="footer-widget">
-                <div className="logo">
+                <div className="logo" style={{ maxWidth: "200px" }}>
                   <Link href={`/`}>
-                    <Image
-                      alt="Unimart Logo"
-                      src="/assets/images/logo/logo.webp"
-                      width={1487}
-                      height={334}
-                    />
+                    <StoreLogo width={200} height={60} />
                   </Link>
                 </div>
                 <p className="description pr--52 pr_sm--0">
-                  Unimart is a modern and user-friendly e-commerce platform
-                  designed to make online shopping simple, secure, and
-                  convenient.
+                  Transasia is a modern and trusted electronics store platform
+                  offering quality tech products and accessories with exceptional
+                  service and convenience.
                 </p>
                 <div className="footer-widget mt--24 d-none">
                   <h5 className="ft-title mb--0">Download App on Mobile:</h5>
@@ -192,16 +188,7 @@ export default function Footer10() {
             </div>
             <div className="col-xxl-3 col-xl-4 col-lg-4 col-md-12 col-12 mt--24">
               <p className="rbt-link-hover text-center text-lg-start">
-                Copyright {new Date().getFullYear()} ®
-                <a
-                  href="https://rainbowthemes.net/"
-                  className="rbt-text-bold rbt-text-color-heading mr--4"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Unimart
-                </a>
-                Nextjs Template.
+                Copyright © {new Date().getFullYear()} Transasia.
               </p>
             </div>
             <div className="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12 mt--24">
