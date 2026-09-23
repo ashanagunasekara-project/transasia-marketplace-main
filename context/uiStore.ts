@@ -156,10 +156,12 @@ export const useUiStore = create<UiState>((set, _get) => ({
   activeMember: null,
   toggleCommonSearch: () =>
     set((s) => ({ commonSearchOpen: !s.commonSearchOpen })),
-  closeCommonSearch: () => set({ commonSearchOpen: false }),
+  closeCommonSearch: () =>
+    set((s) => (s.commonSearchOpen ? { commonSearchOpen: false } : s)),
 
   toggleSearch: () => set((s) => ({ searchOpen: !s.searchOpen })),
-  closeSearch: () => set({ searchOpen: false }),
+  closeSearch: () =>
+    set((s) => (s.searchOpen ? { searchOpen: false } : s)),
 
   showToasterCompare: () => {
     set({ toasterCompareVisible: true });

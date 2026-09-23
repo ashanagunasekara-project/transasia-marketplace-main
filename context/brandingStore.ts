@@ -22,8 +22,12 @@ export const useBrandingStore = create<BrandingState>((set, get) => ({
       if (res.ok) {
         const json = await res.json();
         if (json.success && json.data) {
+          let resolvedLogo = json.data.logoUrl || "/assets/images/logo/logo.webp";
+          if (resolvedLogo.startsWith("/uploads/")) {
+            resolvedLogo = `${API_BASE_URL}${resolvedLogo}`;
+          }
           set({
-            logoUrl: json.data.logoUrl || "/assets/images/logo/logo.webp",
+            logoUrl: resolvedLogo,
             storeName: json.data.storeName || "Transasia",
             isLoaded: true,
           });

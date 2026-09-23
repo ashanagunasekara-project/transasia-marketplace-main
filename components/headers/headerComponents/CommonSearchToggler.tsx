@@ -11,9 +11,11 @@ export default function CommonSearchToggler() {
     closeCommonSearch,
   } = useUiElement();
   useEffect(() => {
-    window.addEventListener("scroll", closeCommonSearch);
-    return () => window.removeEventListener("scroll", closeCommonSearch);
-  }, [closeCommonSearch]);
+    if (!commonSearchOpen) return;
+    const onScroll = () => closeCommonSearch();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [commonSearchOpen, closeCommonSearch]);
   return (
     <button
       type="button"

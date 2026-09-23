@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import { useBrandingStore } from "@/context/brandingStore";
+import { resolveImageUrl } from "@/lib/api";
 
 interface StoreLogoProps {
   width?: number;
@@ -15,9 +15,9 @@ export default function StoreLogo({
   width = 1487,
   height = 334,
   className = "",
-  priority = false,
 }: StoreLogoProps) {
   const { logoUrl, storeName, isLoaded, fetchBranding } = useBrandingStore();
+  const [imgSrc, setImgSrc] = useState<string>("/assets/images/logo/logo.webp");
 
   useEffect(() => {
     if (!isLoaded) {
@@ -25,18 +25,23 @@ export default function StoreLogo({
     }
   }, [isLoaded, fetchBranding]);
 
-  // If logo is remote URL or relative local path
-  const isRemote = logoUrl.startsWith("http://") || logoUrl.startsWith("https://");
+  useEffect(() => {
+    if (logoUrl) {
+      setImgSrc(resolveImageUrl(logoUrl, "/assets/images/logo/logo.webp"));
+    }
+  }, [logoUrl]);
 
   return (
-    <Image
+    <img
       alt={`${storeName} Logo`}
-      src={logoUrl || "/assets/images/logo/logo.webp"}
+      src={imgSrc}
       width={width}
       height={height}
       className={className}
-      priority={priority}
-      unoptimized={isRemote}
+      onError={() => {
+        setImgSrc("/assets/images/logo/logo.webp");
+      }}
+      style={{ maxHeight: "100%", width: "auto", objectFit: "contain" }}
     />
   );
 }

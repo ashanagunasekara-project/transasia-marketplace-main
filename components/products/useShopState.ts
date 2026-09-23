@@ -22,9 +22,12 @@ export function useShopState({
   itemPerPage = 0,
   products,
 }: UseShopStateOptions) {
-  const sourceProducts = (
-    products !== undefined ? products : []
-  ) as Product[];
+  const sourceProducts = useMemo(() => {
+    if (products && products.length > 0) return products;
+    if (products !== undefined) return products;
+    return electronicsCardData;
+  }, [products]);
+
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
     filtered: sourceProducts,
@@ -37,8 +40,20 @@ export function useShopState({
     tags: defaultTags,
   });
 
-  useEffect(() => {
-    dispatch({ type: "FILTER_PRODUCTS", payload: sourceProducts });
+  const filterKey = useMemo(() => {
+    return [
+      state.brands.join(","),
+      state.categories.join(","),
+      state.colors.join(","),
+      state.size,
+      state.activeFilterOnSale ? "1" : "0",
+      state.activeFilterInStock ? "1" : "0",
+      state.services.join(","),
+      state.ratings.join(","),
+      `${state.price[0]}-${state.price[1]}`,
+      state.tags.join(","),
+      sourceProducts.length,
+    ].join("|");
   }, [
     state.brands,
     state.categories,
@@ -50,8 +65,12 @@ export function useShopState({
     state.ratings,
     state.price,
     state.tags,
-    sourceProducts,
+    sourceProducts.length,
   ]);
+
+  useEffect(() => {
+    dispatch({ type: "FILTER_PRODUCTS", payload: sourceProducts });
+  }, [filterKey, sourceProducts]);
 
   useEffect(() => {
     dispatch({ type: "SORT_PRODUCTS" });

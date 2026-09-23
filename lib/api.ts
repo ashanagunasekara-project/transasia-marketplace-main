@@ -4,8 +4,8 @@ import { Category } from "@/types/categories";
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-export function resolveImageUrl(url?: string | null): string {
-  if (!url) return "/assets/images/catagory-img/banner-cat-01.webp";
+export function resolveImageUrl(url?: string | null, fallback = "/assets/images/placeholder.webp"): string {
+  if (!url) return fallback;
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
   if (url.startsWith("/uploads/")) return `${API_BASE_URL}${url}`;
   if (url.startsWith("uploads/")) return `${API_BASE_URL}/${url}`;
