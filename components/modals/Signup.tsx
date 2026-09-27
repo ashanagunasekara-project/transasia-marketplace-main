@@ -136,11 +136,10 @@ export default function Signup() {
                   <div className="d-flex rounded p--4 mb--16 bg-light gap-2">
                     <button
                       type="button"
-                      className={`rbt-btn rbt-btn-sm flex-grow-1 ${
-                        customerType === "retail"
-                          ? "rbt-btn-gradient text-white"
-                          : "bg-transparent text-dark border-0"
-                      }`}
+                      className={`rbt-btn rbt-btn-sm flex-grow-1 ${customerType === "retail"
+                        ? "rbt-btn-gradient text-white"
+                        : "bg-transparent text-dark border-0"
+                        }`}
                       style={{ borderRadius: "8px", fontWeight: 600 }}
                       onClick={() => {
                         setCustomerType("retail");
@@ -152,11 +151,10 @@ export default function Signup() {
                     </button>
                     <button
                       type="button"
-                      className={`rbt-btn rbt-btn-sm flex-grow-1 ${
-                        customerType === "wholesale"
-                          ? "rbt-btn-gradient text-white"
-                          : "bg-transparent text-dark border-0"
-                      }`}
+                      className={`rbt-btn rbt-btn-sm flex-grow-1 ${customerType === "wholesale"
+                        ? "rbt-btn-gradient text-white"
+                        : "bg-transparent text-dark border-0"
+                        }`}
                       style={{ borderRadius: "8px", fontWeight: 600 }}
                       onClick={() => {
                         setCustomerType("wholesale");
@@ -333,9 +331,8 @@ export default function Signup() {
                           aria-label="Toggle password"
                         >
                           <i
-                            className={`fa-regular ${
-                              showPassword ? "fa-eye-slash" : "fa-eye"
-                            }`}
+                            className={`fa-regular ${showPassword ? "fa-eye-slash" : "fa-eye"
+                              }`}
                           />
                         </button>
                       </div>
@@ -363,9 +360,8 @@ export default function Signup() {
                           aria-label="Toggle password"
                         >
                           <i
-                            className={`fa-regular ${
-                              showConfirmPassword ? "fa-eye-slash" : "fa-eye"
-                            }`}
+                            className={`fa-regular ${showConfirmPassword ? "fa-eye-slash" : "fa-eye"
+                              }`}
                           />
                         </button>
                       </div>
@@ -399,8 +395,8 @@ export default function Signup() {
                       {isLoading
                         ? "Registering..."
                         : customerType === "wholesale"
-                        ? "Register Wholesale Account"
-                        : "Create Retail Account"}
+                          ? "Register Wholesale Account"
+                          : "Create Retail Account"}
                     </button>
                   </form>
 

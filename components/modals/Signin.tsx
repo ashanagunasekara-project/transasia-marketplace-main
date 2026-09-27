@@ -579,7 +579,7 @@ export default function Signin() {
                       openModalName="signupModal"
                       className="rbt-switch-btn ml--6 text-primary font-weight-bold"
                     >
-                      <span>Create Account / Register Wholesale</span>
+                      <span>Sign Up</span>
                     </ModalTriggerButton>
                   </div>
                 </div>

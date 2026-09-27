@@ -552,7 +552,7 @@ export default function Signin() {
                   <div className="rbt-login-system-switch rbt-link-hover mt--16 text-center">
                     Don&apos;t have an account?{" "}
                     <Link className="rbt-switch-btn ml--4 text-primary font-weight-bold" href={`/signup`}>
-                      <span>Create an account / Register Wholesale</span>
+                      <span>Sign Up</span>
                     </Link>
                   </div>
                 </div>

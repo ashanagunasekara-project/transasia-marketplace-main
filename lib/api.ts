@@ -4,8 +4,8 @@ import { Category } from "@/types/categories";
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-export function resolveImageUrl(url?: string | null, fallback = "/assets/images/placeholder.webp"): string {
-  if (!url) return fallback;
+export function resolveImageUrl(url?: string | null): string {
+  if (!url) return "/assets/images/catagory-img/banner-cat-01.webp";
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
   if (url.startsWith("/uploads/")) return `${API_BASE_URL}${url}`;
   if (url.startsWith("uploads/")) return `${API_BASE_URL}/${url}`;
@@ -62,11 +62,6 @@ export function mapBackendProductToStorefront(item: BackendProduct): Product {
   const resolvedPrimaryImg = resolveImageUrl(primaryImg);
   const resolvedHoverImg = hoverImg ? resolveImageUrl(hoverImg) : resolvedPrimaryImg;
 
-  const allImages =
-    item.images && item.images.length > 0
-      ? item.images.map((img) => resolveImageUrl(img.url))
-      : [resolvedPrimaryImg];
-
   const categoryTitle = item.category?.title || "Electronics";
   const brandName = item.brand?.name || "Transasia";
 
@@ -80,12 +75,6 @@ export function mapBackendProductToStorefront(item: BackendProduct): Product {
   return {
     id: item.id,
     title: item.title,
-    description: item.description || "",
-    sku: item.sku || "",
-    brandName: brandName,
-    categoryName: categoryTitle,
-    gallery: allImages,
-    stockLabel: item.stockLabel || `${item.stockQuantity} Available`,
     price: Number(item.price),
     oldPrice: hasDiscount ? Number(item.retailPrice) : null,
     discount: discountPct,
@@ -102,14 +91,6 @@ export function mapBackendProductToStorefront(item: BackendProduct): Product {
     reviewCount: 15,
     demoTab: ["best-sellers", "new-arrivals", "on-sale", "view-all"],
     badges: [
-      ...(item.isWholesalePricingApplied
-        ? [
-            {
-              text: "Wholesale Price",
-              bg: "rbt-product-badge-bg-primary",
-            },
-          ]
-        : []),
       {
         text: isInStock ? "In Stock" : "Out of Stock",
         bg: isInStock ? "rbt-product-badge-bg-green" : "rbt-product-badge-bg-gray",
@@ -165,22 +146,10 @@ export function mapBackendCategoryToStorefront(cat: BackendCategory, index: numb
   };
 }
 
-export async function fetchStorefrontProducts(options?: {
-  token?: string | null;
-  viewMode?: string;
-}): Promise<Product[]> {
+export async function fetchStorefrontProducts(): Promise<Product[]> {
   try {
-    const headers: Record<string, string> = {};
-    if (options?.token) {
-      headers["Authorization"] = `Bearer ${options.token}`;
-    }
-    if (options?.viewMode) {
-      headers["x-customer-view"] = options.viewMode;
-    }
-
     const res = await fetch(`${API_BASE_URL}/api/products?limit=100`, {
       cache: "no-store",
-      headers,
     });
     if (!res.ok) {
       console.error(`Failed to fetch products: ${res.status} ${res.statusText}`);
@@ -214,24 +183,11 @@ export async function fetchStorefrontCategories(): Promise<Category[]> {
 }
 
 export async function fetchStorefrontProductByIdOrSlug(
-  idOrSlug: string,
-  options?: {
-    token?: string | null;
-    viewMode?: string;
-  }
+  idOrSlug: string
 ): Promise<Product | null> {
   try {
-    const headers: Record<string, string> = {};
-    if (options?.token) {
-      headers["Authorization"] = `Bearer ${options.token}`;
-    }
-    if (options?.viewMode) {
-      headers["x-customer-view"] = options.viewMode;
-    }
-
     const res = await fetch(`${API_BASE_URL}/api/products/${encodeURIComponent(idOrSlug)}`, {
       cache: "no-store",
-      headers,
     });
     if (!res.ok) {
       return null;
@@ -244,3 +200,88 @@ export async function fetchStorefrontProductByIdOrSlug(
     return null;
   }
 }
+
+// ----------------------------------------------------
+// Storefront Banner APIs
+// ----------------------------------------------------
+
+export interface StorefrontHeroBanner {
+  id: string;
+  subtitle?: string;
+  title: string;
+  oldPrice?: number | string;
+  price: number | string;
+  savePercent?: string;
+  imgSrc: string;
+  mobileImgSrc?: string;
+  width?: number;
+  height?: number;
+  link?: string;
+  btnText?: string;
+  hasCurvedPortion?: boolean;
+  order?: number;
+}
+
+export interface StorefrontHeroResponse {
+  data: StorefrontHeroBanner[];
+  autoShift: boolean;
+  autoShiftDelay: number;
+}
+
+export async function fetchStorefrontHeroBanners(): Promise<StorefrontHeroResponse> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/banners/hero`, {
+      cache: "no-store",
+    });
+    if (!res.ok) throw new Error("Failed to fetch hero banners");
+    const json = await res.json();
+    return {
+      data: json.data || [],
+      autoShift: json.autoShift ?? true,
+      autoShiftDelay: json.autoShiftDelay ?? 3500,
+    };
+  } catch (err) {
+    return {
+      data: [],
+      autoShift: true,
+      autoShiftDelay: 3500,
+    };
+  }
+}
+
+export interface StorefrontPopularCategory {
+  id: string;
+  title: string;
+  imgSrc: string;
+  link: string;
+  subCategories?: Array<{ title: string; href?: string }>;
+}
+
+export interface StorefrontDealBanner {
+  subtitle: string;
+  title: string;
+  secondaryTitle: string;
+  imgSrc: string;
+  link: string;
+}
+
+export interface StorefrontPopularCategoriesResponse {
+  sectionTitle: string;
+  viewAllLink: string;
+  categories: StorefrontPopularCategory[];
+  dealBanner: StorefrontDealBanner;
+}
+
+export async function fetchStorefrontPopularCategories(): Promise<StorefrontPopularCategoriesResponse | null> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/banners/popular-categories`, {
+      cache: "no-store",
+    });
+    if (!res.ok) throw new Error("Failed to fetch popular categories");
+    const json = await res.json();
+    return json.data || null;
+  } catch (err) {
+    return null;
+  }
+}
+
