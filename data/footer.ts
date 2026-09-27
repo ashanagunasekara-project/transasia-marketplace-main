@@ -4,7 +4,7 @@ export const footerData = [
     items: [
       { href: "/account-info", label: "Account Info" },
       { href: "/my-order-history", label: "Your Orders" },
-      { href: "/return-policy", label: "Returns & Replacements" },
+      //{ href: "/return-policy", label: "Returns & Replacements" },
       { href: "/my-order-history", label: "Shipping Rates & Policies" },
       { href: "/return-policy", label: "Refund and Returns Policy" },
       { href: "/privacy-policy", label: "Privacy Policy" },
