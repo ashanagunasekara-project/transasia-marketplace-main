@@ -59,7 +59,10 @@ export default async function Home() {
         powerUpBanner={promotionsData?.powerUpBanner}
         showTodaysBestDeals={promotionsData?.showTodaysBestDeals}
       />
-      <Products3 highlightsBanner={promotionsData?.highlightsBanner} />
+      <Products3
+        highlightsBanner={promotionsData?.highlightsBanner}
+        highlightsProducts={promotionsData?.highlightsProducts}
+      />
       {/* Featured Products (Products4) removed per user request */}
       <Brands />
       <Footer1 />

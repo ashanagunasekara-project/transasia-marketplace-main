@@ -335,6 +335,18 @@ export async function fetchStorefrontTopbar(): Promise<StorefrontTopbarResponse>
   }
 }
 
+export interface StorefrontHighlightProductItem {
+  id: string | number;
+  title: string;
+  price: number;
+  oldPrice?: number | null;
+  imgSrc: string;
+  mobileImgSrc?: string;
+  rating?: number;
+  ratingCount?: number;
+  link?: string;
+}
+
 export interface StorefrontPromotionalBannerItem {
   sectionTitle?: string;
   subtitle: string;
@@ -350,6 +362,7 @@ export interface StorefrontPromotionalBannerItem {
 export interface StorefrontPromotionsResponse {
   powerUpBanner: StorefrontPromotionalBannerItem;
   highlightsBanner: StorefrontPromotionalBannerItem;
+  highlightsProducts?: StorefrontHighlightProductItem[];
   showTodaysBestDeals: boolean;
 }
 
