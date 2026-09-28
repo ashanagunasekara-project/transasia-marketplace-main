@@ -17,8 +17,15 @@ import Tooltip from "@/components/common/ui/Tooltip";
 import ModalTriggerButton from "@/components/action-buttons/ModalTriggerButton";
 import UserAccountMenu from "./headerComponents/UserAccountMenu";
 import StoreLogo from "@/components/common/StoreLogo";
+import type { StorefrontTopbarResponse } from "@/lib/api";
 
-export default function Header2({ sticky = false }) {
+export default function Header2({
+  sticky = false,
+  topbarData,
+}: {
+  sticky?: boolean;
+  topbarData?: StorefrontTopbarResponse;
+}) {
   const isSticky = useSticky();
   const isStickyActive = sticky && isSticky;
   const stickyClass = isStickyActive ? " rbt-sticky" : "";
@@ -149,7 +156,10 @@ export default function Header2({ sticky = false }) {
               <div className="row justify-content-center">
                 <div className="col-lg-6">
                   <div className="inner justify-content-center">
-                    <TopbarSwiper />
+                    <TopbarSwiper
+                      initialSlides={topbarData?.slides}
+                      initialDelay={topbarData?.delay}
+                    />
                   </div>
                 </div>
               </div>

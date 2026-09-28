@@ -2,31 +2,54 @@
 import { Autoplay, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
+import type { StorefrontTopbarSlide } from "@/lib/api";
 
-const slideTexts = [
-  "The best-selling watch —all under $100.",
-  "The best-selling camera —all under $100.",
-  "The best-selling mobile —all under $100.",
+const defaultSlides: StorefrontTopbarSlide[] = [
+  {
+    id: "1",
+    text: "The best-selling watch —all under $100.",
+    linkText: "Shop Now",
+    link: "/shop",
+  },
+  {
+    id: "2",
+    text: "The best-selling camera —all under $100.",
+    linkText: "Shop Now",
+    link: "/shop",
+  },
+  {
+    id: "3",
+    text: "The best-selling mobile —all under $100.",
+    linkText: "Shop Now",
+    link: "/shop",
+  },
 ];
 
 export default function TopbarSwiper({
   position = "center",
   color = "white",
   hasFancyText = false,
+  initialSlides,
+  initialDelay = 3500,
 }: {
   position?: string;
   color?: string;
   hasFancyText?: boolean;
+  initialSlides?: StorefrontTopbarSlide[];
+  initialDelay?: number;
 }) {
+  const slides =
+    initialSlides && initialSlides.length > 0 ? initialSlides : defaultSlides;
+
   return (
     <Swiper
       className="rbt-text-swiper-container rbt-arrow-vertical"
-      loop
+      loop={slides.length > 1}
       slidesPerView={1}
       direction="vertical"
       effect="slide"
       autoplay={{
-        delay: 2000,
+        delay: initialDelay || 3500,
         reverseDirection: true,
         disableOnInteraction: false,
       }}
@@ -36,25 +59,35 @@ export default function TopbarSwiper({
       }}
       modules={[Navigation, Autoplay]}
     >
-      {slideTexts.map((text, index) => (
-        <SwiperSlide key={index} className="swiper-slide">
+      {slides.map((item, index) => (
+        <SwiperSlide key={item.id || index} className="swiper-slide">
           <div
             className={`rbt-fancy-item fancy-menu-text fancy-menu-${position}`}
           >
-            <span className={`mr--4 rbt-fancy-text ${hasFancyText ? "rbt-fancy-text" : ""} rbt-text-color-${color}`}>
+            <span
+              className={`mr--4 rbt-fancy-text ${
+                hasFancyText ? "rbt-fancy-text" : ""
+              } rbt-text-color-${color}`}
+            >
               <i className="fa-sharp fa-solid fa-bolt"></i>
             </span>
             <span
-              className={`rbt-fancy-text ${hasFancyText ? "rbt-fancy-text" : ""} rbt-text-color-${color}`}
+              className={`rbt-fancy-text ${
+                hasFancyText ? "rbt-fancy-text" : ""
+              } rbt-text-color-${color}`}
             >
-              {text}
+              {item.text}
             </span>
-            <Link
-              className={` ml--8 rbt-fancy-text rbt-fancy-link ${hasFancyText ? "rbt-fancy-text" : ""} rbt-text-color-${color}`}
-              href="/shop"
-            >
-              Shop Now
-            </Link>
+            {item.linkText && (
+              <Link
+                className={` ml--8 rbt-fancy-text rbt-fancy-link ${
+                  hasFancyText ? "rbt-fancy-text" : ""
+                } rbt-text-color-${color}`}
+                href={item.link || "/shop"}
+              >
+                {item.linkText}
+              </Link>
+            )}
           </div>
         </SwiperSlide>
       ))}

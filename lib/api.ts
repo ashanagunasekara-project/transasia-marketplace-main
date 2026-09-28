@@ -285,3 +285,108 @@ export async function fetchStorefrontPopularCategories(): Promise<StorefrontPopu
   }
 }
 
+export interface StorefrontTopbarSlide {
+  id: string;
+  text: string;
+  linkText: string;
+  link: string;
+}
+
+export interface StorefrontTopbarResponse {
+  slides: StorefrontTopbarSlide[];
+  delay: number;
+}
+
+export async function fetchStorefrontTopbar(): Promise<StorefrontTopbarResponse> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/banners/topbar`, {
+      cache: "no-store",
+    });
+    if (!res.ok) throw new Error("Failed to fetch topbar ticker");
+    const json = await res.json();
+    return {
+      slides: json.data?.slides || [],
+      delay: json.data?.delay || 3500,
+    };
+  } catch (err) {
+    return {
+      slides: [
+        {
+          id: "1",
+          text: "The best-selling watch —all under $100.",
+          linkText: "Shop Now",
+          link: "/shop",
+        },
+        {
+          id: "2",
+          text: "The best-selling camera —all under $100.",
+          linkText: "Shop Now",
+          link: "/shop",
+        },
+        {
+          id: "3",
+          text: "The best-selling mobile —all under $100.",
+          linkText: "Shop Now",
+          link: "/shop",
+        },
+      ],
+      delay: 3500,
+    };
+  }
+}
+
+export interface StorefrontPromotionalBannerItem {
+  sectionTitle?: string;
+  subtitle: string;
+  titleBold: string;
+  titleRegular: string;
+  secondarySubtitle: string;
+  imgSrc: string;
+  mobileImgSrc?: string;
+  btnText: string;
+  link: string;
+}
+
+export interface StorefrontPromotionsResponse {
+  powerUpBanner: StorefrontPromotionalBannerItem;
+  highlightsBanner: StorefrontPromotionalBannerItem;
+  showTodaysBestDeals: boolean;
+}
+
+export async function fetchStorefrontPromotions(): Promise<StorefrontPromotionsResponse> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/banners/promotions`, {
+      cache: "no-store",
+    });
+    if (!res.ok) throw new Error("Failed to fetch promotional banners");
+    const json = await res.json();
+    return json.data;
+  } catch (err) {
+    return {
+      powerUpBanner: {
+        subtitle: "Power Up Deals",
+        titleBold: "NEW DEVICE",
+        titleRegular: "COMING SOON",
+        secondarySubtitle: "Land major deals",
+        imgSrc: "/assets/images/product-banner/product-banner-img-08.webp",
+        mobileImgSrc: "/assets/images/product-banner/product-banner-img-08.webp",
+        btnText: "SHOP NOW",
+        link: "/shop",
+      },
+      highlightsBanner: {
+        sectionTitle: "This Week’s Highlights",
+        subtitle: "Power Up Deals",
+        titleBold: "THE NEXT GEN",
+        titleRegular: "OF SMARTPHONE",
+        secondarySubtitle: "Grab huge savings",
+        imgSrc: "/assets/images/product-banner/product-banner-img-09.webp",
+        mobileImgSrc: "/assets/images/product-banner/product-banner-img-09.webp",
+        btnText: "SHOP NOW",
+        link: "/shop",
+      },
+      showTodaysBestDeals: false,
+    };
+  }
+}
+
+

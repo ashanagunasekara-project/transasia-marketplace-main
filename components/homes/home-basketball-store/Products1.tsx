@@ -34,8 +34,8 @@ export default function Products1() {
               className="col-lg-3 col-xl-3 col-xxl-3 col-md-6 col-sm-6 col-6 mt--32"
             >
               <ProductCard6 product={product}
-                      animationOrder={i + 1}
-                    />
+                animationOrder={i + 1}
+              />
             </div>
           ))}
           {/* End Single Card  */}

@@ -2,11 +2,34 @@
 import { WaveThinIcon } from "../../svg-icons";
 import MagneticButton from "@/components/common/ui/MagneticButton";
 import { electronicsProducts } from "@/data/products/electronics";
-import Image from "next/image";
 import Link from "next/link";
 import ProductSmallCard from "@/components/product-cards/ProductCardElectronicsList";
+import {
+  resolveImageUrl,
+  type StorefrontPromotionalBannerItem,
+} from "@/lib/api";
 
-export default function Products3() {
+const defaultHighlightsBanner: StorefrontPromotionalBannerItem = {
+  sectionTitle: "This Week’s Highlights",
+  subtitle: "Power Up Deals",
+  titleBold: "Red Camera",
+  titleRegular: "Plus",
+  secondarySubtitle: "Holiday Cheers",
+  imgSrc: "/assets/images/product-banner/product-banner-img-02.webp",
+  mobileImgSrc: "/assets/images/product-banner/product-banner-img-02.webp",
+  btnText: "SHOP NOW",
+  link: "/shop",
+};
+
+export default function Products3({
+  highlightsBanner,
+}: {
+  highlightsBanner?: StorefrontPromotionalBannerItem;
+}) {
+  const banner = highlightsBanner || defaultHighlightsBanner;
+  const desktopImg = resolveImageUrl(banner.imgSrc);
+  const mobileImg = resolveImageUrl(banner.mobileImgSrc || banner.imgSrc);
+
   return (
     <div
       id="rbt-product-block-03"
@@ -21,7 +44,7 @@ export default function Products3() {
                   <div className="rbt-component-section-title">
                     <h4 className="rbt-title rbt-scroll-trigger fade_in animation-order-1">
                       <span className="rbt-bold--text">
-                        This Week’s Highlights
+                        {banner.sectionTitle || "This Week’s Highlights"}
                       </span>
                     </h4>
                     <span className="rbt-fshape-right-portion rbt-fshape-right-portion-sm">
@@ -53,30 +76,50 @@ export default function Products3() {
             <div className="rbt-product-banner rbt-product-banner-style-two rbt-curved-style-box h-100">
               <div className="rbt-banner-inner h-100">
                 <div className="rbt-product-banner-img rbt-full-width-img rbt-scroll-trigger zoom_in animation-order-1">
-                  <Image
-                    alt="Ecommerce Product Banner Image"
-                    src="/assets/images/product-banner/product-banner-img-02.webp"
-                    width={1296}
-                    height={890}
-                  />
+                  <picture>
+                    {banner.mobileImgSrc && (
+                      <source
+                        media="(max-width: 767px)"
+                        srcSet={mobileImg}
+                      />
+                    )}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      alt={banner.titleRegular || "Ecommerce Product Banner Image"}
+                      src={desktopImg}
+                      width={1296}
+                      height={890}
+                      style={{
+                        objectFit: "cover",
+                        width: "100%",
+                        height: "100%",
+                      }}
+                    />
+                  </picture>
                 </div>
                 <div className="rbt-product-banner-content">
                   <div className="rbt-content-section rbt-scroll-trigger fade_in animation-order-1">
-                    <h6 className="rbt-banner-subtitle mb-0">Power Up Deals</h6>
+                    <h6 className="rbt-banner-subtitle mb-0">
+                      {banner.subtitle}
+                    </h6>
                     <h2 className="rbt-banner-title title-capitalize-text mb-0">
-                      <span className="rbt-bold--text">Red Camera </span>Plus
+                      <span className="rbt-bold--text">
+                        {banner.titleBold}{" "}
+                      </span>
+                      {banner.titleRegular}
                     </h2>
                     <h3 className="rbt-secondary-subtitle mb-0">
-                      Holiday Cheers
+                      {banner.secondarySubtitle}
                     </h3>
                   </div>
                   <div className="rbt-banner-btn rbt-scroll-trigger fade_in animation-order-2">
                     <MagneticButton
                       as={Link}
                       className="rbt-btn rbt-btn-round"
-                      href={`/shop`}
+                      href={banner.link || `/shop`}
                     >
-                      <i className="fa-solid fa-arrow-up-right" /> SHOP NOW
+                      <i className="fa-solid fa-arrow-up-right" />{" "}
+                      {banner.btnText || "SHOP NOW"}
                     </MagneticButton>
                   </div>
                 </div>

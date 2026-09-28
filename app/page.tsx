@@ -4,7 +4,6 @@ import Categories from "@/components/homes/home-electronics/Categories";
 import Hero from "@/components/homes/home-electronics/Hero";
 import Products from "@/components/homes/home-electronics/Products";
 import Products3 from "@/components/homes/home-electronics/Products3";
-import Products4 from "@/components/homes/home-electronics/Products4";
 import Brands from "@/components/homes/home-electronics/Brands";
 import Footer1 from "@/components/footers/Footer1";
 
@@ -14,6 +13,8 @@ import {
   fetchStorefrontProducts,
   fetchStorefrontHeroBanners,
   fetchStorefrontPopularCategories,
+  fetchStorefrontTopbar,
+  fetchStorefrontPromotions,
 } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
@@ -25,16 +26,25 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [products, categories, heroData, popularCategoriesData] = await Promise.all([
+  const [
+    products,
+    categories,
+    heroData,
+    popularCategoriesData,
+    topbarData,
+    promotionsData,
+  ] = await Promise.all([
     fetchStorefrontProducts(),
     fetchStorefrontCategories(),
     fetchStorefrontHeroBanners(),
     fetchStorefrontPopularCategories(),
+    fetchStorefrontTopbar(),
+    fetchStorefrontPromotions(),
   ]);
 
   return (
     <>
-      <Header2 sticky={true} />
+      <Header2 sticky={true} topbarData={topbarData} />
       <Hero
         initialBanners={heroData?.data}
         initialAutoShift={heroData?.autoShift}
@@ -45,9 +55,12 @@ export default async function Home() {
         initialPopularData={popularCategoriesData}
       />
       <Products products={products} />
-      <Products2 />
-      <Products3 />
-      <Products4 />
+      <Products2
+        powerUpBanner={promotionsData?.powerUpBanner}
+        showTodaysBestDeals={promotionsData?.showTodaysBestDeals}
+      />
+      <Products3 highlightsBanner={promotionsData?.highlightsBanner} />
+      {/* Featured Products (Products4) removed per user request */}
       <Brands />
       <Footer1 />
     </>
