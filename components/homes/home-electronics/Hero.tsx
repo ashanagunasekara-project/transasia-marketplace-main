@@ -17,12 +17,28 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 const PRODUCT_BANNER_ANIMATION_ORDERS = ["1", "2", "3", "4", "3", "4"];
 
-export default function Hero() {
+interface HeroProps {
+  initialBanners?: StorefrontHeroBanner[];
+  initialAutoShift?: boolean;
+  initialAutoShiftDelay?: number;
+}
+
+export default function Hero({
+  initialBanners,
+  initialAutoShift,
+  initialAutoShiftDelay,
+}: HeroProps = {}) {
   const [banners, setBanners] = useState<StorefrontHeroBanner[]>(
-    productBanners as unknown as StorefrontHeroBanner[]
+    initialBanners && initialBanners.length > 0
+      ? initialBanners
+      : (productBanners as unknown as StorefrontHeroBanner[])
   );
-  const [autoShift, setAutoShift] = useState(true);
-  const [autoShiftDelay, setAutoShiftDelay] = useState(3500);
+  const [autoShift, setAutoShift] = useState(
+    initialAutoShift !== undefined ? initialAutoShift : true
+  );
+  const [autoShiftDelay, setAutoShiftDelay] = useState(
+    initialAutoShiftDelay || 3500
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -38,11 +54,14 @@ export default function Hero() {
         console.warn("Using fallback hero banners:", err);
       }
     }
-    loadHeroBanners();
+    // Only background refetch if not provided or to stay fresh
+    if (!initialBanners || initialBanners.length === 0) {
+      loadHeroBanners();
+    }
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [initialBanners]);
 
   return (
     <>

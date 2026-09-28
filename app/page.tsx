@@ -9,7 +9,12 @@ import Brands from "@/components/homes/home-electronics/Brands";
 import Footer1 from "@/components/footers/Footer1";
 
 import { Metadata } from "next";
-import { fetchStorefrontCategories, fetchStorefrontProducts } from "@/lib/api";
+import {
+  fetchStorefrontCategories,
+  fetchStorefrontProducts,
+  fetchStorefrontHeroBanners,
+  fetchStorefrontPopularCategories,
+} from "@/lib/api";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -20,16 +25,25 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [products, categories] = await Promise.all([
+  const [products, categories, heroData, popularCategoriesData] = await Promise.all([
     fetchStorefrontProducts(),
     fetchStorefrontCategories(),
+    fetchStorefrontHeroBanners(),
+    fetchStorefrontPopularCategories(),
   ]);
 
   return (
     <>
       <Header2 sticky={true} />
-      <Hero />
-      <Categories categories={categories} />
+      <Hero
+        initialBanners={heroData?.data}
+        initialAutoShift={heroData?.autoShift}
+        initialAutoShiftDelay={heroData?.autoShiftDelay}
+      />
+      <Categories
+        categories={categories}
+        initialPopularData={popularCategoriesData}
+      />
       <Products products={products} />
       <Products2 />
       <Products3 />

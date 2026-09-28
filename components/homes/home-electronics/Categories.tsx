@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { ExternalLinkAltIcon } from "../../svg-icons";
-import Image from "next/image";
 import Link from "next/link";
 import { Category } from "@/types/categories";
 import { classicBentoCategories } from "@/data/categories";
@@ -21,17 +20,25 @@ const defaultDealBanner: StorefrontDealBanner = {
   link: "/shop",
 };
 
+interface PopularDataState {
+  sectionTitle: string;
+  viewAllLink: string;
+  categories: StorefrontPopularCategory[];
+  dealBanner: StorefrontDealBanner;
+}
+
 export default function Categories({
   categories = [],
+  initialPopularData,
 }: {
   categories?: Category[];
+  initialPopularData?: PopularDataState | null;
 }) {
-  const [popularData, setPopularData] = useState<{
-    sectionTitle: string;
-    viewAllLink: string;
-    categories: StorefrontPopularCategory[];
-    dealBanner: StorefrontDealBanner;
-  } | null>(null);
+  const [popularData, setPopularData] = useState<PopularDataState | null>(
+    initialPopularData && initialPopularData.categories?.length > 0
+      ? initialPopularData
+      : null
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -45,11 +52,13 @@ export default function Categories({
         console.warn("Using fallback popular categories:", err);
       }
     }
-    loadPopularCategories();
+    if (!initialPopularData || !initialPopularData.categories?.length) {
+      loadPopularCategories();
+    }
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [initialPopularData]);
 
   const sectionTitle =
     popularData?.sectionTitle || "Popular By Categories";
@@ -68,7 +77,7 @@ export default function Categories({
       ? categories.slice(0, 6).map((c, i) => ({
           id: c.id ? String(c.id) : String(i + 1),
           title: c.title || c.name || "",
-          imgSrc: c.imgSrc || c.image || "",
+          imgSrc: c.imgSrc || c.image || "/assets/images/catagory-img/cat-transp-img-07.webp",
           link: "/shop-by-category",
           subCategories: c.subCategories || [],
         }))
@@ -79,6 +88,11 @@ export default function Categories({
           link: "/shop-by-category",
           subCategories: c.subCategories || [],
         }));
+
+  const dealBannerImg = resolveImageUrl(
+    dealBanner.imgSrc,
+    "/assets/images/catagory-img/banner-cat-01.webp"
+  );
 
   return (
     <div className="rbt-component-area rbt-categories-area rbt-section-gap2 rbt-bg-color-white">
@@ -107,7 +121,10 @@ export default function Categories({
             <div className="col-xl-8 col-lg-12 col-12 mt--24">
               <div className="row row--12 mt_dec--24 rbt-mobile-row">
                 {displayCategories.map((category, index: number) => {
-                  const resolvedImg = resolveImageUrl(category.imgSrc);
+                  const resolvedImg = resolveImageUrl(
+                    category.imgSrc,
+                    "/assets/images/catagory-img/cat-transp-img-07.webp"
+                  );
                   return (
                     <div
                       key={category.id || index}
@@ -145,16 +162,19 @@ export default function Categories({
                           </div>
                           <div className="rbt-image-portion">
                             <Link href={category.link || `/shop-by-category`}>
-                              <Image
-                                className="rbt-scroll-trigger"
+                              <img
                                 alt={category.title || "Category Product Image"}
                                 src={resolvedImg}
                                 width={93}
                                 height={93}
                                 style={{
-                                  width: "auto",
-                                  height: "auto",
+                                  width: "93px",
+                                  height: "93px",
                                   objectFit: "contain",
+                                }}
+                                onError={(e) => {
+                                  (e.currentTarget as HTMLImageElement).src =
+                                    "/assets/images/catagory-img/cat-transp-img-07.webp";
                                 }}
                               />
                             </Link>
@@ -194,18 +214,23 @@ export default function Categories({
                       {dealBanner.secondaryTitle}
                     </h3>
                   </div>
-                  <div className="rbt-image-portion">
-                    <Link href={dealBanner.link || "/shop"}>
-                      <Image
-                        className="rbt-scroll-trigger zoom_in animation-order-4"
+                  <div
+                    className="rbt-image-portion d-flex justify-content-center align-items-center"
+                    style={{ minHeight: "180px" }}
+                  >
+                    <Link href={dealBanner.link || "/shop"} className="d-block w-100">
+                      <img
                         alt={dealBanner.title || "Category Image"}
-                        src={resolveImageUrl(dealBanner.imgSrc)}
-                        width={338}
-                        height={201}
+                        src={dealBannerImg}
+                        className="img-fluid mx-auto d-block"
                         style={{
+                          maxHeight: "190px",
                           width: "auto",
-                          height: "auto",
                           objectFit: "contain",
+                        }}
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).src =
+                            "/assets/images/catagory-img/banner-cat-01.webp";
                         }}
                       />
                     </Link>

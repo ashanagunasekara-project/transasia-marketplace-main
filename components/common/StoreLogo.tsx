@@ -18,34 +18,27 @@ export default function StoreLogo({
   height = 334,
   className = "",
 }: StoreLogoProps) {
-  const { logoUrl, storeName, isLoaded, fetchBranding } = useBrandingStore();
-
-  const [imgSrc, setImgSrc] = useState<string>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = localStorage.getItem("transasia_store_branding");
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (parsed?.state?.logoUrl) {
-            return resolveImageUrl(parsed.state.logoUrl, DEFAULT_FALLBACK_LOGO);
-          }
-        }
-      } catch {
-        // Use default fallback
-      }
-    }
-    return logoUrl ? resolveImageUrl(logoUrl, DEFAULT_FALLBACK_LOGO) : DEFAULT_FALLBACK_LOGO;
-  });
+  const { logoUrl, storeName, fetchBranding } = useBrandingStore();
+  const [imgSrc, setImgSrc] = useState<string>(DEFAULT_FALLBACK_LOGO);
 
   useEffect(() => {
     fetchBranding();
-  }, [fetchBranding]);
-
-  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("transasia_store_branding");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed?.state?.logoUrl) {
+          setImgSrc(resolveImageUrl(parsed.state.logoUrl, DEFAULT_FALLBACK_LOGO));
+          return;
+        }
+      }
+    } catch {
+      // Fallback
+    }
     if (logoUrl) {
       setImgSrc(resolveImageUrl(logoUrl, DEFAULT_FALLBACK_LOGO));
     }
-  }, [logoUrl]);
+  }, [fetchBranding, logoUrl]);
 
   return (
     <img
@@ -58,6 +51,7 @@ export default function StoreLogo({
         setImgSrc(DEFAULT_FALLBACK_LOGO);
       }}
       style={{ maxHeight: "100%", width: "auto", objectFit: "contain" }}
+      suppressHydrationWarning
     />
   );
 }
