@@ -38,6 +38,7 @@ export const ModalName = {
   "rbt-content-modal-3": "rbt-content-modal-3",
   "rbt-content-modal-4": "rbt-content-modal-4",
   "rbt-content-modal-6": "rbt-content-modal-6",
+  wholesaleUpgradeModal: "wholesaleUpgradeModal",
 } as const;
 
 export type ModalNameType = (typeof ModalName)[keyof typeof ModalName];

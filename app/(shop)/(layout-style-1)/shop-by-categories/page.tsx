@@ -3,15 +3,21 @@ import Breadcrumb from "@/components/products/Breadcrumb";
 import Categories from "@/components/products/Categories";
 import ShopDefault from "@/components/products/ShopDefault";
 
+import { fetchStorefrontProducts } from "@/lib/api";
+
 import { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
-  title:
-    "Shop By Categories || Unimart - eCommerce React Nextjs Bootstrap5 Template",
-  description: "Unimart - eCommerce React Nextjs Bootstrap5 Template",
+  title: "Shop By Categories || Transasia - Electronics Store",
+  description: "Browse electronics products by categories at Transasia.",
 };
 
-export default function page() {
+export default async function page() {
+  const products = await fetchStorefrontProducts();
+
   return (
     <>
       <Breadcrumb title="Shop By Categories" />
@@ -22,7 +28,7 @@ export default function page() {
           <div className="rbt-separator rbt-separator-gray200" />
         </div>
       </div>
-      <ShopDefault column={3} />
+      <ShopDefault products={products} column={3} />
     </>
   );
 }

@@ -1,15 +1,155 @@
 "use client";
-import { CloseIcon } from "../svg-icons";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { CloseIcon } from "../svg-icons";
 import ReviewSlider from "../other-pages/ReviewSlider";
 import { useManagedModalPanel } from "@/hooks/useManagedModalPanel";
-import { useState } from "react";
 import ModalTriggerButton from "@/components/action-buttons/ModalTriggerButton";
+import { useAuthStore } from "@/context/authStore";
+import { useUiStore } from "@/context/uiStore";
+import StoreLogo from "@/components/common/StoreLogo";
 
 export default function Signin() {
   const { close } = useManagedModalPanel("signinModal");
-  const [activeTab, setActiveTab] = useState<"phone" | "email">("phone");
+  const {
+    loginPassword,
+    sendOtp,
+    verifyOtp,
+    lookupWholesaleCustomer,
+    loginWholesale,
+    isLoading,
+    error,
+    clearError,
+  } = useAuthStore();
+  const showToaster = useUiStore((s) => s.showToaster);
+
+  // Customer Type Tab: "retail" | "wholesale"
+  const [customerType, setCustomerType] = useState<"retail" | "wholesale">("retail");
+
+  // Retail Sub Tab: "otp" | "password"
+  const [retailMethod, setRetailMethod] = useState<"otp" | "password">("otp");
+
+  // Retail OTP form state
+  const [phone, setPhone] = useState("");
+  const [otpCode, setOtpCode] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [debugOtp, setDebugOtp] = useState<string | null>(null);
+
+  // Password login form state
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Wholesale form state
+  const [wholesaleMethod, setWholesaleMethod] = useState<"otp" | "password">("otp");
+  const [wholesaleId, setWholesaleId] = useState("");
+  const [wholesalePassword, setWholesalePassword] = useState("");
+  const [showWholesalePassword, setShowWholesalePassword] = useState(false);
+  const [wholesaleOtpCode, setWholesaleOtpCode] = useState("");
+  const [wholesaleOtpSent, setWholesaleOtpSent] = useState(false);
+  const [wholesaleDebugOtp, setWholesaleDebugOtp] = useState<string | null>(null);
+  const [wholesaleMaskedPhone, setWholesaleMaskedPhone] = useState<string>("");
+
+  useEffect(() => {
+    const trimmed = wholesaleId.trim();
+    if (trimmed.length >= 4) {
+      const timer = setTimeout(async () => {
+        const res = await lookupWholesaleCustomer(trimmed);
+        if (res.success && res.maskedPhone) {
+          setWholesaleMaskedPhone(res.maskedPhone);
+        } else {
+          setWholesaleMaskedPhone("");
+        }
+      }, 350);
+      return () => clearTimeout(timer);
+    } else {
+      setWholesaleMaskedPhone("");
+    }
+  }, [wholesaleId, lookupWholesaleCustomer]);
+
+  const handleSendOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearError();
+    if (!phone) return;
+
+    const res = await sendOtp(phone);
+    if (res.success) {
+      setOtpSent(true);
+      if (res.debugOtp) setDebugOtp(res.debugOtp);
+      showToaster("Verification code sent to your phone");
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearError();
+    if (!phone || !otpCode) return;
+
+    const res = await verifyOtp(phone, otpCode);
+    if (res.success) {
+      showToaster("Welcome back! Signed in successfully");
+      close();
+    }
+  };
+
+  const handleRetailPasswordLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearError();
+    if (!identifier || !password) return;
+
+    const res = await loginPassword(identifier, password);
+    if (res.success) {
+      showToaster("Signed in successfully");
+      close();
+    }
+  };
+
+  const handleWholesaleSendOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearError();
+    if (!wholesaleId.trim()) return;
+
+    const res = await sendOtp({ wholesaleCustomerId: wholesaleId.trim().toUpperCase() });
+    if (res.success) {
+      setWholesaleOtpSent(true);
+      if (res.debugOtp) setWholesaleDebugOtp(res.debugOtp);
+      if (res.maskedPhone) setWholesaleMaskedPhone(res.maskedPhone);
+      showToaster("Verification code sent to registered mobile phone");
+    }
+  };
+
+  const handleWholesaleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearError();
+    if (!wholesaleId.trim() || !wholesaleOtpCode.trim()) return;
+
+    const res = await loginWholesale({
+      wholesaleCustomerId: wholesaleId.trim().toUpperCase(),
+      otpCode: wholesaleOtpCode.trim(),
+    });
+    if (res.success) {
+      showToaster("Wholesale access granted! Wholesale pricing activated.");
+      close();
+    }
+  };
+
+  const handleWholesalePasswordLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearError();
+    if (!wholesaleId.trim() || !wholesalePassword) return;
+
+    const res = await loginWholesale({
+      wholesaleCustomerId: wholesaleId.trim().toUpperCase(),
+      password: wholesalePassword,
+    });
+    if (res.success) {
+      showToaster("Wholesale access granted! Wholesale pricing activated.");
+      close();
+    }
+  };
+
   return (
     <div
       className="rbt-default-modal modal fade has-rbt-top-folder-shape"
@@ -39,167 +179,448 @@ export default function Signin() {
                 <div className="rbt-login-form-top">
                   <div className="logo">
                     <Link href={`/`}>
-                      <Image
-                        alt="Ecommerce Logo Images"
-                        src="/assets/images/logo/logo.webp"
-                        width={1487}
-                        height={334}
-                      />
+                      <StoreLogo />
                     </Link>
                   </div>
                   <h6
-                    className="rbt-title rbt-text-bold mb--16"
+                    className="rbt-title rbt-text-bold mb--12"
                     id="signinModalLabel"
                   >
-                    Sign In To Proceed
+                    Customer Sign In
                   </h6>
-                  <div className="rbt-tab rbt-round-shape-tab">
-                    {/* Start tabs */}
-                    <ul
-                      className="nav nav-tabs"
-                      id="registerFormTab1"
-                      role="tablist"
+
+                  {/* Customer Type Selector */}
+                  <div className="d-flex rounded p--4 mb--16 bg-light gap-2">
+                    <button
+                      type="button"
+                      className={`rbt-btn rbt-btn-sm flex-grow-1 ${customerType === "retail"
+                        ? "rbt-btn-gradient text-white"
+                        : "bg-transparent text-dark border-0"
+                        }`}
+                      style={{ borderRadius: "8px", fontWeight: 600 }}
+                      onClick={() => {
+                        setCustomerType("retail");
+                        clearError();
+                      }}
                     >
-                      <li className="nav-item" role="presentation">
-                        <button
-                          className={`nav-link${activeTab === "phone" ? " active" : ""}`}
-                          id="rbt-form-tab-id-1"
-                          type="button"
-                          onClick={() => setActiveTab("phone")}
-                        >
-                          <i className="fa-sharp fa-regular fa-phone" />
-                          Phone Number
-                        </button>
-                      </li>
-                      <li className="nav-item" role="presentation">
-                        <button
-                          className={`nav-link${activeTab === "email" ? " active" : ""}`}
-                          id="rbt-form-tab-id-2"
-                          type="button"
-                          onClick={() => setActiveTab("email")}
-                        >
-                          <i className="fa-sharp fa-regular fa-envelope" />
-                          Email
-                        </button>
-                      </li>
-                    </ul>
-                    {/* End tabs */}
-                    <form onSubmit={(e) => e.preventDefault()}>
-                      {/* Start tabs content */}
-                      <div className="tab-content" id="registerFormTab1Content">
-                        {activeTab === "phone" && (
-                          <div className="tab-pane fade show active">
-                            <div className="rbt-input-field-grp">
-                              <label
-                                className="rbt-field-label"
-                                htmlFor="modal_signin_number"
-                              >
-                                Your Number
-                                <span className="rbt-text-color-danger">*</span>
-                              </label>
-                              <input
-                                className="rbt-input-field"
-                                placeholder="Number"
-                                type="text"
-                                id="modal_signin_number"
-                              />
-                            </div>
-                          </div>
-                        )}
-                        {activeTab === "email" && (
-                          <div className="tab-pane fade show active">
-                            <div className="rbt-input-field-grp">
-                              <label
-                                className="rbt-field-label"
-                                htmlFor="modal_signin_email"
-                              >
-                                Your Email
-                                <span className="rbt-text-color-danger">*</span>
-                              </label>
-                              <input
-                                className="rbt-input-field"
-                                placeholder="Email"
-                                type="email"
-                                id="modal_signin_email"
-                              />
-                            </div>
-                          </div>
-                        )}
+                      <i className="fa-solid fa-user mr--6" />
+                      Retail Customer
+                    </button>
+                    <button
+                      type="button"
+                      className={`rbt-btn rbt-btn-sm flex-grow-1 ${customerType === "wholesale"
+                        ? "rbt-btn-gradient text-white"
+                        : "bg-transparent text-dark border-0"
+                        }`}
+                      style={{ borderRadius: "8px", fontWeight: 600 }}
+                      onClick={() => {
+                        setCustomerType("wholesale");
+                        clearError();
+                      }}
+                    >
+                      <i className="fa-solid fa-store mr--6" />
+                      Wholesale Customer
+                    </button>
+                  </div>
+
+                  {error && (
+                    <div className="alert alert-danger p--10 rounded mb--16 b3">
+                      <i className="fa-solid fa-circle-exclamation mr--6" />
+                      {error}
+                    </div>
+                  )}
+
+                  {/* Retail Customer View */}
+                  {customerType === "retail" && (
+                    <div className="retail-login-block">
+                      <div className="rbt-tab rbt-round-shape-tab mb--16">
+                        <ul className="nav nav-tabs" role="tablist">
+                          <li className="nav-item" role="presentation">
+                            <button
+                              className={`nav-link${retailMethod === "otp" ? " active" : ""
+                                }`}
+                              type="button"
+                              onClick={() => {
+                                setRetailMethod("otp");
+                                clearError();
+                              }}
+                            >
+                              <i className="fa-sharp fa-regular fa-phone" />
+                              SMS OTP
+                            </button>
+                          </li>
+                          <li className="nav-item" role="presentation">
+                            <button
+                              className={`nav-link${retailMethod === "password" ? " active" : ""
+                                }`}
+                              type="button"
+                              onClick={() => {
+                                setRetailMethod("password");
+                                clearError();
+                              }}
+                            >
+                              <i className="fa-sharp fa-regular fa-key" />
+                              Password
+                            </button>
+                          </li>
+                        </ul>
                       </div>
-                      {/* End tabs content */}
-                      <button
-                        type="submit"
-                        className="rbt-btn d-block w-100 mt--24 mb--16"
-                      >
-                        Continue
-                      </button>
-                      <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mt--12">
-                        <div className="rbt-check-group mb--0">
-                          <input
-                            id="modal_login_checked1"
-                            type="checkbox"
-                            name="login"
-                          />
-                          <label htmlFor="modal_login_checked1">
-                            Stay Logged In
-                          </label>
+
+                      {retailMethod === "otp" && (
+                        <div>
+                          {!otpSent ? (
+                            <form onSubmit={handleSendOtp}>
+                              <div className="rbt-input-field-grp mb--16">
+                                <label
+                                  className="rbt-field-label"
+                                  htmlFor="modal_retail_phone"
+                                >
+                                  Mobile Phone Number
+                                  <span className="rbt-text-color-danger">*</span>
+                                </label>
+                                <input
+                                  className="rbt-input-field"
+                                  placeholder="e.g. 0773392727"
+                                  type="text"
+                                  id="modal_retail_phone"
+                                  value={phone}
+                                  onChange={(e) => setPhone(e.target.value)}
+                                  required
+                                />
+                              </div>
+                              <button
+                                type="submit"
+                                className="rbt-btn d-block w-100 mb--16"
+                                disabled={isLoading || !phone}
+                              >
+                                {isLoading ? "Sending Code..." : "Send Verification Code"}
+                              </button>
+                            </form>
+                          ) : (
+                            <form onSubmit={handleVerifyOtp}>
+                              <div className="alert alert-info p--8 rounded mb--12 b4">
+                                Verification code sent to <strong>{phone}</strong>
+                                {debugOtp && (
+                                  <span className="badge bg-warning text-dark ml--8">
+                                    Code: {debugOtp}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="rbt-input-field-grp mb--16">
+                                <label
+                                  className="rbt-field-label"
+                                  htmlFor="modal_retail_otp"
+                                >
+                                  Enter 6-Digit Code
+                                  <span className="rbt-text-color-danger">*</span>
+                                </label>
+                                <input
+                                  className="rbt-input-field"
+                                  placeholder="000000"
+                                  type="text"
+                                  maxLength={6}
+                                  id="modal_retail_otp"
+                                  value={otpCode}
+                                  onChange={(e) => setOtpCode(e.target.value)}
+                                  required
+                                />
+                              </div>
+                              <button
+                                type="submit"
+                                className="rbt-btn d-block w-100 mb--12"
+                                disabled={isLoading || otpCode.length < 4}
+                              >
+                                {isLoading ? "Verifying..." : "Verify & Sign In"}
+                              </button>
+                              <button
+                                type="button"
+                                className="btn btn-link b4 text-muted w-100"
+                                onClick={() => setOtpSent(false)}
+                              >
+                                Change Phone Number
+                              </button>
+                            </form>
+                          )}
                         </div>
-                        <p className="mb--0 b2">
-                          Forget password?{" "}
-                          <Link className="rbt-switch-btn ml--4" href="/forgot-password">
-                            Reset
-                          </Link>
-                        </p>
+                      )}
+
+                      {retailMethod === "password" && (
+                        <form onSubmit={handleRetailPasswordLogin}>
+                          <div className="rbt-input-field-grp mb--12">
+                            <label
+                              className="rbt-field-label"
+                              htmlFor="modal_retail_id"
+                            >
+                              Phone Number or Email
+                              <span className="rbt-text-color-danger">*</span>
+                            </label>
+                            <input
+                              className="rbt-input-field"
+                              placeholder="Phone or email"
+                              type="text"
+                              id="modal_retail_id"
+                              value={identifier}
+                              onChange={(e) => setIdentifier(e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="rbt-input-field-grp mb--16">
+                            <label
+                              className="rbt-field-label"
+                              htmlFor="modal_retail_pass"
+                            >
+                              Password
+                              <span className="rbt-text-color-danger">*</span>
+                            </label>
+                            <div className="position-relative">
+                              <input
+                                className="rbt-input-field"
+                                placeholder="Password"
+                                type={showPassword ? "text" : "password"}
+                                id="modal_retail_pass"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowPassword((prev) => !prev)}
+                                className="rbt-password-toggle-btn"
+                                aria-label="Toggle password"
+                              >
+                                <i
+                                  className={`fa-regular ${showPassword ? "fa-eye-slash" : "fa-eye"
+                                    }`}
+                                />
+                              </button>
+                            </div>
+                          </div>
+                          <button
+                            type="submit"
+                            className="rbt-btn d-block w-100 mb--16"
+                            disabled={isLoading || !identifier || !password}
+                          >
+                            {isLoading ? "Signing In..." : "Sign In"}
+                          </button>
+                        </form>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Wholesale Customer View */}
+                  {customerType === "wholesale" && (
+                    <div className="wholesale-login-block">
+                      <div className="alert alert-secondary p--10 rounded mb--16 b4">
+                        <i className="fa-solid fa-shield-halved mr--6 text-primary" />
+                        Wholesale portal requires your registered <strong>Wholesale Customer ID (e.g. WS-10025)</strong>.
                       </div>
-                    </form>
-                  </div>
-                  {/* Separator */}
-                  <div className="d-flex align-items-center justify-content-center mb--24 mt--24">
-                    <hr className="rbt-separator rbt-bg-color-gray-light mb--0" />
-                    <span className="pl--8 pr--8 b4 rbt-text-medium">OR</span>
-                    <hr className="rbt-separator rbt-bg-color-gray-light mb--0" />
-                  </div>
-                  {/* Start social login button */}
-                  <button
-                    type="submit"
-                    className="rbt-btn rbt-btn-border rbt-social-login-btn d-block w-100 mb--16 rbt-social-login-btn"
-                  >
-                    <Image
-                      className="icon"
-                      alt="Icon"
-                      src="/assets/images/icons/fb-icon.webp"
-                      width={37}
-                      height={36}
-                    />
-                    Continue with Facebook
-                  </button>
-                  <button
-                    type="submit"
-                    className="rbt-btn rbt-btn-border rbt-social-login-btn d-block w-100 rbt-social-login-btn"
-                  >
-                    <Image
-                      className="icon"
-                      alt="Icon"
-                      src="/assets/images/icons/google-icon.webp"
-                      width={36}
-                      height={36}
-                    />
-                    Continue with Google
-                  </button>
-                  {/* End social login button */}
-                  <div className="rbt-login-system-switch rbt-link-hover">
+
+                      <div className="rbt-tab rbt-round-shape-tab mb--16">
+                        <ul className="nav nav-tabs" role="tablist">
+                          <li className="nav-item" role="presentation">
+                            <button
+                              className={`nav-link${wholesaleMethod === "otp" ? " active" : ""}`}
+                              type="button"
+                              onClick={() => {
+                                setWholesaleMethod("otp");
+                                clearError();
+                              }}
+                            >
+                              <i className="fa-sharp fa-regular fa-phone" />
+                              SMS OTP
+                            </button>
+                          </li>
+                          <li className="nav-item" role="presentation">
+                            <button
+                              className={`nav-link${wholesaleMethod === "password" ? " active" : ""}`}
+                              type="button"
+                              onClick={() => {
+                                setWholesaleMethod("password");
+                                clearError();
+                              }}
+                            >
+                              <i className="fa-sharp fa-regular fa-key" />
+                              Password
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
+
+                      {wholesaleMethod === "otp" && (
+                        <div>
+                          {!wholesaleOtpSent ? (
+                            <form onSubmit={handleWholesaleSendOtp}>
+                              <div className="rbt-input-field-grp mb--16">
+                                <label
+                                  className="rbt-field-label"
+                                  htmlFor="modal_ws_otp_id"
+                                >
+                                  Wholesale Customer ID
+                                  <span className="rbt-text-color-danger">*</span>
+                                </label>
+                                <input
+                                  className="rbt-input-field text-uppercase"
+                                  placeholder="e.g. WS-10025"
+                                  type="text"
+                                  id="modal_ws_otp_id"
+                                  value={wholesaleId}
+                                  onChange={(e) => setWholesaleId(e.target.value.toUpperCase())}
+                                  required
+                                />
+                                {wholesaleMaskedPhone && (
+                                  <div className="alert alert-secondary p--8 rounded mt--8 d-flex align-items-center gap-2 b4 text-dark border">
+                                    <i className="fa-solid fa-mobile-screen-button text-primary" />
+                                    <span>
+                                      Registered Mobile:{" "}
+                                      <strong className="text-primary font-monospace">{wholesaleMaskedPhone}</strong>
+                                    </span>
+                                  </div>
+                                )}
+                                <small className="text-muted mt--4 d-block">
+                                  Verification OTP code will be sent via SMS to the mobile number registered with this ID.
+                                </small>
+                              </div>
+                              <button
+                                type="submit"
+                                className="rbt-btn d-block w-100 mb--16"
+                                disabled={isLoading || !wholesaleId.trim()}
+                              >
+                                {isLoading ? "Sending Code..." : "Send Verification Code"}
+                              </button>
+                            </form>
+                          ) : (
+                            <form onSubmit={handleWholesaleVerifyOtp}>
+                              <div className="alert alert-info p--10 rounded mb--12 b4">
+                                <div className="d-flex align-items-center justify-content-between mb--4">
+                                  <span>Verification code sent to registered number:</span>
+                                </div>
+                                <div className="d-flex align-items-center gap-2">
+                                  <i className="fa-solid fa-mobile-screen-button text-primary" />
+                                  <strong className="text-primary font-monospace" style={{ fontSize: "15px" }}>
+                                    {wholesaleMaskedPhone || wholesaleId}
+                                  </strong>
+                                </div>
+                                {wholesaleDebugOtp && (
+                                  <div className="mt--6">
+                                    <span className="badge bg-warning text-dark">
+                                      Code: {wholesaleDebugOtp}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                              <div className="rbt-input-field-grp mb--16">
+                                <label
+                                  className="rbt-field-label"
+                                  htmlFor="modal_ws_otp_code"
+                                >
+                                  Enter 6-Digit Code
+                                  <span className="rbt-text-color-danger">*</span>
+                                </label>
+                                <input
+                                  className="rbt-input-field"
+                                  placeholder="000000"
+                                  type="text"
+                                  maxLength={6}
+                                  id="modal_ws_otp_code"
+                                  value={wholesaleOtpCode}
+                                  onChange={(e) => setWholesaleOtpCode(e.target.value)}
+                                  required
+                                />
+                              </div>
+                              <button
+                                type="submit"
+                                className="rbt-btn d-block w-100 mb--12"
+                                disabled={isLoading || wholesaleOtpCode.length < 4}
+                              >
+                                {isLoading ? "Verifying..." : "Verify & Sign In"}
+                              </button>
+                              <button
+                                type="button"
+                                className="btn btn-link b4 text-muted w-100"
+                                onClick={() => setWholesaleOtpSent(false)}
+                              >
+                                Change Customer ID / Resend Code
+                              </button>
+                            </form>
+                          )}
+                        </div>
+                      )}
+
+                      {wholesaleMethod === "password" && (
+                        <form onSubmit={handleWholesalePasswordLogin}>
+                          <div className="rbt-input-field-grp mb--12">
+                            <label
+                              className="rbt-field-label"
+                              htmlFor="modal_ws_id"
+                            >
+                              Wholesale Customer ID
+                              <span className="rbt-text-color-danger">*</span>
+                            </label>
+                            <input
+                              className="rbt-input-field text-uppercase"
+                              placeholder="e.g. WS-10025"
+                              type="text"
+                              id="modal_ws_id"
+                              value={wholesaleId}
+                              onChange={(e) => setWholesaleId(e.target.value.toUpperCase())}
+                              required
+                            />
+                          </div>
+                          <div className="rbt-input-field-grp mb--16">
+                            <label
+                              className="rbt-field-label"
+                              htmlFor="modal_ws_pass"
+                            >
+                              Wholesale Account Password
+                              <span className="rbt-text-color-danger">*</span>
+                            </label>
+                            <div className="position-relative">
+                              <input
+                                className="rbt-input-field"
+                                placeholder="Password"
+                                type={showWholesalePassword ? "text" : "password"}
+                                id="modal_ws_pass"
+                                value={wholesalePassword}
+                                onChange={(e) => setWholesalePassword(e.target.value)}
+                                required
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowWholesalePassword((prev) => !prev)}
+                                className="rbt-password-toggle-btn"
+                                aria-label="Toggle password"
+                              >
+                                <i
+                                  className={`fa-regular ${showWholesalePassword ? "fa-eye-slash" : "fa-eye"
+                                    }`}
+                                />
+                              </button>
+                            </div>
+                          </div>
+                          <button
+                            type="submit"
+                            className="rbt-btn d-block w-100 mb--16"
+                            disabled={isLoading || !wholesaleId.trim() || !wholesalePassword}
+                          >
+                            {isLoading ? "Authenticating Wholesale..." : "Wholesale Sign In"}
+                          </button>
+                        </form>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="rbt-login-system-switch rbt-link-hover mt--16 text-center">
                     Don&apos;t have an account?
                     <ModalTriggerButton
                       openModalName="signupModal"
-                      className="rbt-switch-btn ml--4"
+                      className="rbt-switch-btn ml--6 text-primary font-weight-bold"
                     >
-                      <span>Create an account</span>
+                      <span>Sign Up</span>
                     </ModalTriggerButton>
                   </div>
                 </div>
-                {/* Start slider */}
+
                 <ReviewSlider />
-                {/* End slider */}
               </div>
             </div>
           </div>

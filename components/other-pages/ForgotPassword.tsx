@@ -11,6 +11,7 @@ import {
   getPasswordValidationError,
 } from "@/lib/passwordValidation";
 import PasswordStrengthIndicator from "@/components/common/forms/PasswordStrengthIndicator";
+import StoreLogo from "@/components/common/StoreLogo";
 
 const DEMO_OTP_CODE = "123456";
 
@@ -105,12 +106,7 @@ export default function ForgotPassword() {
                 <div className="rbt-login-form-top">
                   <div className="logo">
                     <Link href={`/`}>
-                      <Image
-                        alt="Ecommerce Logo Images"
-                        src="/assets/images/logo/logo.webp"
-                        width={1487}
-                        height={334}
-                      />
+                      <StoreLogo />
                     </Link>
                   </div>
                   <h6 className="rbt-title rbt-text-bold mb--16">

@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   description: "Transasia Electronics Store - High quality electronics and gadgets.",
 };
 
+import { fetchStorefrontProductByIdOrSlug } from "@/lib/api";
+
 export default async function Page({
   params,
 }: {
@@ -23,17 +25,20 @@ export default async function Page({
 }) {
   const { id } = await params;
 
+  const liveProduct = await fetchStorefrontProductByIdOrSlug(id);
   const product =
-    allProducts.filter((p) => p.id === parseInt(id))[0] || allProducts[0];
+    liveProduct ||
+    allProducts.find((p) => String(p.id) === id) ||
+    allProducts[0];
   return (
     <>
       <BreadCrumb product={product} />
       <DetailsAccessories product={product} />
-      <Description2 />
+      <Description2 product={product} />
       <VideoReview />
       <CompareSimilerItems products={accessoryCompareProducts} />
       <BoughtTogether />
-      <BottomStickyProduct />
+      <BottomStickyProduct product={product} />
       <Footer1 />
     </>
   );

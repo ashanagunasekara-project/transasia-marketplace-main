@@ -1,12 +1,12 @@
 "use client";
 
 const categories = [
-  { id: 1, name: "Accessories", count: 96 },
-  { id: 2, name: "Best seller", count: 12 },
-  { id: 3, name: "Computers & Tablets", count: 67 },
-  { id: 4, name: "Home Audio & Theatre", count: 30 },
-  { id: 5, name: "Home Theatre Accessories", count: 89 },
-  { id: 6, name: "Media Streamers", count: 37 },
+  { id: 1, name: "Smartphones & Mobile" },
+  { id: 2, name: "Audio & Headphones" },
+  { id: 3, name: "Laptops & Computers" },
+  { id: 4, name: "Wearable Tech" },
+  { id: 5, name: "Cameras & Drones" },
+  { id: 6, name: "Gaming Accessories" },
 ];
 
 import { Product } from "@/types";

@@ -1,3 +1,5 @@
+"use client";
+import { useEffect, useState } from "react";
 import OfferBadge from "@/components/common/ui/OfferBadge";
 import ProductRating from "@/components/common/ui/ProductRating";
 import { FireIcon } from "../../svg-icons";
@@ -16,7 +18,43 @@ import Tooltip from "@/components/common/ui/Tooltip";
 
 import { Product } from "@/types";
 import ModalTriggerButton from "@/components/action-buttons/ModalTriggerButton";
+import { useAuthStore } from "@/context/authStore";
+import { fetchStorefrontProductByIdOrSlug } from "@/lib/api";
+
 export default function DetailsAccessories({ product }: { product: Product }) {
+  const [liveProduct, setLiveProduct] = useState<Product>(product);
+  const { token, activeView, user } = useAuthStore();
+
+  useEffect(() => {
+    let isMounted = true;
+    async function syncPrice() {
+      try {
+        const idOrSlug = String(product.id || product.slug);
+        const updated = await fetchStorefrontProductByIdOrSlug(idOrSlug, {
+          token,
+          viewMode: activeView,
+        });
+        if (isMounted && updated) {
+          setLiveProduct(updated);
+        }
+      } catch (err) {
+        // Fallback to initial
+      }
+    }
+
+    if (token || activeView === "WHOLESALE") {
+      syncPrice();
+    } else {
+      setLiveProduct(product);
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [token, activeView, product]);
+
+  const displayProduct = liveProduct || product;
+
   return (
     <div className="rbt-component-area rbt-single-product-area rbt-bg-color-white rbt-section-gapBottom">
       <div className="container">
@@ -25,7 +63,7 @@ export default function DetailsAccessories({ product }: { product: Product }) {
             <div className="row row--12 justify-content-center mt_dec--16">
               <div className="col-xl-6 col-lg-6 col-12 mt--16">
                 <div className="rbt-single-product-media-area rbt-single-product-media-area-dflt d-flex rbt-gap--24">
-                  <Slider4 />
+                  <Slider4 product={displayProduct} />
                 </div>
               </div>
               <div className="col-xl-6 col-lg-6 col-12 mt--16">
@@ -44,18 +82,21 @@ export default function DetailsAccessories({ product }: { product: Product }) {
                         />
                       </div>
                       <p className="rbt-quick-access-banner-title b3 mb-0">
-                        Register to buy Grocery&apos;s at wholesale prices for
-                        your shop.
+                        {user?.isWholesaleApproved
+                          ? `Wholesale Account (${user.wholesaleCustomerId || "Approved"}) • Active: ${activeView === "WHOLESALE" ? "Wholesale Pricing" : "Retail Pricing"}`
+                          : "Register to buy at wholesale prices for your shop."}
                       </p>
                     </div>
-                    <div className="rbt-quick-access-banner-action-btn">
-                      <ModalTriggerButton
-                        openModalName="signinModal"
-                        className="rbt-btn rbt-btn-xs"
-                      >
-                        <i className="fa-light fa-user mr--4" /> Register Now
-                      </ModalTriggerButton>
-                    </div>
+                    {!user?.isWholesaleApproved && (
+                      <div className="rbt-quick-access-banner-action-btn">
+                        <ModalTriggerButton
+                          openModalName="signinModal"
+                          className="rbt-btn rbt-btn-xs"
+                        >
+                          <i className="fa-light fa-user mr--4" /> Register Now
+                        </ModalTriggerButton>
+                      </div>
+                    )}
                     <a
                       href="#"
                       className="rbt-cancel-btn"
@@ -66,49 +107,57 @@ export default function DetailsAccessories({ product }: { product: Product }) {
                     </a>
                   </div>
                   <a
-                    href="#"
+                    href="/shop"
                     className="rbt-card-subtitle rbt-card-categories-text mt--16"
                   >
-                    Powerbank
+                    {displayProduct.category?.[0] || displayProduct.categoryName || "Electronics"}
                   </a>
-                  <h2 className="rbt-card-title mt--12">{product.title}</h2>
+                  <h2 className="rbt-card-title mt--12">{displayProduct.title}</h2>
                   <p className="description-text b2 mt--16">
-                    At vero eos et accusamus et iusto dignissimos ducimus
-                    blanditiis praesentium voluptatu atque...
+                    {displayProduct.description ||
+                      "High quality authentic product backed by official warranty and fast islandwide delivery."}
                   </p>
                   <div className="rbt-info-wrapper d-flex mt--28">
-                    <ProductRating product={product} className="mt--0"><Facts /></ProductRating>
+                    <ProductRating product={displayProduct} className="mt--0"><Facts /></ProductRating>
                   </div>
                   <div className="rbt-info-wrapper d-flex justify-content-between mt--16">
                     <div className="rbt-store-price-1">
-                      <div className="pricing-part mt--0">
-                        {product.oldPrice ? (
+                      <div className="pricing-part mt--0 d-flex align-items-center flex-wrap" style={{ gap: "8px" }}>
+                        {displayProduct.oldPrice ? (
                           <del className="price-text">
-                            ${product.oldPrice?.toFixed(2)}
+                            ${Number(displayProduct.oldPrice).toFixed(2)}
                           </del>
                         ) : (
                           ""
                         )}
                         <span className="price-text">
-                          ${product.price.toFixed(2)}
+                          ${Number(displayProduct.price).toFixed(2)}
                         </span>
-                        <OfferBadge product={product} className="rbt-offer-badge-md" />
+                        {displayProduct.isWholesalePricingApplied && (
+                          <span
+                            className="badge bg-primary text-white"
+                            style={{
+                              fontSize: "11px",
+                              fontWeight: 700,
+                              padding: "4px 8px",
+                              borderRadius: "4px",
+                              letterSpacing: "0.5px",
+                            }}
+                          >
+                            Wholesale Price
+                          </span>
+                        )}
+                        <OfferBadge product={displayProduct} className="rbt-offer-badge-md" />
                       </div>
                     </div>
                     <div className="prd-info-section">
                       <div className="prd-id-text">
-                        <p className="text-bold">Brand:</p>
-                        <Tooltip content="Product Brand" placement="top">
-                          <a href="#" className="rbt-brand-img tooltips">
-                            <Image
-                              alt="Small icon Brand"
-                              src="/assets/images/icons/small-brand/sm-brand-b-01.webp"
-                              width={78}
-                              height={48}
-                              className="image-auto"
-                            />
-                          </a>
-                        </Tooltip>
+                        <p className="text-bold">
+                          Brand:{" "}
+                          <span style={{ fontWeight: 600 }}>
+                            {displayProduct.brandName || displayProduct.filterBrands?.[0] || "Transasia"}
+                          </span>
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -120,7 +169,7 @@ export default function DetailsAccessories({ product }: { product: Product }) {
                       >
                         <FireIcon />
                         <p>
-                          <strong>34 products sold in last 10 hours.</strong>
+                          <strong>{product.stockLabel || (product.inStock ? "In Stock" : "Out of Stock")}</strong>
                         </p>
                       </a>
                     </div>
@@ -132,17 +181,19 @@ export default function DetailsAccessories({ product }: { product: Product }) {
                   <div className="rbt-info-wrapper d-block mt--24">
                     <div className="rbt-prd-qty-area">
                       <p className="prd-qty-txt">
-                        <strong>Only 97 pc left</strong>
+                        <strong>{product.stockLabel || `${product.inStock ? "Available in Stock" : "Out of Stock"}`}</strong>
                       </p>
                       <div
                         className="progress"
                         role="progressbar"
                         aria-label="Shipping-progress"
-                        aria-valuenow={50}
+                        aria-valuenow={product.inStock ? 80 : 0}
                         aria-valuemin={0}
                         aria-valuemax={100}
                       >
-                        <div className="progress-bar w-50" />
+                        <div
+                          className={`progress-bar ${product.inStock ? "w-75 bg-success" : "w-100 bg-danger"}`}
+                        />
                       </div>
                     </div>
                   </div>
@@ -150,31 +201,27 @@ export default function DetailsAccessories({ product }: { product: Product }) {
                   <hr className="rbt-separator rbt-separator-gray200 mt--24" />
                   <div className="rbt-info-wrapper d-block mt--24">
                     <ul className="product-details-list shipment-details-list">
-                      <li>
-                        <span className="rbt-bold--text mr--4">Brand : </span>
-                        <span className="text">Sony Corporation Ltd</span>
-                      </li>
-                      <li>
-                        <span className="rbt-bold--text mr--4">
-                          Resolution :
-                        </span>
-                        <span className="text">3840×2160</span>
-                      </li>
-                      <li>
-                        <span className="rbt-bold--text mr--4">
-                          Release years :
-                        </span>
-                        <span className="text"> Jan 2022</span>
-                      </li>
-                      <li>
-                        <span className="rbt-bold--text mr--4">
-                          Motherboard :
-                        </span>
-                        <span className="text"> Samsung</span>
-                        <span className="text d-block">
-                          ATX, ITX, microATX, Mini-ITX
-                        </span>
-                      </li>
+                      {product.productDetails && product.productDetails.length > 0 ? (
+                        product.productDetails.map((detail, idx) => (
+                          <li key={idx}>
+                            <span className="rbt-bold--text mr--4">{detail.label} : </span>
+                            <span className="text">
+                              {Array.isArray(detail.text) ? detail.text.join(", ") : detail.text}
+                            </span>
+                          </li>
+                        ))
+                      ) : (
+                        <>
+                          <li>
+                            <span className="rbt-bold--text mr--4">SKU : </span>
+                            <span className="text">{product.sku || "N/A"}</span>
+                          </li>
+                          <li>
+                            <span className="rbt-bold--text mr--4">Category : </span>
+                            <span className="text">{product.category?.[0] || product.categoryName || "General"}</span>
+                          </li>
+                        </>
+                      )}
                       <li>
                         <span className="icon">
                           <i className="fa-sharp fa-regular fa-truck" />

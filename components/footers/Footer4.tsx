@@ -215,7 +215,7 @@ export default function Footer4() {
                   </div>
                 </div>
               ))}
-              <div className="col-xxl-3 col-xl-4 col-lg-5 col-md-6 col-12 mt--24">
+              <div className="col-xxl-3 col-xl-4 col-lg-5 col-md-6 col-12 mt--24 d-none">
                 <div className="footer-widget footer-widget-text-right">
                   <h5 className="ft-title">Download App on Mobile:</h5>
                   <ul className="ft-link liststyle">

@@ -1,7 +1,9 @@
 import { FilterState, FilterAction, Product } from "@/types";
 
+export const DEFAULT_MAX_PRICE = 100000000;
+
 export const initialState: FilterState = {
-  price: [0, 1000],
+  price: [0, DEFAULT_MAX_PRICE],
   colors: [], // changed from single "color"
   size: "All",
   tags: [],
@@ -147,7 +149,7 @@ export function reducer(state: FilterState, action: FilterAction): FilterState {
     case "CLEAR_FILTER":
       return {
         ...state,
-        price: [0, 1000],
+        price: [0, DEFAULT_MAX_PRICE],
 
         colors: [], // changed from single "color"
         size: "All",

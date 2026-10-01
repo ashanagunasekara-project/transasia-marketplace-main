@@ -14,8 +14,6 @@ export default function Toolbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      closeCommonSearch();
-
       const scrollTop =
         window.scrollY || document.documentElement.scrollTop || 0;
 
@@ -24,10 +22,15 @@ export default function Toolbar() {
 
     handleScroll();
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    const onScrollWithClose = () => {
+      closeCommonSearch();
+      handleScroll();
+    };
+
+    window.addEventListener("scroll", onScrollWithClose, { passive: true });
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", onScrollWithClose);
     };
   }, [closeCommonSearch]);
 

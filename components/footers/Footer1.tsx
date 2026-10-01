@@ -2,6 +2,7 @@ import Newsletter from "../common/other-components/Newsletter";
 import Image from "next/image";
 import Link from "next/link";
 import { footerData, socialLinks } from "../../data/footer";
+import StoreLogo from "@/components/common/StoreLogo";
 
 export default function Footer1() {
   return (
@@ -15,12 +16,7 @@ export default function Footer1() {
                 <div className="footer-widget">
                   <div className="logo">
                     <Link href={`/`}>
-                      <Image
-                        alt="Unimart Logo"
-                        src="/assets/images/logo/logo.webp"
-                        width={1487}
-                        height={334}
-                      />
+                      <StoreLogo />
                     </Link>
                   </div>
                   <p className="description pr--140 pr_sm--0">
@@ -31,12 +27,21 @@ export default function Footer1() {
                     <p className="b2 title">
                       Free from fixed and mobile phones.
                     </p>
-                    <a
-                      className="contact-link has-lg-fsize"
-                      href="tel:0800300353"
-                    >
-                      0 800 300-353
-                    </a>
+                    <div className="d-flex align-items-center flex-wrap gap-2">
+                      <a
+                        className="contact-link has-lg-fsize"
+                        href="tel:+94112332162"
+                      >
+                        +94 112 332 162
+                      </a>
+                      <span className="contact-link has-lg-fsize text-muted">/</span>
+                      <a
+                        className="contact-link has-lg-fsize"
+                        href="tel:+94773392727"
+                      >
+                        +94 773 392 727
+                      </a>
+                    </div>
                   </div>
                   <div className="rbt-quick-contact-info">
                     <p className="b2 title">Call Center hours</p>
@@ -71,7 +76,7 @@ export default function Footer1() {
                 </div>
               ))}
             </div>
-            <div className="row pb--40 pb_sm--24">
+            <div className="row pb--40 pb_sm--24 d-none">
               <div className="col-12">
                 <Link href={`/shop`}>
                   <Image
@@ -112,7 +117,7 @@ export default function Footer1() {
                 </div>
               </div>
               <div className="col-lg-6 mt--20">
-                <div className="rbt-app-store-area justify-content-center justify-content-lg-end">
+                <div className="rbt-app-store-area justify-content-center justify-content-lg-end d-none">
                   <p className="title">Download App :</p>
                   <ul className="rbt-app-store-list">
                     <li>
@@ -145,17 +150,8 @@ export default function Footer1() {
           <div className="container">
             <div className="row align-items-center justify-content-between row--12 mt_dec--24">
               <div className="col-xl-4 col-lg-6 col-md-12 col-12 mt--24">
-                <p className="rbt-link-hover text-center text-lg-start">
-                  Copyright {new Date().getFullYear()} ®
-                  <a
-                    href="https://rainbowthemes.net/"
-                    className="rbt-text-semi-bold mr--4"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Unimart
-                  </a>
-                  Nextjs Template.
+                <p className="text-center text-lg-start mb-0">
+                  Copyright &copy; 2026 Transasia.
                 </p>
               </div>
               <div className="col-xl-4 col-lg-6 col-md-12 col-12 mt--24">

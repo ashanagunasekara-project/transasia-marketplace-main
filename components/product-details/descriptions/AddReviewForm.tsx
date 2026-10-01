@@ -1,10 +1,67 @@
 "use client";
 
-import { WaveThinIcon } from '../../svg-icons';
-export default function AddReviewForm() {
+import { useState } from "react";
+import { WaveThinIcon } from "../../svg-icons";
+
+export interface ReviewData {
+  title: string;
+  desc: string;
+  rating: number;
+  name?: string;
+}
+
+export default function AddReviewForm({
+  onAddReview,
+}: {
+  onAddReview?: (review: ReviewData) => void;
+}) {
+  const [rating, setRating] = useState<number>(5);
+  const [title, setTitle] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+  const [submitted, setSubmitted] = useState<boolean>(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+
+    if (onAddReview) {
+      onAddReview({
+        title: title.trim() || "Customer Review",
+        desc: message.trim(),
+        rating,
+        name: name.trim() || "Verified Buyer",
+      });
+    }
+
+    setTitle("");
+    setName("");
+    setMessage("");
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 5000);
+  };
+
   return (
-    <div className="rbt-reviews-form">
-      <form onSubmit={(e) => e.preventDefault()} className="rbt-contact-form">
+    <div className="rbt-reviews-form mt--32">
+      {submitted && (
+        <div
+          className="alert alert-success d-flex align-items-center mb--24"
+          role="alert"
+          style={{
+            backgroundColor: "#e8f5e9",
+            color: "#2e7d32",
+            border: "1px solid #c8e6c9",
+            borderRadius: "8px",
+            padding: "16px",
+          }}
+        >
+          <i className="fa-solid fa-circle-check mr--8" style={{ fontSize: "20px" }} />
+          <div>
+            <strong>Review Submitted!</strong> Thank you for reviewing this product.
+          </div>
+        </div>
+      )}
+      <form onSubmit={handleSubmit} className="rbt-contact-form">
         <div className="rbt-fshape-box-outline-style">
           <div className="row">
             <div className="col-lg-12">
@@ -21,141 +78,76 @@ export default function AddReviewForm() {
           <div className="rbt-fshape-box rbt-bg-color-white rbt-contact-form-fshape">
             <div className="row">
               <div className="col-12 mb--16">
+                <label className="mb--8 d-block font-weight-bold">Your Rating:</label>
                 <div className="rbt-contact-input-field-grp">
-                  <ul className="rbt-review-inp-list">
-                    <li className="rbt-review-inp">
-                      <input
-                        id="rbt-review-radio-1"
-                        type="radio"
-                        name="rbt-review-radio"
-                      />
-                      <label htmlFor="rbt-review-radio-1">
-                        <span className="rbt-rating-icon-list">
-                          <span>
-                            <i className="fa-solid fa-star rbt-rated-icon" />
-                          </span>
-                        </span>
-                      </label>
-                    </li>
-                    <li className="rbt-review-inp">
-                      <input
-                        id="rbt-review-radio-2"
-                        type="radio"
-                        name="rbt-review-radio"
-                      />
-                      <label htmlFor="rbt-review-radio-2">
-                        <span className="rbt-rating-icon-list">
-                          <span>
-                            <i className="fa-solid fa-star rbt-rated-icon" />
-                          </span>
-                          <span>
-                            <i className="fa-solid fa-star rbt-rated-icon" />
-                          </span>
-                        </span>
-                      </label>
-                    </li>
-                    <li className="rbt-review-inp">
-                      <input
-                        id="rbt-review-radio-3"
-                        type="radio"
-                        name="rbt-review-radio"
-                      />
-                      <label htmlFor="rbt-review-radio-3">
-                        <span className="rbt-rating-icon-list">
-                          <span>
-                            <i className="fa-solid fa-star rbt-rated-icon" />
-                          </span>
-                          <span>
-                            <i className="fa-solid fa-star rbt-rated-icon" />
-                          </span>
-                          <span>
-                            <i className="fa-solid fa-star rbt-rated-icon" />
-                          </span>
-                        </span>
-                      </label>
-                    </li>
-                    <li className="rbt-review-inp">
-                      <input
-                        id="rbt-review-radio-4"
-                        type="radio"
-                        name="rbt-review-radio"
-                      />
-                      <label htmlFor="rbt-review-radio-4">
-                        <span className="rbt-rating-icon-list">
-                          <span>
-                            <i className="fa-solid fa-star rbt-rated-icon" />
-                          </span>
-                          <span>
-                            <i className="fa-solid fa-star rbt-rated-icon" />
-                          </span>
-                          <span>
-                            <i className="fa-solid fa-star rbt-rated-icon" />
-                          </span>
-                          <span>
-                            <i className="fa-solid fa-star rbt-rated-icon" />
-                          </span>
-                        </span>
-                      </label>
-                    </li>
-                    <li className="rbt-review-inp">
-                      <input
-                        id="rbt-review-radio-5"
-                        type="radio"
-                        name="rbt-review-radio"
-                      />
-                      <label htmlFor="rbt-review-radio-5">
-                        <span className="rbt-rating-icon-list">
-                          <span>
-                            <i className="fa-solid fa-star rbt-rated-icon" />
-                          </span>
-                          <span>
-                            <i className="fa-solid fa-star rbt-rated-icon" />
-                          </span>
-                          <span>
-                            <i className="fa-solid fa-star rbt-rated-icon" />
-                          </span>
-                          <span>
-                            <i className="fa-solid fa-star rbt-rated-icon" />
-                          </span>
-                          <span>
-                            <i className="fa-solid fa-star rbt-rated-icon" />
-                          </span>
-                        </span>
-                      </label>
-                    </li>
-                  </ul>
+                  <div className="d-flex align-items-center" style={{ gap: "8px", cursor: "pointer" }}>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setRating(star)}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          padding: "4px",
+                          cursor: "pointer",
+                          color: star <= rating ? "#f59e0b" : "#d1d5db",
+                          fontSize: "24px",
+                        }}
+                      >
+                        <i className="fa-solid fa-star" />
+                      </button>
+                    ))}
+                    <span className="ml--8 text-muted font-weight-500">
+                      ({rating} of 5 stars)
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div className="col-12 mb--16">
+              <div className="col-md-6 col-12 mb--16">
                 <div className="rbt-contact-input-field-grp">
-                  <label htmlFor="email">Your Review Title</label>
+                  <label htmlFor="reviewer-name">Your Name</label>
                   <input
                     className="rbt-contact-input-field"
-                    type="email"
-                    id="email"
+                    type="text"
+                    id="reviewer-name"
+                    placeholder="e.g. John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="col-md-6 col-12 mb--16">
+                <div className="rbt-contact-input-field-grp">
+                  <label htmlFor="review-title">Review Headline</label>
+                  <input
+                    className="rbt-contact-input-field"
+                    type="text"
+                    id="review-title"
+                    placeholder="e.g. Great quality!"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                   />
                 </div>
               </div>
               <div className="col-12 mb--16">
                 <div className="rbt-contact-input-field-grp">
-                  <label htmlFor="message">Your review</label>
+                  <label htmlFor="message">Your Review Comments *</label>
                   <textarea
                     className="rbt-contact-input-field"
                     name="message"
                     id="message"
-                    defaultValue={""}
+                    rows={4}
+                    placeholder="Write your feedback regarding the product performance, quality, and delivery..."
+                    required
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
                   />
                 </div>
               </div>
-              <div className="d-flex justify-content-md-end mt--8 rbt-gap--12 flex-wrap">
-                <button
-                  type="button"
-                  className="rbt-btn rbt-btn-md rbt-btn-border"
-                >
-                  Upload Image
-                </button>
+              <div className="col-12 d-flex justify-content-end mt--8">
                 <button type="submit" className="rbt-btn rbt-btn-md">
-                  Submit Now
+                  Submit Review
                 </button>
               </div>
             </div>

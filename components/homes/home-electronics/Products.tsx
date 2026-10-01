@@ -1,9 +1,13 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import ProductCard9 from "@/components/product-cards/ProductCard9";
 import NavEffectTabs from "../../common/ui/NavEffectTabs";
 import { electronicsCardData } from "@/data/products/electronics";
+import { useAuthStore } from "@/context/authStore";
+import { fetchStorefrontProducts } from "@/lib/api";
+
+import { Product } from "@/types/product";
 
 const TABS = [
   { id: "best-sellers", label: "Best Sellers" },
@@ -12,16 +16,43 @@ const TABS = [
   { id: "view-all", label: "View All" },
 ];
 
-export default function Products() {
+export default function Products({
+  products,
+}: {
+  products?: Product[];
+}) {
   const [activeTab, setActiveTab] = useState<string>("best-sellers");
+  const { token, activeView } = useAuthStore();
+  const [currentProducts, setCurrentProducts] = useState<Product[] | undefined>(products);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function refresh() {
+      const updated = await fetchStorefrontProducts({ token, viewMode: activeView });
+      if (isMounted && updated.length > 0) {
+        setCurrentProducts(updated);
+      }
+    }
+    // Only refresh on client if token or activeView changed from default guest
+    if (token || activeView === "WHOLESALE") {
+      refresh();
+    } else if (products) {
+      setCurrentProducts(products);
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [token, activeView, products]);
+
+  const sourceProducts = currentProducts !== undefined ? currentProducts : electronicsCardData;
 
   const filteredProducts = useMemo(() => {
-    if (activeTab === "view-all") return electronicsCardData;
+    if (activeTab === "view-all") return sourceProducts;
 
-    return electronicsCardData.filter((product) =>
-      product.demoTab?.includes(activeTab),
+    return sourceProducts.filter((product) =>
+      product.demoTab?.includes(activeTab) || true
     );
-  }, [activeTab]);
+  }, [activeTab, sourceProducts]);
 
   return (
     <div
