@@ -12,6 +12,7 @@ import {
 import PasswordStrengthIndicator from "@/components/common/forms/PasswordStrengthIndicator";
 import { useAuthStore } from "@/context/authStore";
 import { useUiStore } from "@/context/uiStore";
+import StoreLogo from "@/components/common/StoreLogo";
 
 export default function Signup() {
   const router = useRouter();
@@ -96,12 +97,7 @@ export default function Signup() {
                 <div className="rbt-login-form-top">
                   <div className="logo">
                     <Link href={`/`}>
-                      <Image
-                        alt="Ecommerce Logo Images"
-                        src="/assets/images/logo/logo.webp"
-                        width={1487}
-                        height={334}
-                      />
+                      <StoreLogo />
                     </Link>
                   </div>
                   <h6 className="rbt-title rbt-text-bold mb--12">

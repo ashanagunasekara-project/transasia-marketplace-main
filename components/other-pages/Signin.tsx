@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -15,6 +15,7 @@ export default function Signin() {
     loginPassword,
     sendOtp,
     verifyOtp,
+    lookupWholesaleCustomer,
     loginWholesale,
     isLoading,
     error,
@@ -48,6 +49,23 @@ export default function Signin() {
   const [wholesaleOtpSent, setWholesaleOtpSent] = useState(false);
   const [wholesaleDebugOtp, setWholesaleDebugOtp] = useState<string | null>(null);
   const [wholesaleMaskedPhone, setWholesaleMaskedPhone] = useState<string>("");
+
+  useEffect(() => {
+    const trimmed = wholesaleId.trim();
+    if (trimmed.length >= 4) {
+      const timer = setTimeout(async () => {
+        const res = await lookupWholesaleCustomer(trimmed);
+        if (res.success && res.maskedPhone) {
+          setWholesaleMaskedPhone(res.maskedPhone);
+        } else {
+          setWholesaleMaskedPhone("");
+        }
+      }, 350);
+      return () => clearTimeout(timer);
+    } else {
+      setWholesaleMaskedPhone("");
+    }
+  }, [wholesaleId, lookupWholesaleCustomer]);
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -425,6 +443,15 @@ export default function Signin() {
                                   onChange={(e) => setWholesaleId(e.target.value.toUpperCase())}
                                   required
                                 />
+                                {wholesaleMaskedPhone && (
+                                  <div className="alert alert-secondary p--8 rounded mt--8 d-flex align-items-center gap-2 b4 text-dark border">
+                                    <i className="fa-solid fa-mobile-screen-button text-primary" />
+                                    <span>
+                                      Registered Mobile:{" "}
+                                      <strong className="text-primary font-monospace">{wholesaleMaskedPhone}</strong>
+                                    </span>
+                                  </div>
+                                )}
                                 <small className="text-muted mt--4 d-block">
                                   Verification OTP code will be sent via SMS to the mobile number registered with this ID.
                                 </small>
@@ -439,13 +466,22 @@ export default function Signin() {
                             </form>
                           ) : (
                             <form onSubmit={handleWholesaleVerifyOtp}>
-                              <div className="alert alert-info p--8 rounded mb--12 b4">
-                                Verification code sent to registered number{" "}
-                                <strong>{wholesaleMaskedPhone || "for " + wholesaleId}</strong>
+                              <div className="alert alert-info p--10 rounded mb--12 b4">
+                                <div className="d-flex align-items-center justify-content-between mb--4">
+                                  <span>Verification code sent to registered number:</span>
+                                </div>
+                                <div className="d-flex align-items-center gap-2">
+                                  <i className="fa-solid fa-mobile-screen-button text-primary" />
+                                  <strong className="text-primary font-monospace" style={{ fontSize: "15px" }}>
+                                    {wholesaleMaskedPhone || wholesaleId}
+                                  </strong>
+                                </div>
                                 {wholesaleDebugOtp && (
-                                  <span className="badge bg-warning text-dark ml--8">
-                                    Code: {wholesaleDebugOtp}
-                                  </span>
+                                  <div className="mt--6">
+                                    <span className="badge bg-warning text-dark">
+                                      Code: {wholesaleDebugOtp}
+                                    </span>
+                                  </div>
                                 )}
                               </div>
                               <div className="rbt-input-field-grp mb--16">

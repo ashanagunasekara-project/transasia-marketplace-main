@@ -85,9 +85,8 @@ export default function Brands() {
               {electronicsBrands.map((brand, index) => (
                 <SwiperSlide key={brand.id} className="swiper-slide">
                   <div
-                    className={`rbt-brand text-center style-one rbt-content-transform-style rbt-scroll-trigger fade_in animation-order-${
-                      index + 1
-                    }`}
+                    className={`rbt-brand text-center style-one rbt-content-transform-style rbt-scroll-trigger fade_in animation-order-${index + 1
+                      }`}
                   >
                     <Link href={`/shop-by-brands`}>
                       <div className="rbt-brand-inner">

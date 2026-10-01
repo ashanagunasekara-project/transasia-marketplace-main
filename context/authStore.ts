@@ -48,6 +48,7 @@ interface AuthState {
     target: string | { phone?: string; wholesaleCustomerId?: string }
   ) => Promise<{ success: boolean; message?: string; debugOtp?: string; isLocked?: boolean; maskedPhone?: string }>;
   verifyOtp: (phone: string, otpCode: string) => Promise<{ success: boolean; message?: string; isLocked?: boolean }>;
+  lookupWholesaleCustomer: (wholesaleCustomerId: string) => Promise<{ success: boolean; maskedPhone?: string; businessName?: string; message?: string }>;
   loginWholesale: (params: { wholesaleCustomerId: string; password?: string; otpCode?: string }) => Promise<{ success: boolean; message?: string }>;
   registerRegular: (data: {
     fullName: string;
@@ -179,6 +180,25 @@ export const useAuthStore = create<AuthState>()(
         } catch (err: any) {
           set({ isLoading: false, error: err.message || "Network error" });
           return { success: false, message: err.message || "Network error" };
+        }
+      },
+
+      lookupWholesaleCustomer: async (wholesaleCustomerId: string) => {
+        try {
+          const res = await fetch(
+            `${API_BASE_URL}/api/auth/wholesale-lookup/${encodeURIComponent(wholesaleCustomerId.trim())}`
+          );
+          const data = await res.json();
+          if (data.success && data.data) {
+            return {
+              success: true,
+              maskedPhone: data.data.maskedPhone,
+              businessName: data.data.businessName,
+            };
+          }
+          return { success: false, message: data.message };
+        } catch (err: any) {
+          return { success: false, message: err.message || "Failed to lookup customer" };
         }
       },
 
