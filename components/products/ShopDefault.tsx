@@ -1,7 +1,7 @@
 "use client";
 import { WaveFatIcon } from "../svg-icons";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   clearAllFilters,
@@ -20,6 +20,8 @@ import Sidebar from "./Sidebar";
 import LayoutHandler from "./LayoutHandler";
 import SidebarScrollable from "./SidebarScrollable";
 import { Product } from "@/types/product";
+import { useAuthStore } from "@/context/authStore";
+import { fetchStorefrontProducts } from "@/lib/api";
 
 import { useShopState } from "./useShopState";
 import ProductCard16 from "../product-cards/ProductCard16";
@@ -76,14 +78,34 @@ export default function ShopDefault({
   products?: Product[];
   hasCardBorder?: boolean;
 }) {
+  const { token, activeView } = useAuthStore();
+  const [liveProducts, setLiveProducts] = useState<Product[] | undefined>(products);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function refreshPricing() {
+      const updated = await fetchStorefrontProducts({ token, viewMode: activeView });
+      if (isMounted && updated.length > 0) {
+        setLiveProducts(updated);
+      }
+    }
+    if (token || activeView === "WHOLESALE") {
+      refreshPricing();
+    } else {
+      setLiveProducts(products);
+    }
+    return () => { isMounted = false; };
+  }, [token, activeView, products]);
+
   const { state, dispatch, visibleProducts, getFilterCount, isLoadMore } =
     useShopState({
       column,
       loaderType,
       defaultTags: defaultFilterTag,
       itemPerPage,
-      products,
+      products: liveProducts,
     });
+
   const columnClass = useMemo(() => {
     if (column <= 4) {
       return `col-xxl-${12 / column} col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 product-col mt--24 ${containerFull ? "" : "product-four-col"}`;

@@ -36,6 +36,7 @@ export interface BackendProduct {
   description?: string | null;
   price: number;
   retailPrice?: number | null;
+  wholesalePrice?: number | null;
   isWholesalePricingApplied?: boolean;
   stockQuantity: number;
   stockLabel?: string;
@@ -49,6 +50,22 @@ export interface BackendProduct {
   } | null;
   images?: { id: string; url: string; isPrimary: boolean }[];
   primaryImage?: string | null;
+}
+
+export interface FetchProductsOptions {
+  token?: string | null;
+  viewMode?: "REGULAR" | "WHOLESALE" | null;
+}
+
+function buildProductAuthHeaders(options?: FetchProductsOptions): HeadersInit {
+  const headers: Record<string, string> = {};
+  if (options?.token) {
+    headers["Authorization"] = `Bearer ${options.token}`;
+  }
+  if (options?.viewMode) {
+    headers["x-customer-view"] = options.viewMode;
+  }
+  return headers;
 }
 
 export function mapBackendProductToStorefront(item: BackendProduct): Product {
@@ -66,19 +83,31 @@ export function mapBackendProductToStorefront(item: BackendProduct): Product {
   const brandName = item.brand?.name || "Transasia";
 
   const isInStock = item.isAvailable && item.stockQuantity > 0;
-  const hasDiscount =
-    item.retailPrice && item.retailPrice > item.price;
-  const discountPct = hasDiscount
-    ? Math.round(((item.retailPrice! - item.price) / item.retailPrice!) * 100)
+
+  // Wholesale pricing: if wholesale pricing is applied, show wholesale price;
+  // retailPrice (the original base price) becomes the crossed-out oldPrice.
+  const isWholesale = item.isWholesalePricingApplied === true;
+  const effectivePrice = Number(item.price);
+  const originalRetailPrice = item.retailPrice ? Number(item.retailPrice) : null;
+
+  // Show discount badge when: wholesaler sees reduced price vs retail, or a general sale
+  const hasDiscount = isWholesale
+    ? originalRetailPrice !== null && originalRetailPrice > effectivePrice
+    : originalRetailPrice !== null && originalRetailPrice > effectivePrice;
+
+  const discountPct = hasDiscount && originalRetailPrice
+    ? Math.round(((originalRetailPrice - effectivePrice) / originalRetailPrice) * 100)
     : null;
 
   return {
     id: item.id,
     title: item.title,
-    price: Number(item.price),
-    oldPrice: hasDiscount ? Number(item.retailPrice) : null,
+    price: effectivePrice,
+    oldPrice: hasDiscount ? originalRetailPrice : null,
     discount: discountPct,
     discountPercentage: discountPct,
+    wholesalePrice: item.wholesalePrice ? Number(item.wholesalePrice) : null,
+    isWholesalePricingApplied: isWholesale,
     imgSrc: resolvedPrimaryImg,
     hoverImgSrc: resolvedHoverImg,
     category: [categoryTitle],
@@ -95,13 +124,10 @@ export function mapBackendProductToStorefront(item: BackendProduct): Product {
         text: isInStock ? "In Stock" : "Out of Stock",
         bg: isInStock ? "rbt-product-badge-bg-green" : "rbt-product-badge-bg-gray",
       },
-      ...(hasDiscount
-        ? [
-            {
-              text: `-${discountPct}%`,
-              bg: "rbt-product-badge-bg-secondary-gradient",
-            },
-          ]
+      ...(isWholesale
+        ? [{ text: "Wholesale", bg: "rbt-product-badge-bg-secondary-gradient" }]
+        : hasDiscount
+        ? [{ text: `-${discountPct}%`, bg: "rbt-product-badge-bg-secondary-gradient" }]
         : []),
     ],
     pricingBadges: [
@@ -146,10 +172,14 @@ export function mapBackendCategoryToStorefront(cat: BackendCategory, index: numb
   };
 }
 
-export async function fetchStorefrontProducts(): Promise<Product[]> {
+export async function fetchStorefrontProducts(
+  options?: FetchProductsOptions
+): Promise<Product[]> {
   try {
+    const headers = buildProductAuthHeaders(options);
     const res = await fetch(`${API_BASE_URL}/api/products?limit=100`, {
       cache: "no-store",
+      headers,
     });
     if (!res.ok) {
       console.error(`Failed to fetch products: ${res.status} ${res.statusText}`);
@@ -183,11 +213,14 @@ export async function fetchStorefrontCategories(): Promise<Category[]> {
 }
 
 export async function fetchStorefrontProductByIdOrSlug(
-  idOrSlug: string
+  idOrSlug: string,
+  options?: FetchProductsOptions
 ): Promise<Product | null> {
   try {
+    const headers = buildProductAuthHeaders(options);
     const res = await fetch(`${API_BASE_URL}/api/products/${encodeURIComponent(idOrSlug)}`, {
       cache: "no-store",
+      headers,
     });
     if (!res.ok) {
       return null;

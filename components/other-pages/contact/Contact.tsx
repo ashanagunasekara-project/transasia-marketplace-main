@@ -81,28 +81,28 @@ export default function Contact() {
                   <div className="inner">
                     <h6 className="rbt-location-card-title">
                       <i className="fa-sharp fa-regular fa-location-dot mr--4" />
-                      Broadway Store
+                      Colombo Store
                     </h6>
                     <p className="rbt-location-card-text">
-                      1260 Broadway, San Franci, CA 94109
+                      Trans Asia Cellular (Pvt) Ltd, 61 1st Cross St, Colombo 00110.
                     </p>
                     <ul className="rbt-contact-info-list">
                       <li>
                         <span>Phone : </span>
                         <a
-                          href="tel:+2085550112"
+                          href="tel:+94773392727"
                           className="rbt-contact-info-single color-primary"
                         >
-                          (208) 555-0112
+                          +94773 392 727
                         </a>
                       </li>
                       <li>
                         <span>Email : </span>
                         <a
-                          href="mailto:unimartabc@mail.com"
+                          href="mailto:[EMAIL_ADDRESS]"
                           className="rbt-contact-info-single color-primary"
                         >
-                          unimartabc@mail.com
+                          [EMAIL_ADDRESS]
                         </a>
                       </li>
                     </ul>
@@ -116,98 +116,28 @@ export default function Contact() {
                   <div className="inner">
                     <h6 className="rbt-location-card-title">
                       <i className="fa-sharp fa-regular fa-location-dot mr--4" />
-                      Valencia Store
+                      Kurunegala Store
                     </h6>
                     <p className="rbt-location-card-text">
-                      1260 Broadway, San Franci, CA 94109
+                      Trans Asia Cellular (Pvt) Ltd, 19 Katugastota-Kurunegala-Puttalam Hwy, Kurunegala.
                     </p>
                     <ul className="rbt-contact-info-list">
                       <li>
                         <span>Phone : </span>
                         <a
-                          href="tel:+2085550112"
+                          href="tel:+94372056240"
                           className="rbt-contact-info-single color-primary"
                         >
-                          (208) 555-0112
+                          +94372 056 240
                         </a>
                       </li>
                       <li>
                         <span>Email : </span>
                         <a
-                          href="mailto:unimartabc@mail.com"
+                          href="mailto:[EMAIL_ADDRESS]"
                           className="rbt-contact-info-single color-primary"
                         >
-                          unimartabc@mail.com
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              {/* End single location card */}
-              {/* Start single location card */}
-              <div className="col-12 col-md-6 col-lg-6 mt--24">
-                <div className="rbt-location-card style-two">
-                  <div className="inner">
-                    <h6 className="rbt-location-card-title">
-                      <i className="fa-sharp fa-regular fa-location-dot mr--4" />
-                      Emeryville Store
-                    </h6>
-                    <p className="rbt-location-card-text">
-                      1260 Broadway, San Franci, CA 94109
-                    </p>
-                    <ul className="rbt-contact-info-list">
-                      <li>
-                        <span>Phone : </span>
-                        <a
-                          href="tel:+2085550112"
-                          className="rbt-contact-info-single color-primary"
-                        >
-                          (208) 555-0112
-                        </a>
-                      </li>
-                      <li>
-                        <span>Email : </span>
-                        <a
-                          href="mailto:unimartabc@mail.com"
-                          className="rbt-contact-info-single color-primary"
-                        >
-                          unimartabc@mail.com
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              {/* End single location card */}
-              {/* Start single location card */}
-              <div className="col-12 col-md-6 col-lg-6 mt--24">
-                <div className="rbt-location-card style-two">
-                  <div className="inner">
-                    <h6 className="rbt-location-card-title">
-                      <i className="fa-sharp fa-regular fa-location-dot mr--4" />
-                      Alameda Store
-                    </h6>
-                    <p className="rbt-location-card-text">
-                      1260 Broadway, San Franci, CA 94109
-                    </p>
-                    <ul className="rbt-contact-info-list">
-                      <li>
-                        <span>Phone : </span>
-                        <a
-                          href="tel:+2085550112"
-                          className="rbt-contact-info-single color-primary"
-                        >
-                          (208) 555-0112
-                        </a>
-                      </li>
-                      <li>
-                        <span>Email : </span>
-                        <a
-                          href="mailto:unimartabc@mail.com"
-                          className="rbt-contact-info-single color-primary"
-                        >
-                          unimartabc@mail.com
+                          [EMAIL_ADDRESS]
                         </a>
                       </li>
                     </ul>
