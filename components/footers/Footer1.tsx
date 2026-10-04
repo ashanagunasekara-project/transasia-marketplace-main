@@ -1,4 +1,3 @@
-import Newsletter from "../common/other-components/Newsletter";
 import Image from "next/image";
 import Link from "next/link";
 import { footerData, socialLinks } from "../../data/footer";
@@ -7,7 +6,6 @@ import StoreLogo from "@/components/common/StoreLogo";
 export default function Footer1() {
   return (
     <>
-      <Newsletter />
       <footer className="rbt-footer rbt-footer-style-one rbt-bg-color-gray-light">
         <div className="rbt-footer-top rbt-section-gap2Top">
           <div className="container">
