@@ -50,6 +50,8 @@ export interface BackendProduct {
   } | null;
   images?: { id: string; url: string; isPrimary: boolean }[];
   primaryImage?: string | null;
+  createdAt?: string;
+  salesCount?: number;
 }
 
 export interface FetchProductsOptions {
@@ -99,6 +101,18 @@ export function mapBackendProductToStorefront(item: BackendProduct): Product {
     ? Math.round(((originalRetailPrice - effectivePrice) / originalRetailPrice) * 100)
     : null;
 
+  // --- Tab Classification ---
+  // "best-sellers": products that have been ordered at least once (salesCount > 0)
+  // "new-arrivals": products created within the last 30 days
+  // "view-all":  always included (all active products)
+  const salesCount = item.salesCount ?? 0;
+  const createdAt = item.createdAt ? new Date(item.createdAt) : null;
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const computedDemoTab: string[] = ["view-all"];
+  if (salesCount > 0) computedDemoTab.push("best-sellers");
+  if (createdAt && createdAt >= thirtyDaysAgo) computedDemoTab.push("new-arrivals");
+
   return {
     id: item.id,
     title: item.title,
@@ -118,7 +132,9 @@ export function mapBackendProductToStorefront(item: BackendProduct): Product {
     rating: 5,
     ratingCount: 15,
     reviewCount: 15,
-    demoTab: ["best-sellers", "new-arrivals", "on-sale", "view-all"],
+    salesCount,
+    createdAt: item.createdAt,
+    demoTab: computedDemoTab,
     badges: [
       {
         text: isInStock ? "In Stock" : "Out of Stock",
