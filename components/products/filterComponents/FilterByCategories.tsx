@@ -1,15 +1,14 @@
 "use client";
 
-const categories = [
-  { id: 1, name: "Smartphones & Mobile" },
-  { id: 2, name: "Audio & Headphones" },
-  { id: 3, name: "Laptops & Computers" },
-  { id: 4, name: "Wearable Tech" },
-  { id: 5, name: "Cameras & Drones" },
-  { id: 6, name: "Gaming Accessories" },
-];
-
+import { useEffect, useState } from "react";
 import { Product } from "@/types";
+import { DOCUMENTATION_CATEGORIES } from "@/data/documentationCategories";
+import { fetchStorefrontCategories } from "@/lib/api";
+
+type CategoryItem = {
+  id: string | number;
+  name: string;
+};
 
 export default function FilterByCategories({
   selectedItems,
@@ -20,6 +19,36 @@ export default function FilterByCategories({
   onChange: (value: string) => void;
   getFilterCount: (fn: (product: Product) => boolean) => number;
 }) {
+  const [categories, setCategories] = useState<CategoryItem[]>(() =>
+    DOCUMENTATION_CATEGORIES.map((c) => ({
+      id: c.id,
+      name: c.title,
+    }))
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadCategories() {
+      try {
+        const live = await fetchStorefrontCategories({ onlyParents: true });
+        if (isMounted && live && live.length > 0) {
+          setCategories(
+            live.map((c: any) => ({
+              id: c.id,
+              name: c.title || c.name,
+            }))
+          );
+        }
+      } catch (err) {
+        // Fallback to DOCUMENTATION_CATEGORIES remains
+      }
+    }
+    loadCategories();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const handleToggle = (name: string) => {
     onChange(name);
   };

@@ -175,15 +175,13 @@ export default function ShopDefault({
         className={`${containerFull ? "rbt-full-width-wrapper" : "container"}`}
       >
         <div
-          className={`row row--16 mt_dec--24  ${
-            rightSidebar ? "flex-row-reverse" : ""
-          } `}
+          className={`row row--16 mt_dec--24  ${rightSidebar ? "flex-row-reverse" : ""
+            } `}
         >
           <div className={sidebarColClass}>
             <aside
-              className={`rbt-sidebar has-rbt-fshape ${
-                stickyTop ? "sticky-top" : ""
-              }`}
+              className={`rbt-sidebar has-rbt-fshape ${stickyTop ? "sticky-top" : ""
+                }`}
             >
               <div className="rbt-sidebar-widget-wrapper rbt-sidebar-bg-one position-relative">
                 <div className="rbt-sidebar-top">
@@ -208,18 +206,6 @@ export default function ShopDefault({
                     dispatch={dispatch}
                   />
                 )}
-              </div>
-              <div className="rbt-sidebar-widget-wrapper">
-                <div className="rbt-sidebar-widget-img">
-                  <a href="#">
-                    <Image
-                      alt="Sidebar Banner"
-                      src="/assets/images/sidebar/sidebar-banner-one.webp"
-                      width={628}
-                      height={840}
-                    />
-                  </a>
-                </div>
               </div>
             </aside>
           </div>
@@ -349,29 +335,29 @@ export default function ShopDefault({
             <div className="row mt--40 mt_sm--16">
               <div className="col-12">
                 {hasNoFilteredItems ||
-                !hasMultiplePages ? null : !isLoadMore ? (
-                  <ShopPagination
-                    key={state.itemPerPage}
-                    state={state}
-                    dispatch={dispatch}
-                  />
-                ) : (
+                  !hasMultiplePages ? null : !isLoadMore ? (
+                    <ShopPagination
+                      key={state.itemPerPage}
+                      state={state}
+                      dispatch={dispatch}
+                    />
+                  ) : (
                   <>
                     {state.currentPage * state.itemPerPage <
                       state.sorted.length && (
-                      <div className="rbt-load-more-btn-area text-center">
-                        <a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setCurrentPage(state.currentPage + 1, dispatch);
-                          }}
-                          className="rbt-btn"
-                        >
-                          Load More <i className="fa-solid fa-spinner ml--4" />
-                        </a>
-                      </div>
-                    )}
+                        <div className="rbt-load-more-btn-area text-center">
+                          <a
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrentPage(state.currentPage + 1, dispatch);
+                            }}
+                            className="rbt-btn"
+                          >
+                            Load More <i className="fa-solid fa-spinner ml--4" />
+                          </a>
+                        </div>
+                      )}
                   </>
                 )}
               </div>

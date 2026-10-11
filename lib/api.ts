@@ -4,8 +4,11 @@ import { Category } from "@/types/categories";
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-export function resolveImageUrl(url?: string | null): string {
-  if (!url) return "/assets/images/catagory-img/banner-cat-01.webp";
+export function resolveImageUrl(
+  url?: string | null,
+  fallback = "/assets/images/catagory-img/banner-cat-01.webp"
+): string {
+  if (!url) return fallback;
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
   if (url.startsWith("/uploads/")) return `${API_BASE_URL}${url}`;
   if (url.startsWith("uploads/")) return `${API_BASE_URL}/${url}`;
@@ -176,15 +179,24 @@ export function mapBackendProductToStorefront(item: BackendProduct): Product {
 }
 
 export function mapBackendCategoryToStorefront(cat: BackendCategory, index: number = 0): Category {
+  const catSlug = cat.slug || (cat.title || "").toLowerCase().replace(/[^a-z0-9]+/g, "-");
   return {
-    id: index + 1,
-    title: cat.title,
+    id: cat.id || index + 1,
+    title: cat.title || cat.name || "",
+    name: cat.title || cat.name || "",
+    slug: catSlug,
     imgSrc: resolveImageUrl(cat.image || cat.imgSrc),
+    image: resolveImageUrl(cat.image || cat.imgSrc),
     qty: cat.productCount ?? cat.count ?? 0,
-    subCategories: (cat.subCategories || []).map((sub: any) => ({
-      title: sub.title || sub.name || "Subcategory",
-      href: `/shop?category=${encodeURIComponent(sub.slug || sub.title)}`,
-    })),
+    subCategories: (cat.subCategories || []).map((sub: any) => {
+      const subSlug = sub.slug || (sub.title || sub.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      const subTitle = sub.title || sub.name || "Subcategory";
+      return {
+        title: subTitle,
+        slug: subSlug,
+        href: `/shop?category=${encodeURIComponent(catSlug)}&subCategory=${encodeURIComponent(subSlug)}`,
+      };
+    }),
   };
 }
 
@@ -210,9 +222,16 @@ export async function fetchStorefrontProducts(
   }
 }
 
-export async function fetchStorefrontCategories(): Promise<Category[]> {
+export async function fetchStorefrontCategories(
+  options?: { onlyParents?: boolean }
+): Promise<Category[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/categories`, {
+    const url =
+      options?.onlyParents === false
+        ? `${API_BASE_URL}/api/categories`
+        : `${API_BASE_URL}/api/categories?onlyParents=true`;
+
+    const res = await fetch(url, {
       cache: "no-store",
     });
     if (!res.ok) {

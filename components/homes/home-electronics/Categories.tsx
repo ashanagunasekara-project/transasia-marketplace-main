@@ -5,6 +5,7 @@ import { ExternalLinkAltIcon } from "../../svg-icons";
 import Link from "next/link";
 import { Category } from "@/types/categories";
 import { classicBentoCategories } from "@/data/categories";
+import { DOCUMENTATION_CATEGORIES } from "@/data/documentationCategories";
 import {
   fetchStorefrontPopularCategories,
   resolveImageUrl,
@@ -74,19 +75,28 @@ export default function Categories({
   }> = popularData?.categories && popularData.categories.length > 0
     ? popularData.categories.slice(0, 6)
     : categories && categories.length > 0
-      ? categories.slice(0, 6).map((c, i) => ({
-          id: c.id ? String(c.id) : String(i + 1),
-          title: c.title || c.name || "",
-          imgSrc: c.imgSrc || c.image || "/assets/images/catagory-img/cat-transp-img-07.webp",
-          link: "/shop-by-category",
-          subCategories: c.subCategories || [],
-        }))
-      : classicBentoCategories.slice(0, 6).map((c, i) => ({
-          id: String(c.id || i + 1),
+      ? categories.slice(0, 6).map((c, i) => {
+          const catSlug = c.slug || (c.title || "").toLowerCase().replace(/[^a-z0-9]+/g, "-");
+          return {
+            id: c.id ? String(c.id) : String(i + 1),
+            title: c.title || c.name || "",
+            imgSrc: c.imgSrc || c.image || `/assets/images/catagory-img/categories-list-card/category-list-image-${(i % 12) + 1}.webp`,
+            link: `/shop?category=${encodeURIComponent(catSlug)}`,
+            subCategories: (c.subCategories || []).slice(0, 5).map((sub) => ({
+              title: sub.title,
+              href: sub.href || `/shop?category=${encodeURIComponent(catSlug)}&subCategory=${encodeURIComponent(sub.slug || sub.title.toLowerCase().replace(/[^a-z0-9]+/g, "-"))}`,
+            })),
+          };
+        })
+      : DOCUMENTATION_CATEGORIES.slice(0, 6).map((c) => ({
+          id: c.id,
           title: c.title,
           imgSrc: c.imgSrc,
-          link: "/shop-by-category",
-          subCategories: c.subCategories || [],
+          link: `/shop?category=${encodeURIComponent(c.slug)}`,
+          subCategories: c.subcategories.slice(0, 5).map((sub) => ({
+            title: sub.title,
+            href: sub.href,
+          })),
         }));
 
   const dealBannerImg = resolveImageUrl(
