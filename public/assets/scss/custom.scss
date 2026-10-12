@@ -471,3 +471,224 @@ input:not(:placeholder-shown) + .cd-headline.clip {
     font-weight: 600;
   }
 }
+
+// ==========================================
+// Uniform Product Card Sizing & Alignment
+// ==========================================
+.row:has(.rbt-product-card) {
+  align-items: stretch;
+
+  > [class*="col-"] {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.rbt-card.rbt-product-card {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #eef2f6;
+  transition: all 0.25s ease;
+
+  &:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .inner {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto;
+  }
+
+  .rbt-card-img {
+    height: 220px !important;
+    min-height: 220px !important;
+    max-height: 220px !important;
+    width: 100% !important;
+    position: relative;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    border-radius: 11px 11px 0 0;
+
+    > a {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    img.rbt-prd-img,
+    img.rbt-hover-img {
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+      object-fit: contain !important;
+      padding: 14px;
+      transition: transform 0.3s ease;
+    }
+  }
+
+  .rbt-card-body {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto;
+    padding: 16px;
+
+    .rbt-card-subtitle,
+    .rbt-card-categories-text {
+      display: block;
+      font-size: 12px;
+      line-height: 18px;
+      height: 18px;
+      min-height: 18px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+      color: #64748b;
+    }
+
+    .rbt-card-category-placeholder {
+      height: 18px;
+      min-height: 18px;
+      margin-bottom: 4px;
+    }
+
+    .rbt-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+      height: 40px;
+      min-height: 40px;
+      max-height: 40px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      margin-top: 0;
+      margin-bottom: 8px;
+
+      a {
+        display: block;
+        color: #1e293b;
+        &:hover {
+          color: var(--color-primary, #0d6efd);
+        }
+      }
+    }
+
+    .rbt-card-rating {
+      min-height: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+      line-height: 1;
+
+      .rating-digit {
+        margin-bottom: 0;
+        font-size: 12px;
+        color: #64748b;
+      }
+    }
+
+    .pricing-part {
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+
+      .price-text {
+        font-weight: 700;
+        color: #0f172a;
+        font-size: 16px;
+      }
+      del.price-text {
+        font-weight: 400;
+        color: #94a3b8;
+        font-size: 13px;
+      }
+    }
+
+    .prd-btn-grp {
+      margin-top: auto !important;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+
+      .rbt-btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: 8px;
+        line-height: 36px;
+        height: 36px;
+        padding: 0 12px;
+        transition: all 0.2s ease;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    border-radius: 8px;
+
+    .rbt-card-img {
+      height: 150px !important;
+      min-height: 150px !important;
+      max-height: 150px !important;
+
+      img.rbt-prd-img,
+      img.rbt-hover-img {
+        padding: 8px;
+      }
+    }
+
+    .rbt-card-body {
+      padding: 10px;
+
+      .rbt-card-title {
+        font-size: 12px;
+        line-height: 1.3;
+        height: 32px;
+        min-height: 32px;
+        max-height: 32px;
+        margin-bottom: 6px;
+      }
+
+      .pricing-part {
+        min-height: 24px;
+        margin-bottom: 8px;
+        .price-text {
+          font-size: 14px;
+        }
+      }
+
+      .prd-btn-grp {
+        gap: 6px;
+        .rbt-btn {
+          font-size: 11px;
+          line-height: 28px;
+          height: 28px;
+          padding: 0 6px;
+        }
+      }
+    }
+  }
+}
+

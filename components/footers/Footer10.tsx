@@ -13,13 +13,6 @@ export default function Footer10() {
     <footer className="rbt-footer rbt-footer-style-ten rbt-bg-color-gray-light">
       <div className="rbt-footer-top rbt-section-gap2">
         <div className="container">
-          <div className="row">
-            <div className="col-12">
-              <div className="rbt-watermark-text rbt-watermark-color-var-1 text-center">
-                <span>Follow Us@Transasia</span>
-              </div>
-            </div>
-          </div>
           <div className="row mt_dec--24">
             <div className="col-12">
               <hr className="rbt-separator m-0" />
