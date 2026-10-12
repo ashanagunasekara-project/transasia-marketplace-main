@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useReducer } from "react";
+import { useSearchParams } from "next/navigation";
 import { initialState, reducer } from "../reducer/filterReducer";
 import { electronicsCardData } from "@/data/products/electronics";
+import { DOCUMENTATION_CATEGORIES } from "@/data/documentationCategories";
 import type { FilterState, Product } from "@/types";
 
 type LoaderType = "pagination" | "button";
@@ -15,6 +17,31 @@ type UseShopStateOptions = {
   products?: Product[];
 };
 
+function resolveCategoryTitle(slugOrTitle: string): string {
+  if (!slugOrTitle) return slugOrTitle;
+  const normalized = slugOrTitle.toLowerCase().trim();
+  for (const parent of DOCUMENTATION_CATEGORIES) {
+    if (
+      parent.slug.toLowerCase() === normalized ||
+      parent.title.toLowerCase() === normalized
+    ) {
+      return parent.title;
+    }
+    for (const sub of parent.subcategories) {
+      if (
+        sub.slug.toLowerCase() === normalized ||
+        sub.title.toLowerCase() === normalized
+      ) {
+        return sub.title;
+      }
+    }
+  }
+  return slugOrTitle
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
 export function useShopState({
   column,
   loaderType = "pagination",
@@ -22,23 +49,70 @@ export function useShopState({
   itemPerPage = 0,
   products,
 }: UseShopStateOptions) {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams?.get("category");
+  const subCategoryParam = searchParams?.get("subCategory");
+  const brandParam = searchParams?.get("brand");
+  const tagParam = searchParams?.get("tag");
+
   const sourceProducts = useMemo(() => {
     if (products && products.length > 0) return products;
     if (products !== undefined) return products;
     return electronicsCardData;
   }, [products]);
 
+  const initialCategories = useMemo(() => {
+    if (subCategoryParam) return [resolveCategoryTitle(subCategoryParam)];
+    if (categoryParam) return [resolveCategoryTitle(categoryParam)];
+    return [];
+  }, [categoryParam, subCategoryParam]);
+
+  const initialBrands = useMemo(() => {
+    if (brandParam) return [brandParam];
+    return [];
+  }, [brandParam]);
+
+  const initialTags = useMemo(() => {
+    if (tagParam) return [tagParam];
+    return defaultTags;
+  }, [tagParam, defaultTags]);
+
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
     filtered: sourceProducts,
     sorted: sourceProducts,
+    categories: initialCategories,
+    brands: initialBrands,
+    tags: initialTags,
     itemPerPage: itemPerPage
       ? itemPerPage
       : column >= 4
         ? column * 3
         : column * 5,
-    tags: defaultTags,
   });
+
+  // Synchronize state when URL query parameters update
+  useEffect(() => {
+    if (subCategoryParam) {
+      const resolved = resolveCategoryTitle(subCategoryParam);
+      dispatch({ type: "SET_CATEGORIES", payload: [resolved] });
+    } else if (categoryParam) {
+      const resolved = resolveCategoryTitle(categoryParam);
+      dispatch({ type: "SET_CATEGORIES", payload: [resolved] });
+    }
+  }, [categoryParam, subCategoryParam]);
+
+  useEffect(() => {
+    if (brandParam) {
+      dispatch({ type: "SET_BRANDS", payload: [brandParam] });
+    }
+  }, [brandParam]);
+
+  useEffect(() => {
+    if (tagParam) {
+      dispatch({ type: "SET_TAGS", payload: [tagParam] });
+    }
+  }, [tagParam]);
 
   const filterKey = useMemo(() => {
     return [

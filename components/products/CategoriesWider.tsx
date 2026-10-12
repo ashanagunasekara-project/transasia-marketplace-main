@@ -24,7 +24,7 @@ export default function CategoriesWider({
               className="col-lg-1 col-md-3 col-sm-4 col-6 mt--12"
             >
               <Link
-                href="/shop-by-categories"
+                href={`/shop?category=${encodeURIComponent(category.slug || category.title.toLowerCase().replace(/[^a-z0-9]+/g, "-"))}`}
                 className={`rbt-cat-box-square text-center rbt-scroll-trigger fade_in animation-order-${
                   index + 1
                 }`}

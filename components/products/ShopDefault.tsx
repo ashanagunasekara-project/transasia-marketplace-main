@@ -1,7 +1,7 @@
 "use client";
 import { WaveFatIcon } from "../svg-icons";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 
 import {
   clearAllFilters,
@@ -45,23 +45,7 @@ type CardVariant =
   | "shadow-hover"
   | "small-variation";
 
-export default function ShopDefault({
-  rightSidebar = false,
-  stickyTop = false,
-  sidebarScrollAble = false,
-  loaderType = "pagination",
-  column = 3,
-  containerFull = false,
-  wider = false,
-  defaultFilterTag = [] as string[],
-  itemPerPage = 0,
-  showBestSellerBadge = false,
-  countdownStyle = "default",
-  showQuantityBadge = false,
-  cardVariant = "default",
-  products,
-  hasCardBorder = false,
-}: {
+export type ShopDefaultProps = {
   rightSidebar?: boolean;
   stickyTop?: boolean;
   sidebarScrollAble?: boolean;
@@ -77,7 +61,25 @@ export default function ShopDefault({
   cardVariant?: CardVariant;
   products?: Product[];
   hasCardBorder?: boolean;
-}) {
+};
+
+function ShopDefaultContent({
+  rightSidebar = false,
+  stickyTop = false,
+  sidebarScrollAble = false,
+  loaderType = "pagination",
+  column = 3,
+  containerFull = false,
+  wider = false,
+  defaultFilterTag = [] as string[],
+  itemPerPage = 0,
+  showBestSellerBadge = false,
+  countdownStyle = "default",
+  showQuantityBadge = false,
+  cardVariant = "default",
+  products,
+  hasCardBorder = false,
+}: ShopDefaultProps) {
   const { token, activeView } = useAuthStore();
   const [liveProducts, setLiveProducts] = useState<Product[] | undefined>(products);
 
@@ -366,5 +368,13 @@ export default function ShopDefault({
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ShopDefault(props: ShopDefaultProps) {
+  return (
+    <Suspense fallback={null}>
+      <ShopDefaultContent {...props} />
+    </Suspense>
   );
 }

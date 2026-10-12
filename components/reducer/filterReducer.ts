@@ -1,4 +1,5 @@
 import { FilterState, FilterAction, Product } from "@/types";
+import { DOCUMENTATION_CATEGORIES } from "@/data/documentationCategories";
 
 export const DEFAULT_MAX_PRICE = 100000000;
 
@@ -21,17 +22,79 @@ export const initialState: FilterState = {
 };
 
 function matchesAllFilters(product: Product, state: FilterState): boolean {
-  if (
-    state.brands.length &&
-    !state.brands.some((b) => product.filterBrands?.includes(b))
-  )
-    return false;
+  if (state.brands.length) {
+    const prodBrands = (product.filterBrands || []).map((b) => b.toLowerCase().trim());
+    const matchesBrand = state.brands.some((selectedBrand) => {
+      const lower = selectedBrand.toLowerCase().trim();
+      return prodBrands.some((pb) => pb === lower || pb.includes(lower) || lower.includes(pb));
+    });
+    if (!matchesBrand) return false;
+  }
 
-  if (
-    state.categories.length &&
-    !state.categories.some((c) => product.filterCategory?.includes(c))
-  )
-    return false;
+  if (state.categories.length) {
+    const prodCategories = [
+      ...(product.filterCategory || []),
+      ...(product.category || []),
+    ].map((c) => String(c).toLowerCase().trim());
+
+    const matchesCategory = state.categories.some((selectedCat) => {
+      const lowerSelected = selectedCat.toLowerCase().trim();
+      const slugSelected = lowerSelected.replace(/[^a-z0-9]+/g, "-");
+
+      // 1. Direct match on title or slug
+      if (prodCategories.some((pc) => pc === lowerSelected || pc === slugSelected)) {
+        return true;
+      }
+
+      // 2. Contains match
+      if (prodCategories.some((pc) => pc.includes(lowerSelected) || lowerSelected.includes(pc))) {
+        return true;
+      }
+
+      // 3. Hierarchy match: If selected category is a parent, match any of its subcategories
+      const docParent = DOCUMENTATION_CATEGORIES.find(
+        (dc) => dc.title.toLowerCase() === lowerSelected || dc.slug.toLowerCase() === slugSelected
+      );
+      if (docParent) {
+        if (prodCategories.some((pc) => pc === docParent.slug || pc === docParent.title.toLowerCase())) {
+          return true;
+        }
+        if (
+          docParent.subcategories.some(
+            (sub) =>
+              prodCategories.includes(sub.title.toLowerCase()) ||
+              prodCategories.includes(sub.slug.toLowerCase())
+          )
+        ) {
+          return true;
+        }
+      }
+
+      // 4. Hierarchy match: If selected category is a subcategory, match if product belongs to it
+      for (const parent of DOCUMENTATION_CATEGORIES) {
+        const docSub = parent.subcategories.find(
+          (sub) =>
+            sub.title.toLowerCase() === lowerSelected ||
+            sub.slug.toLowerCase() === slugSelected
+        );
+        if (docSub) {
+          if (
+            prodCategories.some(
+              (pc) =>
+                pc === docSub.title.toLowerCase() ||
+                pc === docSub.slug.toLowerCase()
+            )
+          ) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    });
+
+    if (!matchesCategory) return false;
+  }
 
   if (state.tags.length && !state.tags.some((t) => product.tags?.includes(t)))
     return false;

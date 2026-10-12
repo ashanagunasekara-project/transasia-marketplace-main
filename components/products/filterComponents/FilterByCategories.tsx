@@ -56,7 +56,15 @@ export default function FilterByCategories({
   return (
     <>
       {categories.map((category) => {
-        const isChecked = selectedItems.includes(category.name);
+        const isChecked = selectedItems.some((item) => {
+          const normItem = item.toLowerCase().trim();
+          const normCat = category.name.toLowerCase().trim();
+          return (
+            normItem === normCat ||
+            normItem === normCat.replace(/[^a-z0-9]+/g, "-") ||
+            normCat === normItem.replace(/[^a-z0-9]+/g, "-")
+          );
+        });
         const inputId = `category-checkbox-${category.id}`;
 
         return (
@@ -76,12 +84,16 @@ export default function FilterByCategories({
                 <span className="rbt-label-text">{category.name}</span>
                 <span className="rbt-label-count">
                   (
-                  {getFilterCount(
-                    (product) =>
-                      !!(
-                        product.filterCategory?.includes(category.name) ?? false
-                      ),
-                  )}
+                  {getFilterCount((product) => {
+                    const normCat = category.name.toLowerCase().trim();
+                    const prodCats = [
+                      ...(product.filterCategory || []),
+                      ...(product.category || []),
+                    ].map((c) => String(c).toLowerCase().trim());
+                    return prodCats.some(
+                      (c) => c === normCat || c.includes(normCat) || normCat.includes(c)
+                    );
+                  })}
                   )
                 </span>
               </span>
