@@ -475,16 +475,35 @@ input:not(:placeholder-shown) + .cd-headline.clip {
 // ==========================================
 // Uniform Product Card Sizing & Alignment
 // ==========================================
-.row:has(.rbt-product-card) {
+.row:has(> [class*="col-"] > .rbt-product-card:not(.rbt-list-view-variation)) {
   align-items: stretch;
 
   > [class*="col-"] {
     display: flex;
     flex-direction: column;
+    position: relative;
+
+    &:hover,
+    &:has(.rbt-product-card:hover) {
+      z-index: 40 !important;
+    }
   }
 }
 
-.rbt-card.rbt-product-card {
+.product-col:hover,
+.col-xxl-3:has(.rbt-product-card:hover),
+.col-xl-3:has(.rbt-product-card:hover),
+.col-xl-6:has(.rbt-product-card:hover),
+.col-lg-4:has(.rbt-product-card:hover),
+.col-lg-6:has(.rbt-product-card:hover),
+.col-md-6:has(.rbt-product-card:hover),
+.col-sm-6:has(.rbt-product-card:hover),
+.col-6:has(.rbt-product-card:hover) {
+  z-index: 40 !important;
+  position: relative;
+}
+
+.rbt-card.rbt-product-card:not(.rbt-list-view-variation):not(.rbt-list-view-sm) {
   height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
@@ -492,10 +511,26 @@ input:not(:placeholder-shown) + .cd-headline.clip {
   background: #ffffff;
   border: 1px solid #eef2f6;
   transition: all 0.25s ease;
+  position: relative;
+  overflow: visible !important;
 
   &:hover {
+    z-index: 40 !important;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
     transform: translateY(-2px);
+
+    // Issue 2 Fix: Elevate dropdown details area above subsequent rows
+    .prd-details-area {
+      z-index: 45 !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      clip: auto !important;
+      clip-path: none !important;
+      background: #ffffff !important;
+      border: 1px solid #eef2f6 !important;
+      border-top: 0 !important;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12) !important;
+    }
   }
 
   .inner {
@@ -691,4 +726,5 @@ input:not(:placeholder-shown) + .cd-headline.clip {
     }
   }
 }
+
 
