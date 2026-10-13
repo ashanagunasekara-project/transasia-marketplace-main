@@ -1,4 +1,5 @@
 import { FilterState, FilterAction, Product } from "@/types";
+import { DOCUMENTATION_CATEGORIES } from "@/data/documentationCategories";
 
 export const DEFAULT_MAX_PRICE = 100000000;
 
@@ -18,20 +19,100 @@ export const initialState: FilterState = {
   sorted: [],
   currentPage: 1,
   itemPerPage: 15,
+  search: "",
 };
 
 function matchesAllFilters(product: Product, state: FilterState): boolean {
-  if (
-    state.brands.length &&
-    !state.brands.some((b) => product.filterBrands?.includes(b))
-  )
-    return false;
+  if (state.search && state.search.trim()) {
+    const q = state.search.toLowerCase().trim();
+    const titleMatch = (product.title || "").toLowerCase().includes(q);
+    const descMatch = (product.description || "").toLowerCase().includes(q);
+    const skuMatch = String(product.sku || product.id || "").toLowerCase().includes(q);
+    const brandMatch = (product.filterBrands || []).some((b) => b.toLowerCase().includes(q));
+    const tagMatch = (product.tags || []).some((t) => t.toLowerCase().includes(q));
+    const catMatch = [
+      ...(product.filterCategory || []),
+      ...(product.category || []),
+    ].some((c) => String(c).toLowerCase().includes(q));
 
-  if (
-    state.categories.length &&
-    !state.categories.some((c) => product.filterCategory?.includes(c))
-  )
-    return false;
+    if (!titleMatch && !descMatch && !skuMatch && !brandMatch && !tagMatch && !catMatch) {
+      return false;
+    }
+  }
+
+  if (state.brands.length) {
+    const prodBrands = (product.filterBrands || []).map((b) => b.toLowerCase().trim());
+    const matchesBrand = state.brands.some((selectedBrand) => {
+      const lower = selectedBrand.toLowerCase().trim();
+      return prodBrands.some((pb) => pb === lower || pb.includes(lower) || lower.includes(pb));
+    });
+    if (!matchesBrand) return false;
+  }
+
+  if (state.categories.length) {
+    const prodCategories = [
+      ...(product.filterCategory || []),
+      ...(product.category || []),
+    ].map((c) => String(c).toLowerCase().trim());
+
+    const matchesCategory = state.categories.some((selectedCat) => {
+      const lowerSelected = selectedCat.toLowerCase().trim();
+      const slugSelected = lowerSelected.replace(/[^a-z0-9]+/g, "-");
+
+      // 1. Direct match on title or slug
+      if (prodCategories.some((pc) => pc === lowerSelected || pc === slugSelected)) {
+        return true;
+      }
+
+      // 2. Contains match
+      if (prodCategories.some((pc) => pc.includes(lowerSelected) || lowerSelected.includes(pc))) {
+        return true;
+      }
+
+      // 3. Hierarchy match: If selected category is a parent, match any of its subcategories
+      const docParent = DOCUMENTATION_CATEGORIES.find(
+        (dc) => dc.title.toLowerCase() === lowerSelected || dc.slug.toLowerCase() === slugSelected
+      );
+      if (docParent) {
+        if (prodCategories.some((pc) => pc === docParent.slug || pc === docParent.title.toLowerCase())) {
+          return true;
+        }
+        if (
+          docParent.subcategories.some(
+            (sub) =>
+              prodCategories.includes(sub.title.toLowerCase()) ||
+              prodCategories.includes(sub.slug.toLowerCase())
+          )
+        ) {
+          return true;
+        }
+      }
+
+      // 4. Hierarchy match: If selected category is a subcategory, match if product belongs to it
+      for (const parent of DOCUMENTATION_CATEGORIES) {
+        const docSub = parent.subcategories.find(
+          (sub) =>
+            sub.title.toLowerCase() === lowerSelected ||
+            sub.slug.toLowerCase() === slugSelected
+        );
+        if (docSub) {
+          if (
+            prodCategories.some(
+              (pc) =>
+                pc === docSub.title.toLowerCase() ||
+                pc === docSub.slug.toLowerCase()
+            )
+          ) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    });
+
+    if (!matchesCategory) return false;
+  }
 
   if (state.tags.length && !state.tags.some((t) => product.tags?.includes(t)))
     return false;
@@ -108,6 +189,9 @@ export function reducer(state: FilterState, action: FilterAction): FilterState {
     case "SET_ITEM_PER_PAGE":
       return { ...state, itemPerPage: action.payload, currentPage: 1 };
 
+    case "SET_SEARCH":
+      return { ...state, search: action.payload, currentPage: 1 };
+
     case "FILTER_PRODUCTS": {
       const productsToFilter = [...action.payload];
       const filtered = productsToFilter.filter((product) =>
@@ -160,6 +244,7 @@ export function reducer(state: FilterState, action: FilterAction): FilterState {
         categories: [],
         ratings: [], // e.g. [4, 3]
         services: [], // e.g. ['Free Delivery', 'Hot Deals']
+        search: "",
 
         sortingOption: "Sort by (Default)",
       };

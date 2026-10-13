@@ -1,15 +1,14 @@
 "use client";
 
-const categories = [
-  { id: 1, name: "Smartphones & Mobile" },
-  { id: 2, name: "Audio & Headphones" },
-  { id: 3, name: "Laptops & Computers" },
-  { id: 4, name: "Wearable Tech" },
-  { id: 5, name: "Cameras & Drones" },
-  { id: 6, name: "Gaming Accessories" },
-];
-
+import { useEffect, useState } from "react";
 import { Product } from "@/types";
+import { DOCUMENTATION_CATEGORIES } from "@/data/documentationCategories";
+import { fetchStorefrontCategories } from "@/lib/api";
+
+type CategoryItem = {
+  id: string | number;
+  name: string;
+};
 
 export default function FilterByCategories({
   selectedItems,
@@ -20,6 +19,36 @@ export default function FilterByCategories({
   onChange: (value: string) => void;
   getFilterCount: (fn: (product: Product) => boolean) => number;
 }) {
+  const [categories, setCategories] = useState<CategoryItem[]>(() =>
+    DOCUMENTATION_CATEGORIES.map((c) => ({
+      id: c.id,
+      name: c.title,
+    }))
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadCategories() {
+      try {
+        const live = await fetchStorefrontCategories({ onlyParents: true });
+        if (isMounted && live && live.length > 0) {
+          setCategories(
+            live.map((c: any) => ({
+              id: c.id,
+              name: c.title || c.name,
+            }))
+          );
+        }
+      } catch (err) {
+        // Fallback to DOCUMENTATION_CATEGORIES remains
+      }
+    }
+    loadCategories();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const handleToggle = (name: string) => {
     onChange(name);
   };
@@ -27,7 +56,15 @@ export default function FilterByCategories({
   return (
     <>
       {categories.map((category) => {
-        const isChecked = selectedItems.includes(category.name);
+        const isChecked = selectedItems.some((item) => {
+          const normItem = item.toLowerCase().trim();
+          const normCat = category.name.toLowerCase().trim();
+          return (
+            normItem === normCat ||
+            normItem === normCat.replace(/[^a-z0-9]+/g, "-") ||
+            normCat === normItem.replace(/[^a-z0-9]+/g, "-")
+          );
+        });
         const inputId = `category-checkbox-${category.id}`;
 
         return (
@@ -47,12 +84,16 @@ export default function FilterByCategories({
                 <span className="rbt-label-text">{category.name}</span>
                 <span className="rbt-label-count">
                   (
-                  {getFilterCount(
-                    (product) =>
-                      !!(
-                        product.filterCategory?.includes(category.name) ?? false
-                      ),
-                  )}
+                  {getFilterCount((product) => {
+                    const normCat = category.name.toLowerCase().trim();
+                    const prodCats = [
+                      ...(product.filterCategory || []),
+                      ...(product.category || []),
+                    ].map((c) => String(c).toLowerCase().trim());
+                    return prodCats.some(
+                      (c) => c === normCat || c.includes(normCat) || normCat.includes(c)
+                    );
+                  })}
                   )
                 </span>
               </span>

@@ -44,15 +44,13 @@ export default function Shop2({
     <div className="rbt-component-area rbt-shop-filter-area rbt-bg-color-white rbt-section-gapBottom">
       <div className="container">
         <div
-          className={`row row--16 mt_dec--24  ${
-            rightSidebar ? "flex-row-reverse" : ""
-          } `}
+          className={`row row--16 mt_dec--24  ${rightSidebar ? "flex-row-reverse" : ""
+            } `}
         >
           <div className="col-lg-3 col-md-12 col-sm-12 col-12 mt--24">
             <aside
-              className={`rbt-sidebar has-rbt-fshape ${
-                stickyTop ? "sticky-top" : ""
-              }`}
+              className={`rbt-sidebar has-rbt-fshape ${stickyTop ? "sticky-top" : ""
+                }`}
             >
               <div className="rbt-sidebar-widget-wrapper rbt-sidebar-bg-one position-relative">
                 <div className="rbt-sidebar-top">
@@ -77,18 +75,6 @@ export default function Shop2({
                     dispatch={dispatch}
                   />
                 )}
-              </div>
-              <div className="rbt-sidebar-widget-wrapper">
-                <div className="rbt-sidebar-widget-img">
-                  <a href="#">
-                    <Image
-                      alt="Sidebar Banner"
-                      src="/assets/images/sidebar/sidebar-banner-one.webp"
-                      width={628}
-                      height={840}
-                    />
-                  </a>
-                </div>
               </div>
             </aside>
           </div>
@@ -204,15 +190,15 @@ export default function Shop2({
             <div className="row mt--40 mt_sm--16">
               <div className="col-12">
                 {hasNoFilteredItems ||
-                !hasMultiplePages ? null : !isLoadMore ? (
-                  <ShopPagination
-                    key={state.itemPerPage}
-                    state={state}
-                    dispatch={dispatch}
-                  />
-                ) : (
+                  !hasMultiplePages ? null : !isLoadMore ? (
+                    <ShopPagination
+                      key={state.itemPerPage}
+                      state={state}
+                      dispatch={dispatch}
+                    />
+                  ) : (
                   state.currentPage * state.itemPerPage <
-                    state.sorted.length && (
+                  state.sorted.length && (
                     <div className="rbt-load-more-btn-area text-center">
                       <a
                         href="#"

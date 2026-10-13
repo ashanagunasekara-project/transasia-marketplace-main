@@ -95,6 +95,8 @@ export interface Product {
   rating?: number;
   ratingCount?: number;
   reviewCount?: number;
+  salesCount?: number;
+  createdAt?: string;
 
   // Badge Fields
   badge?: ProductBadge | null;

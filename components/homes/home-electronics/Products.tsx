@@ -12,7 +12,6 @@ import { Product } from "@/types/product";
 const TABS = [
   { id: "best-sellers", label: "Best Sellers" },
   { id: "new-arrivals", label: "New Arrivals" },
-  { id: "on-sale", label: "On Sale" },
   { id: "view-all", label: "View All" },
 ];
 
@@ -47,11 +46,17 @@ export default function Products({
   const sourceProducts = currentProducts !== undefined ? currentProducts : electronicsCardData;
 
   const filteredProducts = useMemo(() => {
+    // "view-all" shows everything
     if (activeTab === "view-all") return sourceProducts;
 
-    return sourceProducts.filter((product) =>
-      product.demoTab?.includes(activeTab) || true
+    // Filter by demoTab tag (best-sellers / new-arrivals)
+    const matched = sourceProducts.filter((product) =>
+      product.demoTab?.includes(activeTab)
     );
+
+    // If API data isn't tagged yet (e.g. fresh DB, no orders), fall back to
+    // all products so the section is never blank on a new installation.
+    return matched.length > 0 ? matched : sourceProducts;
   }, [activeTab, sourceProducts]);
 
   return (

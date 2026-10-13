@@ -201,8 +201,8 @@ export default function Hero({
                                     </span>
                                     {product.oldPrice && (
                                       <OfferBadge
-                                        price={product.price}
-                                        oldPrice={product.oldPrice}
+                                        price={Number(product.price)}
+                                        oldPrice={Number(product.oldPrice)}
                                       />
                                     )}
                                   </span>

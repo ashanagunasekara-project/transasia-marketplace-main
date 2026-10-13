@@ -4,8 +4,11 @@ import { Category } from "@/types/categories";
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-export function resolveImageUrl(url?: string | null): string {
-  if (!url) return "/assets/images/catagory-img/banner-cat-01.webp";
+export function resolveImageUrl(
+  url?: string | null,
+  fallback = "/assets/images/catagory-img/banner-cat-01.webp"
+): string {
+  if (!url) return fallback;
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
   if (url.startsWith("/uploads/")) return `${API_BASE_URL}${url}`;
   if (url.startsWith("uploads/")) return `${API_BASE_URL}/${url}`;
@@ -36,6 +39,7 @@ export interface BackendProduct {
   description?: string | null;
   price: number;
   retailPrice?: number | null;
+  wholesalePrice?: number | null;
   isWholesalePricingApplied?: boolean;
   stockQuantity: number;
   stockLabel?: string;
@@ -49,6 +53,24 @@ export interface BackendProduct {
   } | null;
   images?: { id: string; url: string; isPrimary: boolean }[];
   primaryImage?: string | null;
+  createdAt?: string;
+  salesCount?: number;
+}
+
+export interface FetchProductsOptions {
+  token?: string | null;
+  viewMode?: "REGULAR" | "WHOLESALE" | null;
+}
+
+function buildProductAuthHeaders(options?: FetchProductsOptions): HeadersInit {
+  const headers: Record<string, string> = {};
+  if (options?.token) {
+    headers["Authorization"] = `Bearer ${options.token}`;
+  }
+  if (options?.viewMode) {
+    headers["x-customer-view"] = options.viewMode;
+  }
+  return headers;
 }
 
 export function mapBackendProductToStorefront(item: BackendProduct): Product {
@@ -66,19 +88,43 @@ export function mapBackendProductToStorefront(item: BackendProduct): Product {
   const brandName = item.brand?.name || "Transasia";
 
   const isInStock = item.isAvailable && item.stockQuantity > 0;
-  const hasDiscount =
-    item.retailPrice && item.retailPrice > item.price;
-  const discountPct = hasDiscount
-    ? Math.round(((item.retailPrice! - item.price) / item.retailPrice!) * 100)
+
+  // Wholesale pricing: if wholesale pricing is applied, show wholesale price;
+  // retailPrice (the original base price) becomes the crossed-out oldPrice.
+  const isWholesale = item.isWholesalePricingApplied === true;
+  const effectivePrice = Number(item.price);
+  const originalRetailPrice = item.retailPrice ? Number(item.retailPrice) : null;
+
+  // Show discount badge when: wholesaler sees reduced price vs retail, or a general sale
+  const hasDiscount = isWholesale
+    ? originalRetailPrice !== null && originalRetailPrice > effectivePrice
+    : originalRetailPrice !== null && originalRetailPrice > effectivePrice;
+
+  const discountPct = hasDiscount && originalRetailPrice
+    ? Math.round(((originalRetailPrice - effectivePrice) / originalRetailPrice) * 100)
     : null;
+
+  // --- Tab Classification ---
+  // "best-sellers": products that have been ordered at least once (salesCount > 0)
+  // "new-arrivals": products created within the last 30 days
+  // "view-all":  always included (all active products)
+  const salesCount = item.salesCount ?? 0;
+  const createdAt = item.createdAt ? new Date(item.createdAt) : null;
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const computedDemoTab: string[] = ["view-all"];
+  if (salesCount > 0) computedDemoTab.push("best-sellers");
+  if (createdAt && createdAt >= thirtyDaysAgo) computedDemoTab.push("new-arrivals");
 
   return {
     id: item.id,
     title: item.title,
-    price: Number(item.price),
-    oldPrice: hasDiscount ? Number(item.retailPrice) : null,
+    price: effectivePrice,
+    oldPrice: hasDiscount ? originalRetailPrice : null,
     discount: discountPct,
     discountPercentage: discountPct,
+    wholesalePrice: item.wholesalePrice ? Number(item.wholesalePrice) : null,
+    isWholesalePricingApplied: isWholesale,
     imgSrc: resolvedPrimaryImg,
     hoverImgSrc: resolvedHoverImg,
     category: [categoryTitle],
@@ -89,19 +135,18 @@ export function mapBackendProductToStorefront(item: BackendProduct): Product {
     rating: 5,
     ratingCount: 15,
     reviewCount: 15,
-    demoTab: ["best-sellers", "new-arrivals", "on-sale", "view-all"],
+    salesCount,
+    createdAt: item.createdAt,
+    demoTab: computedDemoTab,
     badges: [
       {
         text: isInStock ? "In Stock" : "Out of Stock",
         bg: isInStock ? "rbt-product-badge-bg-green" : "rbt-product-badge-bg-gray",
       },
-      ...(hasDiscount
-        ? [
-            {
-              text: `-${discountPct}%`,
-              bg: "rbt-product-badge-bg-secondary-gradient",
-            },
-          ]
+      ...(isWholesale
+        ? [{ text: "Wholesale", bg: "rbt-product-badge-bg-secondary-gradient" }]
+        : hasDiscount
+        ? [{ text: `-${discountPct}%`, bg: "rbt-product-badge-bg-secondary-gradient" }]
         : []),
     ],
     pricingBadges: [
@@ -134,22 +179,35 @@ export function mapBackendProductToStorefront(item: BackendProduct): Product {
 }
 
 export function mapBackendCategoryToStorefront(cat: BackendCategory, index: number = 0): Category {
+  const catSlug = cat.slug || (cat.title || "").toLowerCase().replace(/[^a-z0-9]+/g, "-");
   return {
-    id: index + 1,
-    title: cat.title,
+    id: cat.id || index + 1,
+    title: cat.title || cat.name || "",
+    name: cat.title || cat.name || "",
+    slug: catSlug,
     imgSrc: resolveImageUrl(cat.image || cat.imgSrc),
+    image: resolveImageUrl(cat.image || cat.imgSrc),
     qty: cat.productCount ?? cat.count ?? 0,
-    subCategories: (cat.subCategories || []).map((sub: any) => ({
-      title: sub.title || sub.name || "Subcategory",
-      href: `/shop?category=${encodeURIComponent(sub.slug || sub.title)}`,
-    })),
+    subCategories: (cat.subCategories || []).map((sub: any) => {
+      const subSlug = sub.slug || (sub.title || sub.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      const subTitle = sub.title || sub.name || "Subcategory";
+      return {
+        title: subTitle,
+        slug: subSlug,
+        href: `/shop?category=${encodeURIComponent(catSlug)}&subCategory=${encodeURIComponent(subSlug)}`,
+      };
+    }),
   };
 }
 
-export async function fetchStorefrontProducts(): Promise<Product[]> {
+export async function fetchStorefrontProducts(
+  options?: FetchProductsOptions
+): Promise<Product[]> {
   try {
+    const headers = buildProductAuthHeaders(options);
     const res = await fetch(`${API_BASE_URL}/api/products?limit=100`, {
       cache: "no-store",
+      headers,
     });
     if (!res.ok) {
       console.error(`Failed to fetch products: ${res.status} ${res.statusText}`);
@@ -164,9 +222,16 @@ export async function fetchStorefrontProducts(): Promise<Product[]> {
   }
 }
 
-export async function fetchStorefrontCategories(): Promise<Category[]> {
+export async function fetchStorefrontCategories(
+  options?: { onlyParents?: boolean }
+): Promise<Category[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/categories`, {
+    const url =
+      options?.onlyParents === false
+        ? `${API_BASE_URL}/api/categories`
+        : `${API_BASE_URL}/api/categories?onlyParents=true`;
+
+    const res = await fetch(url, {
       cache: "no-store",
     });
     if (!res.ok) {
@@ -183,11 +248,14 @@ export async function fetchStorefrontCategories(): Promise<Category[]> {
 }
 
 export async function fetchStorefrontProductByIdOrSlug(
-  idOrSlug: string
+  idOrSlug: string,
+  options?: FetchProductsOptions
 ): Promise<Product | null> {
   try {
+    const headers = buildProductAuthHeaders(options);
     const res = await fetch(`${API_BASE_URL}/api/products/${encodeURIComponent(idOrSlug)}`, {
       cache: "no-store",
+      headers,
     });
     if (!res.ok) {
       return null;

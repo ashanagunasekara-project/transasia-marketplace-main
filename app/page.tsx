@@ -35,7 +35,7 @@ export default async function Home() {
     promotionsData,
   ] = await Promise.all([
     fetchStorefrontProducts(),
-    fetchStorefrontCategories(),
+    fetchStorefrontCategories({ onlyParents: true }),
     fetchStorefrontHeroBanners(),
     fetchStorefrontPopularCategories(),
     fetchStorefrontTopbar(),

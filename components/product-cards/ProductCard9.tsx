@@ -49,18 +49,28 @@ export default function ProductCard9({
             <Link href={detailsPageLink}>
               <Image
                 className="rbt-prd-img"
-                alt="Card Image"
+                alt={product.title || "Card Image"}
                 src={product.imgSrc}
-                width={1246}
-                height={976}
+                width={600}
+                height={600}
+                style={{
+                  objectFit: "contain",
+                  width: "100%",
+                  height: "100%",
+                }}
               />
               {product.hoverImgSrc && (
                 <Image
                   className="rbt-hover-img"
-                  alt="Card Image"
+                  alt={product.title || "Card Image"}
                   src={product.hoverImgSrc}
-                  width={1246}
-                  height={976}
+                  width={600}
+                  height={600}
+                  style={{
+                    objectFit: "contain",
+                    width: "100%",
+                    height: "100%",
+                  }}
                 />
               )}
             </Link>
@@ -114,18 +124,22 @@ export default function ProductCard9({
               )}
           </div>
           <div className="rbt-card-body">
-            {product.category?.length && product.category.length > 0 && (
+            {product.category?.length && product.category.length > 0 ? (
               <div>
                 {product.category?.map((item, index) => (
                   <Link
                     key={index}
-                    href={`/shop-by-categories`}
+                    href={`/shop?category=${encodeURIComponent(
+                      item.toLowerCase().replace(/[^a-z0-9]+/g, "-")
+                    )}`}
                     className="rbt-card-subtitle rbt-card-categories-text"
                   >
                     {item}
                   </Link>
                 ))}
               </div>
+            ) : (
+              <div className="rbt-card-category-placeholder" />
             )}
             <h6 className="rbt-card-title">
               <Link href={detailsPageLink}>

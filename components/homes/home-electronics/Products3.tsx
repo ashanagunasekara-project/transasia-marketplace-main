@@ -137,9 +137,9 @@ export default function Products3({
       className="rbt-component-area rbt-categories-area rbt-section-gap2 rbt-bg-color-gray-light"
     >
       <div className="container">
-        <div className="row row--12 mt_dec--24">
-          <div className="col-xl-6 col-lg-12 col-md-12 col-12 mt--24">
-            <div className="rbt-fshape-box-outline-style rbt-fshape-box-outline-style-bg-white rbt-fshape-box-outline-style-sm-size">
+        <div className="row row--12 mt_dec--24 align-items-stretch">
+          <div className="col-xl-6 col-lg-12 col-md-12 col-12 mt--24 d-flex flex-column">
+            <div className="rbt-fshape-box-outline-style rbt-fshape-box-outline-style-bg-white rbt-fshape-box-outline-style-sm-size h-100 d-flex flex-column">
               <div className="row">
                 <div className="col-lg-12">
                   <div className="rbt-component-section-title">
@@ -154,7 +154,7 @@ export default function Products3({
                   </div>
                 </div>
               </div>
-              <div className="rbt-fshape-box">
+              <div className="rbt-fshape-box flex-grow-1">
                 <div className="row row--12 mt_dec--24 rbt-card-row-has-top-separator rbt-two-align-card-row">
                   {products.map((item, i) => (
                     <div
@@ -210,6 +210,8 @@ export default function Products3({
                                   style={{
                                     objectFit: "contain",
                                     maxWidth: "100%",
+                                    maxHeight: "110px",
+                                    width: "auto",
                                     height: "auto",
                                   }}
                                 />
@@ -224,12 +226,12 @@ export default function Products3({
               </div>
             </div>
           </div>
-          <div className="col-xl-6 col-lg-12 col-md-12 col-12 mt--24 pt--44 pt_sm--0 pt_lg--0 pt_md--0">
+          <div className="col-xl-6 col-lg-12 col-md-12 col-12 mt--24 d-flex flex-column">
             {/* Start Product Banner Area */}
-            <div className="rbt-product-banner rbt-product-banner-style-two rbt-curved-style-box h-100">
-              <div className="rbt-banner-inner h-100">
-                <div className="rbt-product-banner-img rbt-full-width-img rbt-scroll-trigger zoom_in animation-order-1">
-                  <picture>
+            <div className="rbt-product-banner rbt-product-banner-style-two rbt-curved-style-box h-100 flex-grow-1">
+              <div className="rbt-banner-inner h-100 position-relative">
+                <div className="rbt-product-banner-img rbt-full-width-img rbt-scroll-trigger zoom_in animation-order-1 h-100">
+                  <picture className="h-100 w-100 d-block">
                     {banner.mobileImgSrc && (
                       <source
                         media="(max-width: 767px)"

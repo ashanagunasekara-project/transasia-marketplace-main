@@ -13,13 +13,6 @@ export default function Footer10() {
     <footer className="rbt-footer rbt-footer-style-ten rbt-bg-color-gray-light">
       <div className="rbt-footer-top rbt-section-gap2">
         <div className="container">
-          <div className="row">
-            <div className="col-12">
-              <div className="rbt-watermark-text rbt-watermark-color-var-1 text-center">
-                <span>Follow Us@Transasia</span>
-              </div>
-            </div>
-          </div>
           <div className="row mt_dec--24">
             <div className="col-12">
               <hr className="rbt-separator m-0" />
@@ -68,17 +61,9 @@ export default function Footer10() {
                 <div className="footer-widget mt--40">
                   <ul className="ft-link">
                     <li>
-                      <p>Subscribe and get discount 20% Off</p>
-                    </li>
-                  </ul>
-                  <FooterNewsletterForm formClass="rbt-newsletter-form-one mt--24" />
-                </div>
-                <div className="footer-widget mt--40">
-                  <ul className="ft-link">
-                    <li>
                       <div className="rbt-quick-contact-box border-0 bg-transparent pl--0">
                         <a
-                          href="tel:(500)80018588-5"
+                          href="tel:+94112332162"
                           className="rbt-icon rbt-text-color-heading h2 mb--0 rbt-text-medium"
                         >
                           <i className="fa-regular fa-phone" />
