@@ -141,8 +141,8 @@ export default function BoughtTogether4() {
                           </Link>
                         </h6>
                         <ProductRating product={featuredProduct}><span className="icon">
-                            <i className="fa-sharp fa-solid fa-truck-fast" />
-                          </span></ProductRating>
+                          <i className="fa-sharp fa-solid fa-truck-fast" />
+                        </span></ProductRating>
                         <div className="pricing-part">
                           {featuredProduct.oldPrice ? (
                             <del className="price-text">

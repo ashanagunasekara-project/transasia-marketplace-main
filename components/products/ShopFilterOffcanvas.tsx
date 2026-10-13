@@ -52,7 +52,7 @@ export default function ShopFilterOffcanvas({
                       <h6 className="rbt-shop-tools-title">Product View :</h6>
                       <ProductViewTabs state={state} dispatch={dispatch} />
                     </div>
-                    <div className="rbt-shop-tool-content rbt-shop-filter-tag-wrapper">
+                    {/* <div className="rbt-shop-tool-content rbt-shop-filter-tag-wrapper">
                       <h6 className="rbt-shop-tools-title">Fast FIlter :</h6>
                       <div className="rbt-shop-filter-tag-list rbt-tag-list rbt-tag-list-rounded rbt-tag-list-var-one">
                         <FilterByTagTwo
@@ -62,7 +62,7 @@ export default function ShopFilterOffcanvas({
                           }
                         />
                       </div>
-                    </div>
+                    </div> */}
                     <div className="rbt-shop-tool-content rbt-shop-filter-tag-wrapper justify-content-end">
                       {hasMultiplePages ? (
                         <ShopPagination

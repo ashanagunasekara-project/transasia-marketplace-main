@@ -215,7 +215,7 @@ function ShopDefaultContent({
             <div className="row row--12">
               <div className="col-md-12">
                 <div className="rbt-shop-tools-wrapper">
-                  <div className="rbt-shop-tool-content rbt-shop-filter-tag-wrapper w-100">
+                  {/* <div className="rbt-shop-tool-content rbt-shop-filter-tag-wrapper w-100">
                     <h6 className="rbt-shop-tools-title">Fast FIlter :</h6>
                     <div className="rbt-shop-filter-tag-list rbt-tag-list rbt-tag-list-rounded rbt-tag-list-var-one">
                       <FilterByTag
@@ -225,7 +225,7 @@ function ShopDefaultContent({
                         }
                       />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="rbt-shop-tools-wrapper rbt-shop-tools-wrapper-var-one mt--20">
                   <div className="rbt-shop-tool-content rbt-shop-view-var-wrapper">

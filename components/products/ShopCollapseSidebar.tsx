@@ -81,9 +81,8 @@ export default function ShopCollapseSidebar({
 
   const productWrapperClass =
     filterPosition === "left"
-      ? `rbt-card-wrapper rbt-collapsible-filter-product-area${
-          filterOpen ? " shift-right" : ""
-        }`
+      ? `rbt-card-wrapper rbt-collapsible-filter-product-area${filterOpen ? " shift-right" : ""
+      }`
       : "rbt-card-wrapper rbt-collapsible-filter-product-area";
 
   return (
@@ -93,7 +92,7 @@ export default function ShopCollapseSidebar({
       >
         <div className="row row--16 mt_dec--24">
           <div className="col-12 mt--24">
-            <div className="rbt-shop-tools-wrapper">
+            {/* <div className="rbt-shop-tools-wrapper">
               <div className="rbt-shop-tool-content rbt-shop-filter-tag-wrapper w-100">
                 <h6 className="rbt-shop-tools-title">Fast FIlter :</h6>
                 <div className="rbt-shop-filter-tag-list rbt-tag-list rbt-tag-list-rounded rbt-tag-list-var-one">
@@ -103,7 +102,7 @@ export default function ShopCollapseSidebar({
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="rbt-shop-tools-wrapper rbt-shop-tools-wrapper-var-one mt--20">
               {filterPosition == "left" && (
                 <FilterToggle
@@ -225,29 +224,29 @@ export default function ShopCollapseSidebar({
             <div className="row mt--40 mt_sm--16">
               <div className="col-12">
                 {hasNoFilteredItems ||
-                !hasMultiplePages ? null : !isLoadMore ? (
-                  <ShopPagination
-                    key={state.itemPerPage}
-                    state={state}
-                    dispatch={dispatch}
-                  />
-                ) : (
+                  !hasMultiplePages ? null : !isLoadMore ? (
+                    <ShopPagination
+                      key={state.itemPerPage}
+                      state={state}
+                      dispatch={dispatch}
+                    />
+                  ) : (
                   <>
                     {state.currentPage * state.itemPerPage <
                       state.sorted.length && (
-                      <div className="rbt-load-more-btn-area text-center">
-                        <a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setCurrentPage(state.currentPage + 1, dispatch);
-                          }}
-                          className="rbt-btn"
-                        >
-                          Load More <i className="fa-solid fa-spinner ml--4" />
-                        </a>
-                      </div>
-                    )}
+                        <div className="rbt-load-more-btn-area text-center">
+                          <a
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrentPage(state.currentPage + 1, dispatch);
+                            }}
+                            className="rbt-btn"
+                          >
+                            Load More <i className="fa-solid fa-spinner ml--4" />
+                          </a>
+                        </div>
+                      )}
                   </>
                 )}
               </div>
