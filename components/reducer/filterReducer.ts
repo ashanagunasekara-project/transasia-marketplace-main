@@ -19,9 +19,27 @@ export const initialState: FilterState = {
   sorted: [],
   currentPage: 1,
   itemPerPage: 15,
+  search: "",
 };
 
 function matchesAllFilters(product: Product, state: FilterState): boolean {
+  if (state.search && state.search.trim()) {
+    const q = state.search.toLowerCase().trim();
+    const titleMatch = (product.title || "").toLowerCase().includes(q);
+    const descMatch = (product.description || "").toLowerCase().includes(q);
+    const skuMatch = String(product.sku || product.id || "").toLowerCase().includes(q);
+    const brandMatch = (product.filterBrands || []).some((b) => b.toLowerCase().includes(q));
+    const tagMatch = (product.tags || []).some((t) => t.toLowerCase().includes(q));
+    const catMatch = [
+      ...(product.filterCategory || []),
+      ...(product.category || []),
+    ].some((c) => String(c).toLowerCase().includes(q));
+
+    if (!titleMatch && !descMatch && !skuMatch && !brandMatch && !tagMatch && !catMatch) {
+      return false;
+    }
+  }
+
   if (state.brands.length) {
     const prodBrands = (product.filterBrands || []).map((b) => b.toLowerCase().trim());
     const matchesBrand = state.brands.some((selectedBrand) => {
@@ -171,6 +189,9 @@ export function reducer(state: FilterState, action: FilterAction): FilterState {
     case "SET_ITEM_PER_PAGE":
       return { ...state, itemPerPage: action.payload, currentPage: 1 };
 
+    case "SET_SEARCH":
+      return { ...state, search: action.payload, currentPage: 1 };
+
     case "FILTER_PRODUCTS": {
       const productsToFilter = [...action.payload];
       const filtered = productsToFilter.filter((product) =>
@@ -223,6 +244,7 @@ export function reducer(state: FilterState, action: FilterAction): FilterState {
         categories: [],
         ratings: [], // e.g. [4, 3]
         services: [], // e.g. ['Free Delivery', 'Hot Deals']
+        search: "",
 
         sortingOption: "Sort by (Default)",
       };

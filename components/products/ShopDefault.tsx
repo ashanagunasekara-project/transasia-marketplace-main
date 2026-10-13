@@ -270,15 +270,29 @@ function ShopDefaultContent({
                     </div>
                   </div>
                   <div className="rbt-shop-tool-content rbt-shop-view-var-wrapper">
-                    <div className="rbt-inner-search-field style-one rbt-search-field-rounded">
-                      <input type="text" placeholder="Search for products" />
+                    <form
+                      className="rbt-inner-search-field style-one rbt-search-field-rounded"
+                      onSubmit={(e) => e.preventDefault()}
+                    >
+                      <input
+                        type="text"
+                        placeholder="Search for products"
+                        value={state.search || ""}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "SET_SEARCH",
+                            payload: e.target.value,
+                          })
+                        }
+                      />
                       <button
                         className="rbt-round-btn search-btn"
                         type="submit"
+                        aria-label="Search"
                       >
                         <i className="fa-solid fa-magnifying-glass" />
                       </button>
-                    </div>
+                    </form>
                   </div>
                 </div>
                 <div className="rbt-shop-tools-wrapper">

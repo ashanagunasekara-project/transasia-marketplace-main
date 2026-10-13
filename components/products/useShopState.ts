@@ -54,6 +54,7 @@ export function useShopState({
   const subCategoryParam = searchParams?.get("subCategory");
   const brandParam = searchParams?.get("brand");
   const tagParam = searchParams?.get("tag");
+  const searchParam = searchParams?.get("search") || searchParams?.get("query") || "";
 
   const sourceProducts = useMemo(() => {
     if (products && products.length > 0) return products;
@@ -84,6 +85,7 @@ export function useShopState({
     categories: initialCategories,
     brands: initialBrands,
     tags: initialTags,
+    search: searchParam,
     itemPerPage: itemPerPage
       ? itemPerPage
       : column >= 4
@@ -114,6 +116,10 @@ export function useShopState({
     }
   }, [tagParam]);
 
+  useEffect(() => {
+    dispatch({ type: "SET_SEARCH", payload: searchParam });
+  }, [searchParam]);
+
   const filterKey = useMemo(() => {
     return [
       state.brands.join(","),
@@ -126,6 +132,7 @@ export function useShopState({
       state.ratings.join(","),
       `${state.price[0]}-${state.price[1]}`,
       state.tags.join(","),
+      state.search,
       sourceProducts.length,
     ].join("|");
   }, [
@@ -139,6 +146,7 @@ export function useShopState({
     state.ratings,
     state.price,
     state.tags,
+    state.search,
     sourceProducts.length,
   ]);
 
