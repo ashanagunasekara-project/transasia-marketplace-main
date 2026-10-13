@@ -1,27 +1,63 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import ProductCard9 from "@/components/product-cards/ProductCard9";
 import NavEffectTabs from "../../common/ui/NavEffectTabs";
 import { electronicsCardData } from "@/data/products/electronics";
+import { useAuthStore } from "@/context/authStore";
+import { fetchStorefrontProducts } from "@/lib/api";
+
+import { Product } from "@/types/product";
 
 const TABS = [
   { id: "best-sellers", label: "Best Sellers" },
   { id: "new-arrivals", label: "New Arrivals" },
-  { id: "on-sale", label: "On Sale" },
   { id: "view-all", label: "View All" },
 ];
 
-export default function Products() {
+export default function Products({
+  products,
+}: {
+  products?: Product[];
+}) {
   const [activeTab, setActiveTab] = useState<string>("best-sellers");
+  const { token, activeView } = useAuthStore();
+  const [currentProducts, setCurrentProducts] = useState<Product[] | undefined>(products);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function refresh() {
+      const updated = await fetchStorefrontProducts({ token, viewMode: activeView });
+      if (isMounted && updated.length > 0) {
+        setCurrentProducts(updated);
+      }
+    }
+    // Only refresh on client if token or activeView changed from default guest
+    if (token || activeView === "WHOLESALE") {
+      refresh();
+    } else if (products) {
+      setCurrentProducts(products);
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [token, activeView, products]);
+
+  const sourceProducts = currentProducts !== undefined ? currentProducts : electronicsCardData;
 
   const filteredProducts = useMemo(() => {
-    if (activeTab === "view-all") return electronicsCardData;
+    // "view-all" shows everything
+    if (activeTab === "view-all") return sourceProducts;
 
-    return electronicsCardData.filter((product) =>
-      product.demoTab?.includes(activeTab),
+    // Filter by demoTab tag (best-sellers / new-arrivals)
+    const matched = sourceProducts.filter((product) =>
+      product.demoTab?.includes(activeTab)
     );
-  }, [activeTab]);
+
+    // If API data isn't tagged yet (e.g. fresh DB, no orders), fall back to
+    // all products so the section is never blank on a new installation.
+    return matched.length > 0 ? matched : sourceProducts;
+  }, [activeTab, sourceProducts]);
 
   return (
     <div
@@ -54,7 +90,7 @@ export default function Products() {
               className="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6 mt--24"
             >
               <ProductCard9
-                detailsPageUrl="/product-single-electronics"
+                detailsPageUrl="/product"
                 product={product}
                 animationOrder={i + 1}
               />

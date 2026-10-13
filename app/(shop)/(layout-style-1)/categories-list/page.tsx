@@ -1,15 +1,19 @@
 import Breadcrumb from "@/components/common/other-components/Breadcrumb";
 import Categories3 from "@/components/products/Categories3";
-
+import { fetchStorefrontCategories } from "@/lib/api";
 import { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
-  title:
-    "Categories List || Unimart - eCommerce React Nextjs Bootstrap5 Template",
-  description: "Unimart - eCommerce React Nextjs Bootstrap5 Template",
+  title: "Categories List || Transasia - Electronics Store",
+  description: "Browse all electronics product categories and subcategories at Transasia.",
 };
 
-export default function CategoriesListPage() {
+export default async function CategoriesListPage() {
+  const categories = await fetchStorefrontCategories({ onlyParents: true });
+
   return (
     <>
       <Breadcrumb
@@ -18,7 +22,7 @@ export default function CategoriesListPage() {
         hasHrLine
         title="Categories List"
       />
-      <Categories3 />
+      <Categories3 initialCategories={categories} />
     </>
   );
 }

@@ -26,6 +26,7 @@ export interface FilterState {
   itemPerPage: number;
   customMin?: number;
   customMax?: number;
+  search: string;
 }
 
 export type FilterAction =
@@ -41,6 +42,7 @@ export type FilterAction =
   | { type: "SET_SERVICES"; payload: string[] }
   | { type: "SET_CURRENT_PAGE"; payload: number }
   | { type: "SET_ITEM_PER_PAGE"; payload: number }
+  | { type: "SET_SEARCH"; payload: string }
   | { type: "FILTER_PRODUCTS"; payload: Product[] }
   | { type: "SET_SORTING_OPTION"; payload: SortingOption }
   | { type: "SORT_PRODUCTS" }

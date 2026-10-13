@@ -77,4 +77,8 @@ export const LAYOUT_MODAL_LAZY: Partial<Record<ModalNameType, ComponentType>> = 
   exampleModal: dynamic(() => import("@/components/modals/TeamMemberModal"), {
     ssr: false,
   }),
+  wholesaleUpgradeModal: dynamic(
+    () => import("@/components/modals/WholesaleUpgradeModal"),
+    { ssr: false },
+  ),
 };

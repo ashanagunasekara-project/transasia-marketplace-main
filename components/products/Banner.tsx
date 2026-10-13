@@ -9,7 +9,7 @@ const menuBannerProduct =
 
 export default function Banner({ containerFull = false }) {
   return (
-    <div className="rbt-component-area rbt-page-banner-content">
+    <div className="rbt-component-area rbt-page-banner-content d-none">
       <div
         className={`${containerFull ? "rbt-full-width-wrapper" : "container"}`}
       >

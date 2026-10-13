@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import StoreLogo from "@/components/common/StoreLogo";
 import {
   footerData,
   footerDataB2B,
@@ -12,13 +13,6 @@ export default function Footer10() {
     <footer className="rbt-footer rbt-footer-style-ten rbt-bg-color-gray-light">
       <div className="rbt-footer-top rbt-section-gap2">
         <div className="container">
-          <div className="row">
-            <div className="col-12">
-              <div className="rbt-watermark-text rbt-watermark-color-var-1 text-center">
-                <span>Follow Us@Unimart</span>
-              </div>
-            </div>
-          </div>
           <div className="row mt_dec--24">
             <div className="col-12">
               <hr className="rbt-separator m-0" />
@@ -27,22 +21,17 @@ export default function Footer10() {
           <div className="row row--16 justify-content-between pt--32 rbt-footer-nav-wrapper">
             <div className="col-lg-4 col-md-6 col-sm-12 col-12 mt--24">
               <div className="footer-widget">
-                <div className="logo">
+                <div className="logo" style={{ maxWidth: "200px" }}>
                   <Link href={`/`}>
-                    <Image
-                      alt="Unimart Logo"
-                      src="/assets/images/logo/logo.webp"
-                      width={1487}
-                      height={334}
-                    />
+                    <StoreLogo width={200} height={60} />
                   </Link>
                 </div>
                 <p className="description pr--52 pr_sm--0">
-                  Unimart is a modern and user-friendly e-commerce platform
-                  designed to make online shopping simple, secure, and
-                  convenient.
+                  Transasia is a modern and trusted electronics store platform
+                  offering quality tech products and accessories with exceptional
+                  service and convenience.
                 </p>
-                <div className="footer-widget mt--24">
+                <div className="footer-widget mt--24 d-none">
                   <h5 className="ft-title mb--0">Download App on Mobile:</h5>
                   <div className="rbt-app-store-area mt--16">
                     <ul className="rbt-app-store-list">
@@ -72,17 +61,9 @@ export default function Footer10() {
                 <div className="footer-widget mt--40">
                   <ul className="ft-link">
                     <li>
-                      <p>Subscribe and get discount 20% Off</p>
-                    </li>
-                  </ul>
-                  <FooterNewsletterForm formClass="rbt-newsletter-form-one mt--24" />
-                </div>
-                <div className="footer-widget mt--40">
-                  <ul className="ft-link">
-                    <li>
                       <div className="rbt-quick-contact-box border-0 bg-transparent pl--0">
                         <a
-                          href="tel:(500)80018588-5"
+                          href="tel:+94112332162"
                           className="rbt-icon rbt-text-color-heading h2 mb--0 rbt-text-medium"
                         >
                           <i className="fa-regular fa-phone" />
@@ -92,10 +73,16 @@ export default function Footer10() {
                             Need help? Call now!
                           </p>
                           <a
-                            href="tel:(500)80018588-5"
-                            className="rbt-text-color-heading rbt-text-bold rbt-link-hover"
+                            href="tel:+94112332162"
+                            className="rbt-text-color-heading rbt-text-bold rbt-link-hover d-block mb--4"
                           >
-                            (500) 8001 8588-5
+                            +94 112 332 162
+                          </a>
+                          <a
+                            href="tel:+94773392727"
+                            className="rbt-text-color-heading rbt-text-bold rbt-link-hover d-block"
+                          >
+                            +94 773 392 727
                           </a>
                         </div>
                       </div>
@@ -186,16 +173,7 @@ export default function Footer10() {
             </div>
             <div className="col-xxl-3 col-xl-4 col-lg-4 col-md-12 col-12 mt--24">
               <p className="rbt-link-hover text-center text-lg-start">
-                Copyright {new Date().getFullYear()} ®
-                <a
-                  href="https://rainbowthemes.net/"
-                  className="rbt-text-bold rbt-text-color-heading mr--4"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Unimart
-                </a>
-                Nextjs Template.
+                Copyright © {new Date().getFullYear()} Transasia.
               </p>
             </div>
             <div className="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12 mt--24">

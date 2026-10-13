@@ -31,67 +31,28 @@ export default function Footer4() {
             <div className="d-flex rbt-gap--16 align-items-center justify-content-between rbt-scrollable-content hide-scrollbar">
               <div className="rbt-quick-locat-link">
                 <h6 className="rbt-quick-locat-link-title b1 mb--0">
-                  <a className="d-flex align-items-center rbt-gap--8" href="#">
-                    Broadway Store
+                  <a className="d-flex align-items-center rbt-gap--8" href="https://maps.app.goo.gl/8neepjjC3zf3bjQM9">
+                    Colombo Store
                     <span className="rbt-quick-locat-link-title-arrow">
                       <i className="fa-regular fa-angle-right" />
                     </span>
                   </a>
                 </h6>
                 <p className="rbt-quick-locat-link-desc">
-                  1260 Broadway, San Francisco, CA 941
+                  Trans Asia Cellular (Pvt) Ltd, 61 1st Cross St, Colombo 00110.
                 </p>
               </div>
               <div className="rbt-quick-locat-link">
                 <h6 className="rbt-quick-locat-link-title b1 mb--0">
-                  <a className="d-flex align-items-center rbt-gap--8" href="#">
-                    Valencia Store
+                  <a className="d-flex align-items-center rbt-gap--8" href="https://share.google/PgQR1peNhQ5whKjyb">
+                    Kurunegala Store
                     <span className="rbt-quick-locat-link-title-arrow">
                       <i className="fa-regular fa-angle-right" />
                     </span>
                   </a>
                 </h6>
                 <p className="rbt-quick-locat-link-desc">
-                  1501 Valencia St, San Francisco, CA 94110|
-                </p>
-              </div>
-              <div className="rbt-quick-locat-link">
-                <h6 className="rbt-quick-locat-link-title b1 mb--0">
-                  <a className="d-flex align-items-center rbt-gap--8" href="#">
-                    Pennsylvania Store
-                    <span className="rbt-quick-locat-link-title-arrow">
-                      <i className="fa-regular fa-angle-right" />
-                    </span>
-                  </a>
-                </h6>
-                <p className="rbt-quick-locat-link-desc">
-                  3122 Pennsylvania WD, California Usa, TX 02398
-                </p>
-              </div>
-              <div className="rbt-quick-locat-link">
-                <h6 className="rbt-quick-locat-link-title b1 mb--0">
-                  <a className="d-flex align-items-center rbt-gap--8" href="#">
-                    Emeryville Store
-                    <span className="rbt-quick-locat-link-title-arrow">
-                      <i className="fa-regular fa-angle-right" />
-                    </span>
-                  </a>
-                </h6>
-                <p className="rbt-quick-locat-link-desc">
-                  1034 36th St, Emeryville, CA 94608
-                </p>
-              </div>
-              <div className="rbt-quick-locat-link">
-                <h6 className="rbt-quick-locat-link-title b1 mb--0">
-                  <a className="d-flex align-items-center rbt-gap--8" href="#">
-                    Alameda Store
-                    <span className="rbt-quick-locat-link-title-arrow">
-                      <i className="fa-regular fa-angle-right" />
-                    </span>
-                  </a>
-                </h6>
-                <p className="rbt-quick-locat-link-desc">
-                  1433 High St, Alameda, CA 94501
+                  Trans Asia Cellular (Pvt) Ltd, 19 Katugastota-Kurunegala-Puttalam Hwy, Kurunegala
                 </p>
               </div>
             </div>
@@ -215,7 +176,7 @@ export default function Footer4() {
                   </div>
                 </div>
               ))}
-              <div className="col-xxl-3 col-xl-4 col-lg-5 col-md-6 col-12 mt--24">
+              <div className="col-xxl-3 col-xl-4 col-lg-5 col-md-6 col-12 mt--24 d-none">
                 <div className="footer-widget footer-widget-text-right">
                   <h5 className="ft-title">Download App on Mobile:</h5>
                   <ul className="ft-link liststyle">

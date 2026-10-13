@@ -21,7 +21,7 @@ const renderStars = (rating: number) => {
 
 export default function ProductSmallCard({
   product,
-  detailsPageUrl = "/product-single-electronics",
+  detailsPageUrl = "/product",
   animationOrder = 1,
 }: {
   product: Product;

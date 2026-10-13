@@ -8,7 +8,7 @@ import AddToWishlistTwo from "../action-buttons/AddToWishlistTwo";
 
 export default function ProductCard5({
   product,
-  detailsPageUrl = "/product-single-default",
+  detailsPageUrl = "/product",
   imbBgClass = "",
   contentBgClass = "",
   starClass = "",

@@ -60,9 +60,8 @@ export default function ShopListSidebar({ rightSidebar = false }) {
     <div className="rbt-component-area rbt-shop-filter-area rbt-bg-color-white rbt-section-gapBottom">
       <div className="container">
         <div
-          className={`row row--16 mt_dec--24 ${
-            rightSidebar ? "flex-row-reverse" : ""
-          } `}
+          className={`row row--16 mt_dec--24 ${rightSidebar ? "flex-row-reverse" : ""
+            } `}
         >
           <div className="col-lg-3 col-md-12 col-sm-12 col-12 mt--24">
             <aside className="rbt-sidebar has-rbt-fshape">
@@ -81,18 +80,6 @@ export default function ShopListSidebar({ rightSidebar = false }) {
                   state={state}
                   dispatch={dispatch}
                 />
-              </div>
-              <div className="rbt-sidebar-widget-wrapper">
-                <div className="rbt-sidebar-widget-img">
-                  <a href="#">
-                    <Image
-                      alt="Sidebar Banner"
-                      src="/assets/images/sidebar/sidebar-banner-one.webp"
-                      width={628}
-                      height={840}
-                    />
-                  </a>
-                </div>
               </div>
             </aside>
           </div>
@@ -180,8 +167,8 @@ export default function ShopListSidebar({ rightSidebar = false }) {
                   className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt--24"
                 >
                   <ProductCard11 product={product}
-                      animationOrder={i + 1}
-                    />
+                    animationOrder={i + 1}
+                  />
                 </div>
               ))}
               {/* End Single Card  */}

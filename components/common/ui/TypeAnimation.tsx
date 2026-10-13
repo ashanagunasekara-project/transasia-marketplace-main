@@ -21,9 +21,10 @@ export default function TypeAnimation({
   useEffect(() => {
     updateWidth();
 
+    let timeoutId: NodeJS.Timeout | null = null;
     const reapedTyping = setInterval(() => {
       if (typeidRef.current) typeidRef.current.style.width = "0px";
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setActiveStingIndex((pre) => {
           if (pre === strings.length - 1) {
             return 0;
@@ -37,6 +38,7 @@ export default function TypeAnimation({
     // Cleanup function to destroy the Typed instance
     return () => {
       clearInterval(reapedTyping);
+      if (timeoutId) clearTimeout(timeoutId);
       if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current);
         rafRef.current = null;

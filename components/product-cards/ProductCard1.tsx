@@ -11,7 +11,7 @@ import AddToQuickViewOne from "../action-buttons/AddToQuickViewOne";
 import AddToWishlistTwo from "../action-buttons/AddToWishlistTwo";
 
 export default function ProductCard1({
-  detailsPageUrl = "/product-single-default",
+  detailsPageUrl = "/product",
   product,
   cardBodyClass = "rbt-card-body has-rbt-top-right-corner-portion rbt-card-body-top-bottom-space",
   animationOrder = 1,

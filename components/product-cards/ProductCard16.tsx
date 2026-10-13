@@ -10,7 +10,7 @@ import AddToCompareThree from "../action-buttons/AddToCompareThree";
 import AddToWishlistTwo from "../action-buttons/AddToWishlistTwo";
 export default function ProductCard16({
   product,
-  detailsPageUrl = "/product-single-default",
+  detailsPageUrl = "/product",
   animationOrder = 1,
 }: {
   product: Product;

@@ -106,7 +106,7 @@ export default function Footer7() {
                   </ul>
                 </div>
               </div>
-              <div className="col-xl-4 col-lg-5 col-md-12 col-sm-12 col-12 mt--24">
+              <div className="col-xl-4 col-lg-5 col-md-12 col-sm-12 col-12 mt--24 d-none">
                 <div className="footer-widget">
                   <h5 className="ft-title">Download App on Mobile:</h5>
                   <ul className="ft-link">

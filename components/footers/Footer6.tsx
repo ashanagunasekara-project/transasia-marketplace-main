@@ -157,7 +157,7 @@ export default function Footer6() {
                   </ul>
                 </div>
               </div>
-              <div className="col-xl-4 col-lg-4 col-md-7 col-12 mt--24">
+              <div className="col-xl-4 col-lg-4 col-md-7 col-12 mt--24 d-none">
                 <div className="footer-widget">
                   <h5 className="ft-title">Download App on Mobile:</h5>
                   <div className="rbt-app-store-area mt--24">
@@ -208,11 +208,8 @@ export default function Footer6() {
           <div className="container">
             <div className="row row--12 mt_dec--24 align-items-center justify-content-between">
               <div className="col-md-6 col-12 mt--24 d-flex justify-content-center justify-content-md-start">
-                <p className="rbt-link-hover text-center text-lg-start">
-                  Copyright {new Date().getFullYear()} ®
-                  <a href="https://rainbowthemes.net/" target="_blank"
-                  rel="noopener noreferrer" className="mr--4">Unimart</a> Nextjs
-                  Template.
+                <p className="text-center text-lg-start mb-0">
+                  Copyright &copy; 2026 Transasia.
                 </p>
               </div>
               <div className="col-md-6 col-12 mt--24 mt_sm--0">

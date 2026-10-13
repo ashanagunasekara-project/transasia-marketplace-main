@@ -1,7 +1,7 @@
 "use client";
 import { WaveFatIcon } from "../svg-icons";
 import Image from "next/image";
-import { useMemo } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 
 import {
   clearAllFilters,
@@ -20,6 +20,8 @@ import Sidebar from "./Sidebar";
 import LayoutHandler from "./LayoutHandler";
 import SidebarScrollable from "./SidebarScrollable";
 import { Product } from "@/types/product";
+import { useAuthStore } from "@/context/authStore";
+import { fetchStorefrontProducts } from "@/lib/api";
 
 import { useShopState } from "./useShopState";
 import ProductCard16 from "../product-cards/ProductCard16";
@@ -43,23 +45,7 @@ type CardVariant =
   | "shadow-hover"
   | "small-variation";
 
-export default function ShopDefault({
-  rightSidebar = false,
-  stickyTop = false,
-  sidebarScrollAble = false,
-  loaderType = "pagination",
-  column = 3,
-  containerFull = false,
-  wider = false,
-  defaultFilterTag = [] as string[],
-  itemPerPage = 0,
-  showBestSellerBadge = false,
-  countdownStyle = "default",
-  showQuantityBadge = false,
-  cardVariant = "default",
-  products,
-  hasCardBorder = false,
-}: {
+export type ShopDefaultProps = {
   rightSidebar?: boolean;
   stickyTop?: boolean;
   sidebarScrollAble?: boolean;
@@ -75,15 +61,53 @@ export default function ShopDefault({
   cardVariant?: CardVariant;
   products?: Product[];
   hasCardBorder?: boolean;
-}) {
+};
+
+function ShopDefaultContent({
+  rightSidebar = false,
+  stickyTop = false,
+  sidebarScrollAble = false,
+  loaderType = "pagination",
+  column = 3,
+  containerFull = false,
+  wider = false,
+  defaultFilterTag = [] as string[],
+  itemPerPage = 0,
+  showBestSellerBadge = false,
+  countdownStyle = "default",
+  showQuantityBadge = false,
+  cardVariant = "default",
+  products,
+  hasCardBorder = false,
+}: ShopDefaultProps) {
+  const { token, activeView } = useAuthStore();
+  const [liveProducts, setLiveProducts] = useState<Product[] | undefined>(products);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function refreshPricing() {
+      const updated = await fetchStorefrontProducts({ token, viewMode: activeView });
+      if (isMounted && updated.length > 0) {
+        setLiveProducts(updated);
+      }
+    }
+    if (token || activeView === "WHOLESALE") {
+      refreshPricing();
+    } else {
+      setLiveProducts(products);
+    }
+    return () => { isMounted = false; };
+  }, [token, activeView, products]);
+
   const { state, dispatch, visibleProducts, getFilterCount, isLoadMore } =
     useShopState({
       column,
       loaderType,
       defaultTags: defaultFilterTag,
       itemPerPage,
-      products,
+      products: liveProducts,
     });
+
   const columnClass = useMemo(() => {
     if (column <= 4) {
       return `col-xxl-${12 / column} col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 product-col mt--24 ${containerFull ? "" : "product-four-col"}`;
@@ -153,15 +177,13 @@ export default function ShopDefault({
         className={`${containerFull ? "rbt-full-width-wrapper" : "container"}`}
       >
         <div
-          className={`row row--16 mt_dec--24  ${
-            rightSidebar ? "flex-row-reverse" : ""
-          } `}
+          className={`row row--16 mt_dec--24  ${rightSidebar ? "flex-row-reverse" : ""
+            } `}
         >
           <div className={sidebarColClass}>
             <aside
-              className={`rbt-sidebar has-rbt-fshape ${
-                stickyTop ? "sticky-top" : ""
-              }`}
+              className={`rbt-sidebar has-rbt-fshape ${stickyTop ? "sticky-top" : ""
+                }`}
             >
               <div className="rbt-sidebar-widget-wrapper rbt-sidebar-bg-one position-relative">
                 <div className="rbt-sidebar-top">
@@ -186,18 +208,6 @@ export default function ShopDefault({
                     dispatch={dispatch}
                   />
                 )}
-              </div>
-              <div className="rbt-sidebar-widget-wrapper">
-                <div className="rbt-sidebar-widget-img">
-                  <a href="#">
-                    <Image
-                      alt="Sidebar Banner"
-                      src="/assets/images/sidebar/sidebar-banner-one.webp"
-                      width={628}
-                      height={840}
-                    />
-                  </a>
-                </div>
               </div>
             </aside>
           </div>
@@ -260,15 +270,29 @@ export default function ShopDefault({
                     </div>
                   </div>
                   <div className="rbt-shop-tool-content rbt-shop-view-var-wrapper">
-                    <div className="rbt-inner-search-field style-one rbt-search-field-rounded">
-                      <input type="text" placeholder="Search for products" />
+                    <form
+                      className="rbt-inner-search-field style-one rbt-search-field-rounded"
+                      onSubmit={(e) => e.preventDefault()}
+                    >
+                      <input
+                        type="text"
+                        placeholder="Search for products"
+                        value={state.search || ""}
+                        onChange={(e) =>
+                          dispatch({
+                            type: "SET_SEARCH",
+                            payload: e.target.value,
+                          })
+                        }
+                      />
                       <button
                         className="rbt-round-btn search-btn"
                         type="submit"
+                        aria-label="Search"
                       >
                         <i className="fa-solid fa-magnifying-glass" />
                       </button>
-                    </div>
+                    </form>
                   </div>
                 </div>
                 <div className="rbt-shop-tools-wrapper">
@@ -311,6 +335,7 @@ export default function ShopDefault({
                     }
                   >
                     <ProductCardComponent
+                      detailsPageUrl="/product"
                       showBestSellerBadge={showBestSellerBadge}
                       showPricingBadge={shouldShowPricingBadge}
                       shouldShowTimer={shouldShowTimer}
@@ -326,29 +351,29 @@ export default function ShopDefault({
             <div className="row mt--40 mt_sm--16">
               <div className="col-12">
                 {hasNoFilteredItems ||
-                !hasMultiplePages ? null : !isLoadMore ? (
-                  <ShopPagination
-                    key={state.itemPerPage}
-                    state={state}
-                    dispatch={dispatch}
-                  />
-                ) : (
+                  !hasMultiplePages ? null : !isLoadMore ? (
+                    <ShopPagination
+                      key={state.itemPerPage}
+                      state={state}
+                      dispatch={dispatch}
+                    />
+                  ) : (
                   <>
                     {state.currentPage * state.itemPerPage <
                       state.sorted.length && (
-                      <div className="rbt-load-more-btn-area text-center">
-                        <a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setCurrentPage(state.currentPage + 1, dispatch);
-                          }}
-                          className="rbt-btn"
-                        >
-                          Load More <i className="fa-solid fa-spinner ml--4" />
-                        </a>
-                      </div>
-                    )}
+                        <div className="rbt-load-more-btn-area text-center">
+                          <a
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrentPage(state.currentPage + 1, dispatch);
+                            }}
+                            className="rbt-btn"
+                          >
+                            Load More <i className="fa-solid fa-spinner ml--4" />
+                          </a>
+                        </div>
+                      )}
                   </>
                 )}
               </div>
@@ -357,5 +382,13 @@ export default function ShopDefault({
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ShopDefault(props: ShopDefaultProps) {
+  return (
+    <Suspense fallback={null}>
+      <ShopDefaultContent {...props} />
+    </Suspense>
   );
 }
