@@ -38,9 +38,8 @@ export default function ProductCard9({
   return (
     <>
       <div
-        className={`rbt-card rbt-product-card has-hover-box-shadow ${
-          product.isStockOut ? "rbt-stock-out-product-card" : ""
-        }`}
+        className={`rbt-card rbt-product-card has-hover-box-shadow ${product.isStockOut ? "rbt-stock-out-product-card" : ""
+          }`}
       >
         <div
           className={`inner rbt-scroll-trigger fade_in animation-order-${animationOrder}`}
@@ -103,9 +102,8 @@ export default function ProductCard9({
               <Tooltip content="Quick View" placement="left">
                 <AddToQuickViewOne
                   product={product}
-                  className={`rbt-search-btn rbt-quick-btn tooltips ${
-                    product.id === 2 ? "rbt-quickview-sidenav-activation" : ""
-                  }`}
+                  className={`rbt-search-btn rbt-quick-btn tooltips ${product.id === 2 ? "rbt-quickview-sidenav-activation" : ""
+                    }`}
                   type="button"
                   openModalName="quickViewModal"
                 >
@@ -220,7 +218,7 @@ export default function ProductCard9({
                   product={product}
                 />
               )}
-              <AddToCompareThree product={product} />
+              {/* <AddToCompareThree product={product} /> */}
             </div>
           </div>
         </div>

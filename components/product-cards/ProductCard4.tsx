@@ -137,10 +137,10 @@ export default function ProductCard4({
               <i className="fa-regular fa-file-plus-minus" />
               Add To Compare
             </a> */}
-            <AddToCompareThree
+            {/* <AddToCompareThree
               parentClass="rbt-btn rbt-btn-border rbt-btn-sm rbt-square-btn d-block rbt-btn-transparent has-left-icon rbt-compare-btn-activation"
               product={product}
-            />
+            /> */}
           </div>
         </div>
       </div>
