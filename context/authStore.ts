@@ -5,6 +5,31 @@ import { persist } from "zustand/middleware";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
+async function triggerCartMergeOnLogin(token: string, viewMode: CustomerViewMode) {
+  if (typeof window === "undefined") return;
+  const sessionId = window.localStorage.getItem("transasia_cart_session_id");
+  if (!sessionId) return;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/cart/merge`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        "x-customer-view": viewMode,
+      },
+      body: JSON.stringify({ guestSessionId: sessionId }),
+    });
+    if (res.ok) {
+      window.dispatchEvent(
+        new CustomEvent("customer-view-changed", { detail: { activeView: viewMode } })
+      );
+    }
+  } catch (err) {
+    console.error("Cart merge on login failed:", err);
+  }
+}
+
 export type CustomerViewMode = "REGULAR" | "WHOLESALE";
 export type WholesaleStatus = "NONE" | "PENDING" | "APPROVED" | "REJECTED";
 
@@ -119,6 +144,7 @@ export const useAuthStore = create<AuthState>()(
           if (typeof window !== "undefined") {
             window.dispatchEvent(new CustomEvent("customer-view-changed", { detail: { activeView } }));
           }
+          await triggerCartMergeOnLogin(data.token, activeView);
           return { success: true };
         } catch (err: any) {
           set({ isLoading: false, error: err.message || "Network error" });
@@ -176,6 +202,7 @@ export const useAuthStore = create<AuthState>()(
           if (typeof window !== "undefined") {
             window.dispatchEvent(new CustomEvent("customer-view-changed", { detail: { activeView } }));
           }
+          await triggerCartMergeOnLogin(data.token, activeView);
           return { success: true };
         } catch (err: any) {
           set({ isLoading: false, error: err.message || "Network error" });
@@ -228,6 +255,7 @@ export const useAuthStore = create<AuthState>()(
           if (typeof window !== "undefined") {
             window.dispatchEvent(new CustomEvent("customer-view-changed", { detail: { activeView } }));
           }
+          await triggerCartMergeOnLogin(data.token, activeView);
           return { success: true };
         } catch (err: any) {
           set({ isLoading: false, error: err.message || "Network error" });
@@ -379,7 +407,7 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      logout: () => {
+        logout: () => {
         set({
           user: null,
           token: null,
@@ -388,6 +416,7 @@ export const useAuthStore = create<AuthState>()(
           error: null,
         });
         if (typeof window !== "undefined") {
+          window.localStorage.removeItem("transasia_cart_session_id");
           window.dispatchEvent(
             new CustomEvent("customer-view-changed", { detail: { activeView: "REGULAR" } })
           );

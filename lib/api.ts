@@ -1,4 +1,4 @@
-import { Product } from "@/types/product";
+import { Product, CartProduct } from "@/types/product";
 import { Category } from "@/types/categories";
 
 const API_BASE_URL =
@@ -466,6 +466,261 @@ export async function fetchStorefrontPromotions(): Promise<StorefrontPromotionsR
         link: "/shop",
       },
       showTodaysBestDeals: false,
+    };
+  }
+}
+
+// ----------------------------------------------------
+// Shopping Cart APIs
+// ----------------------------------------------------
+
+export const CART_SESSION_STORAGE_KEY = "transasia_cart_session_id";
+
+export function getCartSessionId(): string {
+  if (typeof window === "undefined") return "";
+  let sid = window.localStorage.getItem(CART_SESSION_STORAGE_KEY);
+  if (!sid) {
+    sid = "sess-" + Math.random().toString(36).substring(2, 11) + "-" + Date.now().toString(36);
+    window.localStorage.setItem(CART_SESSION_STORAGE_KEY, sid);
+  }
+  return sid;
+}
+
+export interface CartRequestOptions {
+  token?: string | null;
+  sessionId?: string | null;
+  viewMode?: "REGULAR" | "WHOLESALE" | null;
+}
+
+function buildCartHeaders(options?: CartRequestOptions): Record<string, string> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  const sid = options?.sessionId || (typeof window !== "undefined" ? getCartSessionId() : undefined);
+  if (sid) {
+    headers["x-session-id"] = sid;
+  }
+  if (options?.token) {
+    headers["Authorization"] = `Bearer ${options.token}`;
+  }
+  if (options?.viewMode) {
+    headers["x-customer-view"] = options.viewMode;
+  }
+  return headers;
+}
+
+export interface BackendCartItem {
+  id: string;
+  cartId: string;
+  productId: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+  isWholesaleApplied: boolean;
+  product: {
+    id: string;
+    sku?: string;
+    title: string;
+    slug: string;
+    basePrice: number;
+    wholesalePrice?: number | null;
+    stockQuantity: number;
+    status: string;
+    isAvailable: boolean;
+    isExceedingStock: boolean;
+    primaryImage?: string | null;
+    category?: { id: string; title: string; slug: string } | null;
+    brand?: { id: string; name: string; slug: string } | null;
+  };
+}
+
+export interface BackendCartData {
+  id: string | null;
+  userId: string | null;
+  sessionId: string | null;
+  items: BackendCartItem[];
+  subtotal: number;
+  totalItems: number;
+  hasStockIssues: boolean;
+  isWholesaleCustomer: boolean;
+  updatedAt: string;
+}
+
+export function mapBackendCartItemToCartProduct(item: BackendCartItem): CartProduct {
+  const prod = item.product;
+  const resolvedImg = resolveImageUrl(prod.primaryImage);
+  return {
+    id: prod.id,
+    title: prod.title,
+    price: item.unitPrice,
+    oldPrice: item.isWholesaleApplied ? prod.basePrice : undefined,
+    quantity: item.quantity,
+    imgSrc: resolvedImg,
+    hoverImgSrc: resolvedImg,
+    slug: prod.slug,
+    sku: prod.sku,
+    brandName: prod.brand?.name,
+    categoryName: prod.category?.title,
+    cartItemId: item.id,
+    inStock: prod.isAvailable,
+    availableQuantity: prod.stockQuantity,
+    isStockOut: !prod.isAvailable,
+    isWholesalePricingApplied: item.isWholesaleApplied,
+    isAvailable: prod.isAvailable,
+    isExceedingStock: prod.isExceedingStock,
+  };
+}
+
+export async function fetchBackendCart(
+  options?: CartRequestOptions
+): Promise<BackendCartData | null> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/cart`, {
+      headers: buildCartHeaders(options),
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.success ? (json.data as BackendCartData) : null;
+  } catch (err) {
+    console.error("fetchBackendCart error:", err);
+    return null;
+  }
+}
+
+export async function addItemToBackendCart(
+  productId: string,
+  quantity: number = 1,
+  options?: CartRequestOptions
+): Promise<{ success: boolean; data?: BackendCartData; message?: string }> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/cart/items`, {
+      method: "POST",
+      headers: buildCartHeaders(options),
+      body: JSON.stringify({ productId, quantity }),
+    });
+    const json = await res.json();
+    return {
+      success: Boolean(json.success),
+      data: json.data,
+      message: json.message,
+    };
+  } catch (err: any) {
+    return { success: false, message: err.message || "Network error" };
+  }
+}
+
+export async function updateBackendCartItemQty(
+  itemId: string,
+  quantity: number,
+  options?: CartRequestOptions
+): Promise<{ success: boolean; data?: BackendCartData; message?: string }> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/cart/items/${itemId}`, {
+      method: "PATCH",
+      headers: buildCartHeaders(options),
+      body: JSON.stringify({ quantity }),
+    });
+    const json = await res.json();
+    return {
+      success: Boolean(json.success),
+      data: json.data,
+      message: json.message,
+    };
+  } catch (err: any) {
+    return { success: false, message: err.message || "Network error" };
+  }
+}
+
+export async function removeBackendCartItem(
+  itemId: string,
+  options?: CartRequestOptions
+): Promise<{ success: boolean; data?: BackendCartData; message?: string }> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/cart/items/${itemId}`, {
+      method: "DELETE",
+      headers: buildCartHeaders(options),
+    });
+    const json = await res.json();
+    return {
+      success: Boolean(json.success),
+      data: json.data,
+      message: json.message,
+    };
+  } catch (err: any) {
+    return { success: false, message: err.message || "Network error" };
+  }
+}
+
+export async function clearBackendCart(
+  options?: CartRequestOptions
+): Promise<{ success: boolean; data?: BackendCartData; message?: string }> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/cart`, {
+      method: "DELETE",
+      headers: buildCartHeaders(options),
+    });
+    const json = await res.json();
+    return {
+      success: Boolean(json.success),
+      data: json.data,
+      message: json.message,
+    };
+  } catch (err: any) {
+    return { success: false, message: err.message || "Network error" };
+  }
+}
+
+export async function mergeBackendCart(
+  guestSessionId?: string,
+  guestItems?: Array<{ productId: string; quantity: number }>,
+  options?: CartRequestOptions
+): Promise<{ success: boolean; data?: BackendCartData; message?: string }> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/cart/merge`, {
+      method: "POST",
+      headers: buildCartHeaders(options),
+      body: JSON.stringify({ guestSessionId, guestItems }),
+    });
+    const json = await res.json();
+    return {
+      success: Boolean(json.success),
+      data: json.data,
+      message: json.message,
+    };
+  } catch (err: any) {
+    return { success: false, message: err.message || "Network error" };
+  }
+}
+
+export async function validateBackendCart(
+  options?: CartRequestOptions
+): Promise<{
+  success: boolean;
+  valid: boolean;
+  issues: Array<{ productId: string; title: string; issue: string; type: string }>;
+  cart?: BackendCartData;
+  message?: string;
+}> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/cart/validate`, {
+      method: "POST",
+      headers: buildCartHeaders(options),
+    });
+    const json = await res.json();
+    return {
+      success: Boolean(json.success),
+      valid: Boolean(json.valid),
+      issues: json.issues || [],
+      cart: json.cart,
+      message: json.message,
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      valid: false,
+      issues: [],
+      message: err.message || "Validation failed",
     };
   }
 }

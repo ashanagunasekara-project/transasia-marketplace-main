@@ -188,4 +188,7 @@ export interface Product {
 // Cart item: Product with required quantity
 export interface CartProduct extends Product {
   quantity: number;
+  cartItemId?: string;
+  isAvailable?: boolean;
+  isExceedingStock?: boolean;
 }
