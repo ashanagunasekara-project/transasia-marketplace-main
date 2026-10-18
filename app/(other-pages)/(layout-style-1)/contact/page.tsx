@@ -1,20 +1,18 @@
 import Breadcrumb from "@/components/other-pages/Breadcrumb";
-import Contact from "@/components/other-pages/contact/Contact";
-import ContactMap from "@/components/other-pages/contact/ContactMap";
-
+import ContactSection from "@/components/other-pages/contact/ContactSection";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact Us || Unimart - eCommerce React Nextjs Bootstrap5 Template",
-  description: "Get in touch with the Unimart team via our contact page.",
+  title: "Contact Us | Trans Asia Cellular",
+  description:
+    "Get in touch with Trans Asia Cellular. Visit our Colombo and Kurunegala store branches or reach out to us online.",
 };
 
 export default function page() {
   return (
     <>
       <Breadcrumb />
-      <Contact />
-      <ContactMap />
+      <ContactSection />
     </>
   );
 }
