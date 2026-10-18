@@ -38,8 +38,8 @@ export default function DetailsGridSidebar({ product }: { product: Product }) {
                   </p>
                   <div className="rbt-info-wrapper d-flex">
                     <ProductRating product={product} className="mt--0"><span className="icon">
-                        <i className="fa-sharp fa-solid fa-truck-fast" />
-                      </span></ProductRating>
+                      <i className="fa-sharp fa-solid fa-truck-fast" />
+                    </span></ProductRating>
                     <div className="prd-info-section has-left-separator">
                       <div className="prd-id-text">
                         <p className="text-bold">SKU:</p>

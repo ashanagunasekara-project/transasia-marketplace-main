@@ -70,7 +70,7 @@ export default function CartModal() {
                   Your cart
                 </h6>
               </div>
-              <div className="rbt-quick-info-tag d-flex mt--16 rbt-flash-animation">
+              {/* <div className="rbt-quick-info-tag d-flex mt--16 rbt-flash-animation">
                 <FireOrangeIcon />
                 <p>
                   Limited Item,{" "}
@@ -79,7 +79,7 @@ export default function CartModal() {
                     <span className="rbt-countdown-cart">10m 00s</span>
                   </strong>
                 </p>
-              </div>
+              </div> */}
               <div className="rbt-btn-close" id="btn_sideNavClose">
                 <button
                   className="minicart-close-button rbt-round-btn"
@@ -235,7 +235,7 @@ export default function CartModal() {
                   <span className="text">Coupon</span>
                 </button>
               </div>
-              <div className="minicart-inc-items-area mt--12">
+              {/* <div className="minicart-inc-items-area mt--12">
                 <h6 className="title positin-top">You May Also Like</h6>
                 <div className="bottom-area">
                   <Swiper
@@ -312,7 +312,7 @@ export default function CartModal() {
                     <div className="rbt-swiper-pagination shop-cart-pagination" />
                   </Swiper>
                 </div>
-              </div>
+              </div> */}
             </nav>
           </div>
           <div className="rbt-minicart-footer">

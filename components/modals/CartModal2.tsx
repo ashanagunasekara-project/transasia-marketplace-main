@@ -71,7 +71,7 @@ export default function CartModal2() {
                         Your cart
                       </h6>
                     </div>
-                    <div className="rbt-quick-info-tag d-flex mt--16 rbt-flash-animation">
+                    {/* <div className="rbt-quick-info-tag d-flex mt--16 rbt-flash-animation">
                       <FireSolidIcon />
                       <p>
                         Limited Item,{" "}
@@ -80,7 +80,7 @@ export default function CartModal2() {
                           <span className="rbt-countdown-cart">10m 00s</span>
                         </strong>
                       </p>
-                    </div>
+                    </div> */}
                   </div>
                   <nav className="side-nav w-100">
                     <ul className="rbt-minicart-wrapper">
