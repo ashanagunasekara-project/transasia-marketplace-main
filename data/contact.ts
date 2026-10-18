@@ -17,6 +17,7 @@ export interface StoreLocation {
 export const contactInfo = {
   phone: "+94 773 392 727",
   phoneRaw: "+94773392727",
+  phoneHref: "tel:+94773392727",
   landline: "+94 112 332 162",
   email: "info@transasiacellular.com",
   emailHref: "mailto:info@transasiacellular.com",
