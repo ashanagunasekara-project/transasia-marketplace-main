@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import {
   clearAllFilters,
   setItemPerPage,
@@ -20,11 +20,13 @@ import FilterByTagTwo from "./filterComponents/FilterByTagTwo";
 const columnClass =
   "col-xxl-3 col-lg-4 col-md-6 col-sm-6 col-6 mt--24 product-col";
 
-export default function ShopFilterOffcanvas({
-  offcanvasDirection = "left",
-}: {
+type ShopFilterOffcanvasProps = {
   offcanvasDirection?: "left" | "right" | "top" | "bottom";
-}) {
+};
+
+function ShopFilterOffcanvasContent({
+  offcanvasDirection = "left",
+}: ShopFilterOffcanvasProps) {
   const { state, dispatch, visibleProducts, getFilterCount } = useShopState({
     column: 4,
     loaderType: "pagination",
@@ -216,5 +218,21 @@ export default function ShopFilterOffcanvas({
         getFilterCount={getFilterCount}
       />
     </>
+  );
+}
+
+export default function ShopFilterOffcanvas(props: ShopFilterOffcanvasProps) {
+  return (
+    <Suspense
+      fallback={
+        <div className="rbt-component-area rbt-shop-filter-area rbt-bg-color-white py-5">
+          <div className="container text-center py-5">
+            <div className="spinner-border text-primary" role="status" />
+          </div>
+        </div>
+      }
+    >
+      <ShopFilterOffcanvasContent {...props} />
+    </Suspense>
   );
 }

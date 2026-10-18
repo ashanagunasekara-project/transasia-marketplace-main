@@ -2,7 +2,7 @@
 
 import TypeAnimation from "@/components/common/ui/TypeAnimation";
 import SearchableDropdown from "@/components/common/select/SearchableDropdown";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DOCUMENTATION_CATEGORIES } from "@/data/documentationCategories";
 import { fetchStorefrontCategories } from "@/lib/api";
@@ -13,7 +13,7 @@ const FALLBACK_CATEGORY_OPTIONS = [
   ...DOCUMENTATION_CATEGORIES.map((cat) => cat.title),
 ];
 
-export default function SearchWithCategory({
+function SearchWithCategoryContent({
   parentClass = "rbt-search-with-category uni-header-swc-one uni-header-swc-md",
 }: {
   parentClass?: string;
@@ -199,6 +199,23 @@ export default function SearchWithCategory({
         }
       `}</style>
     </div>
+  );
+}
+
+export default function SearchWithCategory(props: { parentClass?: string }) {
+  return (
+    <Suspense
+      fallback={
+        <div
+          className={
+            props.parentClass ||
+            "rbt-search-with-category uni-header-swc-one uni-header-swc-md"
+          }
+        />
+      }
+    >
+      <SearchWithCategoryContent {...props} />
+    </Suspense>
   );
 }
 

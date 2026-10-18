@@ -32,7 +32,17 @@ const nextConfig: NextConfig = {
     // Inlines route CSS to reduce render-blocking linked stylesheets (PageSpeed: Render blocking requests).
     inlineCss: true,
     // Optimize package imports for large icon/component libraries (reduces initial JS bundle).
-    optimizePackageImports: ["swiper", "bootstrap", "lightgallery"],
+    optimizePackageImports: [
+      "swiper",
+      "bootstrap",
+      "lightgallery",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-popover",
+      "@radix-ui/react-tooltip",
+      "rc-slider",
+      "react-datepicker",
+      "zustand",
+    ],
   },
   // Image optimization: serve AVIF (smaller) then WebP, tuned device breakpoints.
   images: {

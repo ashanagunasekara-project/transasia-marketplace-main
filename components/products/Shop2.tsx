@@ -17,15 +17,23 @@ import FilterMeta from "./FilterMeta";
 import Sidebar from "./Sidebar";
 import LayoutHandler from "./LayoutHandler";
 import SidebarScrollable from "./SidebarScrollable";
+import { Suspense } from "react";
 import ProductCard10 from "../product-cards/ProductCard10";
 import { useShopState } from "./useShopState";
 
-export default function Shop2({
+type Shop2Props = {
+  rightSidebar?: boolean;
+  stickyTop?: boolean;
+  sidebarScrollAble?: boolean;
+  loaderType?: "pagination" | "button";
+};
+
+function Shop2Content({
   rightSidebar = false,
   stickyTop = false,
   sidebarScrollAble = false,
   loaderType = "pagination",
-}) {
+}: Shop2Props) {
   const { state, dispatch, visibleProducts, getFilterCount, isLoadMore } =
     useShopState({
       column: 3,
@@ -219,5 +227,21 @@ export default function Shop2({
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Shop2(props: Shop2Props) {
+  return (
+    <Suspense
+      fallback={
+        <div className="rbt-component-area rbt-shop-filter-area rbt-bg-color-white py-5">
+          <div className="container text-center py-5">
+            <div className="spinner-border text-primary" role="status" />
+          </div>
+        </div>
+      }
+    >
+      <Shop2Content {...props} />
+    </Suspense>
   );
 }

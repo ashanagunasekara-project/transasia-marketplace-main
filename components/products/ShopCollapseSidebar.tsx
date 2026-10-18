@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import {
   clearAllFilters,
   setCurrentPage,
@@ -30,7 +30,7 @@ type Props = {
   filterPosition?: "left" | "right";
 };
 
-export default function ShopCollapseSidebar({
+function ShopCollapseSidebarContent({
   loaderType = "pagination",
   column = 3,
   containerFull = false,
@@ -255,5 +255,21 @@ export default function ShopCollapseSidebar({
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ShopCollapseSidebar(props: Props) {
+  return (
+    <Suspense
+      fallback={
+        <div className="rbt-component-area rbt-shop-filter-area rbt-bg-color-white py-5">
+          <div className="container text-center py-5">
+            <div className="spinner-border text-primary" role="status" />
+          </div>
+        </div>
+      }
+    >
+      <ShopCollapseSidebarContent {...props} />
+    </Suspense>
   );
 }

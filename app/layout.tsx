@@ -3,6 +3,8 @@ import LayoutEffectsLoader from "@/components/common/other-components/LayoutEffe
 import BootstrapJsLoader from "@/components/common/other-components/BootstrapJsLoader";
 import type { Metadata } from "next";
 
+import "@/public/assets/css/vendor/bootstrap.min.css";
+import "@/public/assets/css/plugins/fontawesome-all.min.css";
 import "../public/assets/scss/main.scss";
 
 const cabin = Cabin({
