@@ -725,4 +725,52 @@ export async function validateBackendCart(
   }
 }
 
+// ----------------------------------------------------
+// Location APIs (Sri Lanka Districts & Cities)
+// ----------------------------------------------------
+
+export interface LocationDistrict {
+  id: string;
+  name: string;
+  code: string;
+}
+
+export interface LocationCity {
+  id: string;
+  name: string;
+  postalCode?: string | null;
+  districtId: string;
+  districtName: string;
+  displayName: string;
+}
+
+export async function fetchDistricts(): Promise<LocationDistrict[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/locations/districts`);
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json.success && Array.isArray(json.data) ? json.data : [];
+  } catch (err) {
+    console.error("fetchDistricts error:", err);
+    return [];
+  }
+}
+
+export async function fetchCities(districtId?: string, search?: string): Promise<LocationCity[]> {
+  try {
+    const params = new URLSearchParams();
+    if (districtId) params.set("districtId", districtId);
+    if (search) params.set("search", search);
+    const query = params.toString() ? `?${params.toString()}` : "";
+    const res = await fetch(`${API_BASE_URL}/api/locations/cities${query}`);
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json.success && Array.isArray(json.data) ? json.data : [];
+  } catch (err) {
+    console.error("fetchCities error:", err);
+    return [];
+  }
+}
+
+
 

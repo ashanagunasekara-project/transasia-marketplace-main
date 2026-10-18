@@ -1,15 +1,22 @@
-export const FREE_SHIPPING_THRESHOLD = 250;
-export const SHIPPING_COST = 10;
+import { formatCurrency } from "./price";
 
-export function getCartSummary(totalPrice: number, itemCount: number) {
+export const FREE_SHIPPING_THRESHOLD = 15000;
+export const DEFAULT_SHIPPING_COST = 450;
+
+export function getCartSummary(
+  totalPrice: number,
+  itemCount: number,
+  shippingCost = DEFAULT_SHIPPING_COST,
+  freeShippingThreshold = FREE_SHIPPING_THRESHOLD
+) {
   const clampedTotal = Math.max(0, totalPrice);
   const shippingTotal =
-    clampedTotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+    clampedTotal >= freeShippingThreshold || clampedTotal === 0 ? 0 : shippingCost;
   const orderTotal = clampedTotal + shippingTotal;
-  const amountToFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - clampedTotal);
+  const amountToFreeShipping = Math.max(0, freeShippingThreshold - clampedTotal);
   const progressPercent = Math.min(
-    (clampedTotal / FREE_SHIPPING_THRESHOLD) * 100,
-    100,
+    (clampedTotal / freeShippingThreshold) * 100,
+    100
   );
   const subtotalLabel = itemCount === 1 ? "1 item" : `${itemCount} items`;
 
@@ -20,5 +27,9 @@ export function getCartSummary(totalPrice: number, itemCount: number) {
     amountToFreeShipping,
     progressPercent,
     hasFreeShipping: amountToFreeShipping === 0,
+    formattedSubtotal: formatCurrency(clampedTotal),
+    formattedShipping: shippingTotal === 0 ? "Free" : formatCurrency(shippingTotal),
+    formattedTotal: formatCurrency(orderTotal),
+    formattedAmountToFreeShipping: formatCurrency(amountToFreeShipping),
   };
 }

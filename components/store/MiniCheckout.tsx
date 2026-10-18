@@ -19,6 +19,10 @@ export default function MiniCheckout() {
     amountToFreeShipping,
     progressPercent,
     hasFreeShipping,
+    formattedSubtotal,
+    formattedShipping,
+    formattedTotal,
+    formattedAmountToFreeShipping,
   } = getCartSummary(totalPrice, cartProducts.length);
 
   return (
@@ -73,20 +77,18 @@ export default function MiniCheckout() {
           </div>
           <div className="rbt-cart-subttotal">
             <p>Subtotal ({subtotalLabel})</p>
-            <p className="price">${totalPrice.toFixed(2)}</p>
+            <p className="price">{formattedSubtotal}</p>
           </div>
           <div className="rbt-cart-subttotal">
             <p>Shipping</p>
-            <p className="price">
-              {shippingTotal === 0 ? "Free" : `$${shippingTotal.toFixed(2)}`}
-            </p>
+            <p className="price">{formattedShipping}</p>
           </div>
           <hr className="mb--8 mt--8 rbt-bg-color-gray-200" />
           <div className="rbt-cart-subttotal mb--12">
             <p className="subtotal">
               <strong>Total</strong>
             </p>
-            <p className="price">${orderTotal.toFixed(2)}</p>
+            <p className="price">{formattedTotal}</p>
           </div>
           <div className="offer-progress-area">
             <p className="offer-text">
@@ -96,7 +98,7 @@ export default function MiniCheckout() {
                 </>
               ) : (
                 <>
-                  Add <strong>${amountToFreeShipping.toFixed(2)}</strong> More
+                  Add <strong>{formattedAmountToFreeShipping}</strong> More
                   To Get <strong className="ml--4">Free Shipping</strong>
                 </>
               )}

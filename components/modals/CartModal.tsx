@@ -10,6 +10,7 @@ import { Pagination } from "swiper/modules";
 import Tooltip from "@/components/common/ui/Tooltip";
 import ModalTriggerButton from "@/components/action-buttons/ModalTriggerButton";
 import { getCartSummary } from "@/lib/cartSummaryUtils";
+import { formatCurrency } from "@/lib/price";
 import { getStackedModalZIndex } from "@/lib/modalStack";
 import { useManagedModalPanel } from "@/hooks/useManagedModalPanel";
 
@@ -45,6 +46,10 @@ export default function CartModal() {
     amountToFreeShipping,
     progressPercent,
     hasFreeShipping,
+    formattedSubtotal,
+    formattedShipping,
+    formattedTotal,
+    formattedAmountToFreeShipping,
   } = getCartSummary(totalPrice, cartProducts.length);
 
   return (
@@ -129,9 +134,14 @@ export default function CartModal() {
                         <span className="quantity">
                           {product.quantity}x{" "}
                           <span className="price">
-                            ${product.price.toFixed(2)}
+                            {formatCurrency(product.price)}
                           </span>
                         </span>
+                        {product.isWholesalePricingApplied && (
+                          <span className="badge bg-success text-white px-2 py-0 mt-1 d-inline-block" style={{ fontSize: "10px" }}>
+                            Wholesale
+                          </span>
+                        )}
                         <div className="bottom-part">
                           <div className="rbt-qty-area">
                             <button
@@ -145,20 +155,24 @@ export default function CartModal() {
                             <input
                               type="number"
                               className="items-qty-input"
-                              onChange={(e) =>
-                                updateQuantity(
-                                  product.id,
-                                  Number(e.target.value),
-                                )
-                              }
+                              onChange={(e) => {
+                                const val = parseInt(e.target.value, 10);
+                                if (!isNaN(val) && val >= 1 && val <= 20) {
+                                  updateQuantity(product.id, val);
+                                }
+                              }}
                               min={1}
+                              max={20}
                               value={product.quantity}
                             />
                             <button
                               className="qty-item-btn qty-item-btn-incr"
-                              onClick={() =>
-                                updateQuantity(product.id, product.quantity + 1)
-                              }
+                              disabled={product.quantity >= 20}
+                              onClick={() => {
+                                if (product.quantity < 20) {
+                                  updateQuantity(product.id, product.quantity + 1);
+                                }
+                              }}
                             >
                               <i className="fa-solid fa-plus" />
                             </button>
@@ -305,20 +319,18 @@ export default function CartModal() {
             <hr className="mb--0 mt--16" />
             <div className="rbt-cart-subttotal">
               <p>Subtotal ({subtotalLabel})</p>
-              <p className="price">${totalPrice.toFixed(2)}</p>
+              <p className="price">{formattedSubtotal}</p>
             </div>
             <div className="rbt-cart-subttotal">
               <p>Shipping</p>
-              <p className="price">
-                {shippingTotal === 0 ? "Free" : `$${shippingTotal.toFixed(2)}`}
-              </p>
+              <p className="price">{formattedShipping}</p>
             </div>
             <hr className="mb--0" />
             <div className="rbt-cart-subttotal">
               <p>
                 <strong>Total</strong>
               </p>
-              <p className="price">${orderTotal.toFixed(2)}</p>
+              <p className="price">{formattedTotal}</p>
             </div>
             <div className="offer-progress-area">
               <p className="offer-text">
@@ -328,7 +340,7 @@ export default function CartModal() {
                   </>
                 ) : (
                   <>
-                    Add <strong>${amountToFreeShipping.toFixed(2)}</strong> More
+                    Add <strong>{formattedAmountToFreeShipping}</strong> More
                     To Get <strong className="ml--4">Free Shipping</strong>
                   </>
                 )}

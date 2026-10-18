@@ -1,6 +1,6 @@
 export function formatCurrency(
   value: number | string | null | undefined,
-  currency = "USD",
+  currency = "LKR",
 ): string {
   const normalizedValue =
     typeof value === "string"
@@ -8,15 +8,13 @@ export function formatCurrency(
       : value;
 
   if (typeof normalizedValue !== "number" || Number.isNaN(normalizedValue)) {
-    return "$0.00";
+    return "Rs. 0.00";
   }
 
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
+  return `Rs. ${normalizedValue.toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(normalizedValue);
+  })}`;
 }
 
 export function calculateDiscountPercentage(

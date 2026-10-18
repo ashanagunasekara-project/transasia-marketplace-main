@@ -5,9 +5,19 @@ import Link from "next/link";
 import { useContextElement } from "@/context/store";
 import ModalTriggerButton from "@/components/action-buttons/ModalTriggerButton";
 import { formatCurrency } from "@/lib/price";
+import { getCartSummary } from "@/lib/cartSummaryUtils";
 
 export default function MiniCartDropdown() {
   const { cartProducts, totalPrice, setCartProducts } = useContextElement();
+  const {
+    subtotalLabel,
+    formattedSubtotal,
+    formattedShipping,
+    formattedTotal,
+    formattedAmountToFreeShipping,
+    hasFreeShipping,
+    progressPercent,
+  } = getCartSummary(totalPrice, cartProducts.length);
 
   return (
     <div className="rbt-mini-cart-popup">
@@ -79,33 +89,31 @@ export default function MiniCartDropdown() {
             </nav>
             <div className="rbt-minicart-footer">
               <div className="rbt-cart-subttotal">
-                <p>Subtotal ({cartProducts.length} items)</p>
-                <p className="price">${totalPrice.toFixed(2)}</p>
+                <p>Subtotal ({subtotalLabel})</p>
+                <p className="price">{formattedSubtotal}</p>
               </div>
               <div className="rbt-cart-subttotal">
                 <p>Shipping</p>
-                <p className="price">$10.00</p>
+                <p className="price">{formattedShipping}</p>
               </div>
               <hr className="mb--0" />
               <div className="rbt-cart-subttotal">
                 <p className="subtotal">
                   <strong>Total</strong>
                 </p>
-                <p className="price">
-                  ${(totalPrice + (totalPrice > 0 ? 10 : 0)).toFixed(2)}
-                </p>
+                <p className="price">{formattedTotal}</p>
               </div>
               <div className="offer-progress-area text-start">
                 <p className="offer-text">
-                  {totalPrice < 1000 ? (
+                  {hasFreeShipping ? (
                     <>
-                      Add <strong>${(1000 - totalPrice).toFixed(2)}</strong>{" "}
-                      More To Get
+                      Congratulations! You have
                       <strong className="ml--4">Free Shipping</strong>
                     </>
                   ) : (
                     <>
-                      Congratulations! You have
+                      Add <strong>{formattedAmountToFreeShipping}</strong>{" "}
+                      More To Get
                       <strong className="ml--4">Free Shipping</strong>
                     </>
                   )}
@@ -114,14 +122,14 @@ export default function MiniCartDropdown() {
                   className="progress"
                   role="progressbar"
                   aria-label="Shipping-progress"
-                  aria-valuenow={Math.min((totalPrice / 1000) * 100, 100)}
+                  aria-valuenow={Math.round(progressPercent)}
                   aria-valuemin={0}
                   aria-valuemax={100}
                 >
                   <div
                     className="progress-bar"
                     style={{
-                      width: `${Math.min((totalPrice / 1000) * 100, 100)}%`,
+                      width: `${progressPercent}%`,
                     }}
                   />
                 </div>
