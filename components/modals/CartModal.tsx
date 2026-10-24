@@ -32,12 +32,13 @@ export default function CartModal() {
     setActiveCartProduct,
     updateQuantity,
     addProductToCart,
+    removeProductFromCart,
     isAddedToCartProducts,
     mounted,
   } = useContextElement();
 
   const removeItem = (id: string | number) => {
-    setCartProducts((pre) => [...pre.filter((elm) => elm.id != id)]);
+    removeProductFromCart(id);
   };
   const {
     subtotalLabel,
@@ -66,20 +67,10 @@ export default function CartModal() {
             <div className="rbt-cart-header">
               <div className="title-section">
                 <h6 className="title mb--0">
-                  <i className="fa-sharp fa-regular fa-cart-shopping mr--12" />{" "}
+                  <i className="fa-solid fa-cart-shopping mr--12" />{" "}
                   Your cart
                 </h6>
               </div>
-              {/* <div className="rbt-quick-info-tag d-flex mt--16 rbt-flash-animation">
-                <FireOrangeIcon />
-                <p>
-                  Limited Item,{" "}
-                  <strong>
-                    checkout within{" "}
-                    <span className="rbt-countdown-cart">10m 00s</span>
-                  </strong>
-                </p>
-              </div> */}
               <div className="rbt-btn-close" id="btn_sideNavClose">
                 <button
                   className="minicart-close-button rbt-round-btn"
@@ -105,6 +96,7 @@ export default function CartModal() {
                         <Link
                           href="/shop-by-categories"
                           className="rbt-btn rbt-btn-sm"
+                          onClick={close}
                         >
                           Browse Products
                         </Link>
@@ -116,7 +108,7 @@ export default function CartModal() {
                   cartProducts.map((product, i) => (
                     <li key={i} className="minicart-item">
                       <div className="thumbnail">
-                        <Link href={`/product-single-default/${product.id}`}>
+                        <Link href={`/product-single-default/${product.id}`} onClick={close}>
                           <Image
                             alt="Product Image"
                             src={product.imgSrc || ""}
@@ -127,7 +119,7 @@ export default function CartModal() {
                       </div>
                       <div className="product-content">
                         <h6 className="title">
-                          <Link href={`/product-single-default/${product.id}`}>
+                          <Link href={`/product-single-default/${product.id}`} onClick={close}>
                             {product.title}
                           </Link>
                         </h6>
@@ -146,9 +138,13 @@ export default function CartModal() {
                           <div className="rbt-qty-area">
                             <button
                               className="qty-item-btn qty-item-btn-decr"
-                              onClick={() =>
-                                updateQuantity(product.id, product.quantity - 1)
-                              }
+                              disabled={product.quantity <= 1}
+                              onClick={() => {
+                                if (product.quantity > 1) {
+                                  updateQuantity(product.id, product.quantity - 1);
+                                }
+                              }}
+                              aria-label="Decrease quantity"
                             >
                               <i className="fa-solid fa-minus" />
                             </button>
@@ -173,6 +169,7 @@ export default function CartModal() {
                                   updateQuantity(product.id, product.quantity + 1);
                                 }
                               }}
+                              aria-label="Increase quantity"
                             >
                               <i className="fa-solid fa-plus" />
                             </button>
@@ -182,7 +179,7 @@ export default function CartModal() {
                             className="edit-btn"
                             onClick={() => setActiveCartProduct(product)}
                           >
-                            <i className="fa-regular fa-pen" /> Edit
+                            <i className="fa-solid fa-pen-to-square mr--4" /> Edit
                           </ModalTriggerButton>
                         </div>
                       </div>
@@ -190,6 +187,7 @@ export default function CartModal() {
                         <button
                           className="rbt-round-btn"
                           onClick={() => removeItem(product.id)}
+                          aria-label="Remove item"
                         >
                           <i className="fa-solid fa-xmark" />
                         </button>
@@ -208,7 +206,7 @@ export default function CartModal() {
                   onClick={() => setOpenTool((pre) => (pre == 1 ? -1 : 1))}
                 >
                   <span className="icon">
-                    <i className="fa-regular fa-pen" />
+                    <i className="fa-solid fa-pen" />
                   </span>
                   <span className="text">Note</span>
                 </button>
@@ -219,7 +217,7 @@ export default function CartModal() {
                   onClick={() => setOpenTool((pre) => (pre == 2 ? -1 : 2))}
                 >
                   <span className="icon">
-                    <i className="fa-regular fa-truck-fast" />
+                    <i className="fa-solid fa-truck-fast" />
                   </span>
                   <span className="text">Shipping</span>
                 </button>
@@ -230,11 +228,12 @@ export default function CartModal() {
                   onClick={() => setOpenTool((pre) => (pre == 3 ? -1 : 3))}
                 >
                   <span className="icon">
-                    <i className="fa-regular fa-ticket" />
+                    <i className="fa-solid fa-ticket" />
                   </span>
                   <span className="text">Coupon</span>
                 </button>
               </div>
+
               {/* <div className="minicart-inc-items-area mt--12">
                 <h6 className="title positin-top">You May Also Like</h6>
                 <div className="bottom-area">
@@ -361,25 +360,38 @@ export default function CartModal() {
             </div>
             <div className="rbt-minicart-bottom mt--24">
               <div className="checkout-btn mt--20">
-                <Link
-                  className="rbt-btn w-100 text-center"
-                  href="/checkout-delivery-step-one"
-                >
-                  <span className="btn-text">Checkout</span>
-                </Link>
+                {cartProducts.length > 0 ? (
+                  <Link
+                    className="rbt-btn w-100 text-center"
+                    href="/checkout-delivery-step-one"
+                    onClick={close}
+                  >
+                    <span className="btn-text">Checkout</span>
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    className="rbt-btn w-100 text-center"
+                    style={{ opacity: 0.6, cursor: "not-allowed" }}
+                    disabled
+                  >
+                    <span className="btn-text">Checkout</span>
+                  </button>
+                )}
               </div>
               <div className="share-btn-grp rbt-link-hover">
-                <Link href={`/cart`} className="share-btn">
-                  <i className="fa-regular fa-pen mr--4" /> View Cart
+                <Link href="/cart" className="share-btn" onClick={close}>
+                  <i className="fa-solid fa-cart-shopping mr--4" /> View Cart
                 </Link>
                 <ModalTriggerButton
                   openModalName="socialShareModal"
                   className="share-btn"
                 >
-                  <i className="fa-sharp fa-solid fa-link mr--4" /> Share Cart
+                  <i className="fa-solid fa-link mr--4" /> Share Cart
                 </ModalTriggerButton>
               </div>
             </div>
+
           </div>
         </div>
         <button

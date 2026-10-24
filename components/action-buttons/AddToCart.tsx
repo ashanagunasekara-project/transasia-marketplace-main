@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useContextElement } from "@/context/Context";
+import { useUiElement } from "@/context/uiStore";
 import { Product } from "@/types";
-import ModalTriggerButton from "@/components/action-buttons/ModalTriggerButton";
 
 interface AddToCartProps {
   parentClass?: string;
@@ -13,27 +14,60 @@ export default function AddToCart({
   parentClass = "rbt-btn rbt-btn-sm has-left-icon rbt-cart-sidenav-activation",
   product,
 }: AddToCartProps) {
-  const { addProductToCart, isAddedToCartProducts } = useContextElement();
+  const { addProductToCart, quantityInCart } = useContextElement();
+  const { openSpecificBsModal } = useUiElement();
+  const [isAdding, setIsAdding] = useState(false);
 
-  const isAdded = isAddedToCartProducts(product.id);
+  const inCartQty = quantityInCart(product.id);
+  const isMaxReached = inCartQty >= 20;
 
-  if (isAdded) {
-    return (
-      <button type="button" className={parentClass}>
-        <i className="fa-regular fa-cart-shopping mr--4" /> Already Added
-      </button>
-    );
-  }
+  const handleAddToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!isMaxReached && !product.isStockOut) {
+      setIsAdding(true);
+      await addProductToCart(product, 1);
+      setTimeout(() => setIsAdding(false), 300);
+    }
+
+    // Immediately open the cart offcanvas drawer
+    openSpecificBsModal("cartSidebar");
+  };
 
   return (
-    <ModalTriggerButton
-      openModalName="cartSidebar"
+    <button
+      type="button"
       className={parentClass}
-      onClick={() => {
-        addProductToCart(product);
-      }}
+      onClick={handleAddToCart}
+      disabled={product.isStockOut}
+      title={
+        product.isStockOut
+          ? "Out of Stock"
+          : isMaxReached
+          ? "Maximum 20 items in cart - Click to view cart"
+          : inCartQty > 0
+          ? `In Cart: ${inCartQty} - Click to add another`
+          : "Add To Cart"
+      }
     >
-      <i className="fa-regular fa-cart-shopping mr--4" /> Add To Cart
-    </ModalTriggerButton>
+      <i
+        className={
+          isAdding
+            ? "fa-solid fa-spinner fa-spin mr--4"
+            : inCartQty > 0
+            ? "fa-solid fa-cart-shopping mr--4"
+            : "fa-solid fa-cart-shopping mr--4"
+        }
+      />
+      {product.isStockOut
+        ? "Out of Stock"
+        : isAdding
+        ? "Adding..."
+        : inCartQty > 0
+        ? `Add To Cart (${inCartQty})`
+        : "Add To Cart"}
+    </button>
   );
 }
+

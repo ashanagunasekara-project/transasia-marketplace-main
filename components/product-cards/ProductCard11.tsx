@@ -6,6 +6,7 @@ import Link from "next/link";
 import Countdown from "../common/ui/Countdown";
 import Tooltip from "@/components/common/ui/Tooltip";
 import { Product } from "@/types";
+import { formatCurrency } from "@/lib/price";
 import AddToCart from "../action-buttons/AddToCart";
 import AddToCompareOne from "../action-buttons/AddToCompareOne";
 import AddToWishlist from "../action-buttons/AddToWishlistOne";
@@ -171,12 +172,10 @@ export default function ProductCard11({
           </div>
           <div className="pricing-part">
             {product.oldPrice && (
-              <del className="price-text">${product.oldPrice.toFixed(2)}</del>
+              <del className="price-text">{formatCurrency(product.oldPrice)}</del>
             )}
             <span className="price-text">
-              {typeof product.price === "number"
-                ? `$${product.price.toFixed(2)}`
-                : product.price}
+              {formatCurrency(product.price)}
             </span>
             <OfferBadge product={product} variant="minus" />
             {/* Pricing badges are not present in this list view */}

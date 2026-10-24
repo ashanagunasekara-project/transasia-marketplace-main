@@ -18,7 +18,7 @@ export default function ProductActionPanel({ product }: { product: Product }) {
           <QuantitySelect quantity={quantity} setQuantity={setQuantity} />
         </div>
         <ModalTriggerButton
-          openModalName="popup-cartModal"
+          openModalName="cartSidebar"
           className="rbt-btn rbt-btn-border has-left-icon d-block text-center"
           disabled={isDisabled}
           onClick={(e) => {
@@ -27,7 +27,7 @@ export default function ProductActionPanel({ product }: { product: Product }) {
           }}
           suppressHydrationWarning
         >
-          <i className="fa-regular fa-cart-shopping mr--4" />
+          <i className="fa-solid fa-cart-shopping mr--4" />
           {buttonLabel}
         </ModalTriggerButton>
       </div>

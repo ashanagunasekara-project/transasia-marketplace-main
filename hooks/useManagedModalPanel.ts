@@ -35,9 +35,8 @@ export function useManagedModalPanel(
   const slideReady = usePanelSlideInReady(useSlideIn ? isOpen : false);
 
   const isAnimatedOpen =
-    Boolean(delayedShowBsModal) &&
     isOpen &&
-    (!useSlideIn || slideReady);
+    (!useSlideIn || slideReady || Boolean(delayedShowBsModal));
 
   return {
     modalId,

@@ -12,21 +12,27 @@ export function useCartQuantityAction(product: Product) {
   const isInCart = isAddedToCartProducts(product.id);
   const cartQty = quantityInCart(product.id);
   const quantity = quantityDraft ?? (cartQty || 1);
-  const isSameAsCart = isInCart && quantity === cartQty;
+  const isMaxReached = cartQty >= 20;
 
   const buttonLabel = isInCart
-    ? isSameAsCart
-      ? "Already Added"
-      : "Update Cart"
+    ? isMaxReached
+      ? "In Cart (Max 20)"
+      : quantityDraft !== null && quantityDraft !== cartQty
+      ? "Update Cart"
+      : `Add To Cart (${cartQty})`
     : "Add To Cart";
 
   const applyCartAction = () => {
-    if (isSameAsCart) return;
+    if (product.isStockOut) return;
 
     if (isInCart) {
-      updateQuantity(product.id, quantity);
+      if (quantityDraft !== null && quantityDraft !== cartQty) {
+        updateQuantity(product.id, Math.min(20, Math.max(1, quantityDraft)));
+      } else if (!isMaxReached) {
+        updateQuantity(product.id, Math.min(20, cartQty + 1));
+      }
     } else {
-      addProductToCart(product, quantity);
+      addProductToCart(product, Math.min(20, Math.max(1, quantity)));
     }
 
     setQuantityDraft(null);
@@ -36,7 +42,8 @@ export function useCartQuantityAction(product: Product) {
     quantity,
     setQuantity: setQuantityDraft,
     buttonLabel,
-    isDisabled: isSameAsCart,
+    isDisabled: product.isStockOut,
     applyCartAction,
   };
 }
+

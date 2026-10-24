@@ -144,7 +144,7 @@ export default function MiniCheckout() {
           </div>
         </div>
       </div>
-      <div className="rbt-sidebar-widget rbt-sidebar-widget-sm mt--24">
+      <div className="rbt-sidebar-widget rbt-sidebar-widget-sm mt--24 d-none">
         <div className="rbt-inner">
           <div className="rbt-quick-info-tag d-flex transparent">
             <FireIcon />
