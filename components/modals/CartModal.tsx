@@ -221,7 +221,8 @@ export default function CartModal() {
                   </span>
                   <span className="text">Shipping</span>
                 </button>
-                <span className="hr-sepator" />
+                {/* Temporarily hidden coupon button & function (Figure 02) */}
+                {/* <span className="hr-sepator" />
                 <button
                   type="button"
                   className="single-quick-access rbt-coupon-btn"
@@ -231,8 +232,9 @@ export default function CartModal() {
                     <i className="fa-solid fa-ticket" />
                   </span>
                   <span className="text">Coupon</span>
-                </button>
+                </button> */}
               </div>
+
 
               {/* <div className="minicart-inc-items-area mt--12">
                 <h6 className="title positin-top">You May Also Like</h6>
@@ -331,7 +333,8 @@ export default function CartModal() {
               </p>
               <p className="price">{formattedTotal}</p>
             </div>
-            <div className="offer-progress-area">
+            {/* Temporarily hidden free shipping progress text and function (Figure 03) */}
+            {/* <div className="offer-progress-area">
               <p className="offer-text">
                 {hasFreeShipping ? (
                   <>
@@ -357,7 +360,7 @@ export default function CartModal() {
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
-            </div>
+            </div> */}
             <div className="rbt-minicart-bottom mt--24">
               <div className="checkout-btn mt--20">
                 {cartProducts.length > 0 ? (
@@ -413,10 +416,12 @@ export default function CartModal() {
           onCityChange={setSelectedShippingCity}
         />
 
-        <CartCouponPopup
+        {/* Temporarily hidden coupon popup (Figure 02) */}
+        {/* <CartCouponPopup
           isOpen={openTool === 3}
           onClose={() => setOpenTool(-1)}
-        />
+        /> */}
+
       </div>
     </>
   );

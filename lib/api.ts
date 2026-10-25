@@ -744,33 +744,43 @@ export interface LocationCity {
   displayName: string;
 }
 
+import { getAllDistricts, getCitiesForDistrict } from "@/data/sriLankaLocations";
+
 export async function fetchDistricts(): Promise<LocationDistrict[]> {
   try {
     const res = await fetch(`${API_BASE_URL}/api/locations/districts`);
-    if (!res.ok) return [];
-    const json = await res.json();
-    return json.success && Array.isArray(json.data) ? json.data : [];
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && Array.isArray(json.data) && json.data.length >= 25) {
+        return json.data;
+      }
+    }
   } catch (err) {
-    console.error("fetchDistricts error:", err);
-    return [];
+    console.warn("fetchDistricts API warning, using comprehensive Sri Lanka districts:", err);
   }
+  return getAllDistricts();
 }
 
 export async function fetchCities(districtId?: string, search?: string): Promise<LocationCity[]> {
+  if (!districtId) return [];
   try {
     const params = new URLSearchParams();
-    if (districtId) params.set("districtId", districtId);
+    params.set("districtId", districtId);
     if (search) params.set("search", search);
-    const query = params.toString() ? `?${params.toString()}` : "";
+    const query = `?${params.toString()}`;
     const res = await fetch(`${API_BASE_URL}/api/locations/cities${query}`);
-    if (!res.ok) return [];
-    const json = await res.json();
-    return json.success && Array.isArray(json.data) ? json.data : [];
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+        return json.data;
+      }
+    }
   } catch (err) {
-    console.error("fetchCities error:", err);
-    return [];
+    console.warn("fetchCities API warning, using Sri Lanka district cities:", err);
   }
+  return getCitiesForDistrict(districtId);
 }
+
 
 
 

@@ -224,7 +224,8 @@ export default function CartModal2() {
                       </span>
                       <span className="text">Shipping</span>
                     </button>
-                    <span className="hr-sepator" />
+                    {/* Temporarily hidden coupon button */}
+                    {/* <span className="hr-sepator" />
                     <button
                       type="button"
                       className="single-quick-access rbt-coupon-btn"
@@ -236,7 +237,7 @@ export default function CartModal2() {
                         <i className="fa-regular fa-ticket" />
                       </span>
                       <span className="text">Coupon</span>
-                    </button>
+                    </button> */}
                   </div>
                   <hr className="mb--0 mt--16" />
                   <div className="rbt-cart-subttotal">
@@ -258,7 +259,8 @@ export default function CartModal2() {
                     </p>
                     <p className="price">${orderTotal.toFixed(2)}</p>
                   </div>
-                  <div className="offer-progress-area">
+                  {/* Temporarily hidden free shipping progress */}
+                  {/* <div className="offer-progress-area">
                     <p className="offer-text">
                       {hasFreeShipping ? (
                         <>
@@ -286,8 +288,9 @@ export default function CartModal2() {
                         style={{ width: `${progressPercent}%` }}
                       />
                     </div>
-                  </div>
+                  </div> */}
                   <div className="rbt-minicart-bottom mt--24">
+
                     <div className="checkout-btn mt--20">
                       <Link
                         href={`/checkout-delivery-step-one`}

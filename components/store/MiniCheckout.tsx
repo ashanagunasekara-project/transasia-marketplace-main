@@ -90,7 +90,8 @@ export default function MiniCheckout() {
             </p>
             <p className="price">{formattedTotal}</p>
           </div>
-          <div className="offer-progress-area">
+          {/* Temporarily hidden free shipping progress */}
+          {/* <div className="offer-progress-area">
             <p className="offer-text">
               {hasFreeShipping ? (
                 <>
@@ -116,8 +117,9 @@ export default function MiniCheckout() {
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
-          </div>
+          </div> */}
           <div className="rbt-minicart-bottom mt--24">
+
             <div className="share-btn-grp rbt-link-hover">
               <Link href="/cart" className="share-btn">
                 <i className="fa-regular fa-pen mr--4" /> View Cart

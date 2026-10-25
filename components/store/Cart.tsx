@@ -34,12 +34,13 @@ const DELIVERY_OPTIONS: DeliveryMethodOption[] = [
     cost: 450,
     description: "Standard delivery across Sri Lanka (2-3 working days)",
   },
-  {
-    id: "PICKME_FLASH",
-    name: "PickMe Flash Express",
-    cost: 650,
-    description: "Same-day express delivery within Western Province",
-  },
+  // Temporarily hidden PickMe Flash Express (Figure 04b)
+  // {
+  //   id: "PICKME_FLASH",
+  //   name: "PickMe Flash Express",
+  //   cost: 650,
+  //   description: "Same-day express delivery within Western Province",
+  // },
   {
     id: "STORE_PICKUP_COLOMBO",
     name: "Store Pickup - Colombo Head Office",
@@ -53,6 +54,7 @@ const DELIVERY_OPTIONS: DeliveryMethodOption[] = [
     description: "Collect directly at TransAsia Kurunegala (Free)",
   },
 ];
+
 
 export default function Cart() {
   const router = useRouter();
@@ -182,14 +184,16 @@ export default function Cart() {
                   </button>
                 )}
 
-                <div className="rbt-quick-info-tag d-flex">
+                {/* Temporarily hidden Max 20 units label (Figure 04a) */}
+                {/* <div className="rbt-quick-info-tag d-flex">
                   <FireIcon />
                   <p className="mb-0">
                     Max <strong>20 units per item</strong> (Wholesale / Retail)
                   </p>
-                </div>
+                </div> */}
               </div>
             </div>
+
 
             {/* Error or validation alert */}
             {(cartError || validationIssues.length > 0) && (
@@ -665,8 +669,8 @@ export default function Cart() {
                       </p>
                     </div>
 
-                    {/* Free shipping threshold progress in LKR */}
-                    <div className="offer-progress-area mb--20">
+                    {/* Free shipping threshold progress temporarily hidden (Figure 05a) */}
+                    {/* <div className="offer-progress-area mb--20">
                       <p className="offer-text b4 mb--6">
                         {hasFreeShipping ? (
                           <span className="text-success font-semibold">
@@ -694,29 +698,37 @@ export default function Cart() {
                           style={{ width: `${progressPercent}%` }}
                         />
                       </div>
-                    </div>
+                    </div> */}
 
-                    {/* Proceed to Checkout Action */}
+                    {/* Proceed to Checkout Action - alignment issue fixed (Figure 05b) */}
                     <div className="checkout-btn">
                       <button
                         type="button"
-                        className="rbt-btn w-100 text-center rbt-btn-primary py-3 font-bold"
+                        className="rbt-btn w-100 d-flex align-items-center justify-content-center rbt-btn-primary font-bold"
+                        style={{
+                          height: "54px",
+                          lineHeight: "1",
+                          borderRadius: "50px",
+                          padding: "0 24px",
+                          fontSize: "16px",
+                        }}
                         onClick={handleProceedToCheckout}
                         disabled={cartProducts.length === 0 || isValidating}
                       >
                         {isValidating ? (
-                          <span>
-                            <i className="fa-solid fa-spinner fa-spin mr--6" />{" "}
+                          <span className="d-inline-flex align-items-center">
+                            <i className="fa-solid fa-spinner fa-spin mr--8" />{" "}
                             Validating Stock...
                           </span>
                         ) : (
-                          <span>
+                          <span className="d-inline-flex align-items-center">
                             Proceed to Checkout{" "}
-                            <i className="fa-regular fa-arrow-right ml--6" />
+                            <i className="fa-solid fa-arrow-right ml--8" />
                           </span>
                         )}
                       </button>
                     </div>
+
 
                     <div className="text-center mt--16">
                       <small className="text-muted b4 d-block">
