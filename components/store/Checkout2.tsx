@@ -5,28 +5,11 @@ import { useRouter } from "next/navigation";
 import MiniCheckout from "./MiniCheckout";
 import { formatCurrency } from "@/lib/price";
 
-interface DeliveryTimeOption {
-  dayLabel: string;
-  slots: string[];
-}
-
-const DELIVERY_SCHEDULE: DeliveryTimeOption[] = [
-  { dayLabel: "Monday, 13", slots: ["12:00 - 15:00", "17:00 - 20:00"] },
-  { dayLabel: "Tuesday, 14", slots: ["09:00 - 12:00", "14:00 - 19:00"] },
-  { dayLabel: "Wednesday, 15", slots: ["09:00 - 12:00", "14:00 - 19:00"] },
-  { dayLabel: "Thursday, 16", slots: ["12:00 - 15:00", "17:00 - 20:00"] },
-  { dayLabel: "Friday, 17", slots: ["12:00 - 15:00", "17:00 - 20:00"] },
-];
-
 export default function Checkout2() {
   const router = useRouter();
 
   // Selected shipping method: "DOMEX_COURIER" | "STORE_PICKUP_COLOMBO" | "LOCAL_SHIPPING"
   const [shippingMethod, setShippingMethod] = useState<string>("DOMEX_COURIER");
-
-  // Selected time slot for courier delivery (defaults to Monday, 13 | 12:00 - 15:00)
-  const [selectedDay, setSelectedDay] = useState<string>("Monday, 13");
-  const [selectedSlot, setSelectedSlot] = useState<string>("12:00 - 15:00");
 
   // Destination context (loaded from step 1 or default)
   const [postcode, setPostcode] = useState<string>("00100");
@@ -52,13 +35,6 @@ export default function Checkout2() {
               parsed.district.toLowerCase() !== "colombo" &&
               !parsed.postcode?.startsWith("00");
             setIsOutOfColombo(outOfCol);
-          }
-          if (parsed.deliveryTimeSlot) {
-            const parts = parsed.deliveryTimeSlot.split(" | ");
-            if (parts.length === 2) {
-              setSelectedDay(parts[0]);
-              setSelectedSlot(parts[1]);
-            }
           }
           if (parsed.deliveryMethod) {
             setShippingMethod(parsed.deliveryMethod);
@@ -94,11 +70,6 @@ export default function Checkout2() {
     ? outOfColomboCourierRate
     : colomboCourierRate;
 
-  const handleSelectSlot = (day: string, slot: string) => {
-    setSelectedDay(day);
-    setSelectedSlot(slot);
-  };
-
   const handleContinue = (e: React.MouseEvent) => {
     e.preventDefault();
 
@@ -109,15 +80,17 @@ export default function Checkout2() {
         ? localShippingRate
         : 0;
 
-    const fullSlotString = `${selectedDay} | ${selectedSlot}`;
-
     const deliveryState = {
       postcode,
       district,
       deliveryMethod: shippingMethod,
       shippingFee: currentFee,
-      deliveryTimeSlot: shippingMethod === "DOMEX_COURIER" ? fullSlotString : "Standard",
-      estimatedDelivery: fullSlotString,
+      estimatedDelivery:
+        shippingMethod === "DOMEX_COURIER"
+          ? "Standard Delivery (1-3 Business Days)"
+          : shippingMethod === "STORE_PICKUP_COLOMBO"
+          ? "Standard"
+          : "Local Delivery (1-2 Days)",
       updatedAt: new Date().toISOString(),
     };
 
@@ -168,7 +141,7 @@ export default function Checkout2() {
                         id="shippingMethod"
                         role="list"
                       >
-                        {/* Option 1: Courier delivery (Figure 01 & 02) */}
+                        {/* Option 1: Courier delivery (Figure 01 clean without time slot grid) */}
                         <div className="rbt-single-shipping-method rbt-radio-accordion border-bottom">
                           <div
                             className="form-check mb-0"
@@ -196,68 +169,6 @@ export default function Checkout2() {
                               </span>
                             </label>
                           </div>
-
-                          {/* Figure 02: Courier delivery slot picker */}
-                          {shippingMethod === "DOMEX_COURIER" && (
-                            <div className="rbt-courier-shipping-area pb-4 ps-3 ms-2 ms-sm-3 border-top pt-3">
-                              <p className="fs-sm mb--12 fw-medium text-dark">
-                                Choose a courier delivery time convenient for you:
-                              </p>
-
-                              <div className="rbt-delivery-input-wrapper mt--12 d-flex flex-wrap gap-2 justify-content-between">
-                                {DELIVERY_SCHEDULE.map((item) => (
-                                  <div
-                                    key={item.dayLabel}
-                                    className="rbt-single-input-box text-center p-2 rounded-3 bg-white border flex-grow-1"
-                                    style={{ minWidth: "120px" }}
-                                  >
-                                    <div className="h6 fs-sm pb-1 mb-2 rbt-text-regular fw-bold text-dark border-bottom">
-                                      {item.dayLabel}
-                                    </div>
-                                    {item.slots.map((slot) => {
-                                      const isSelected =
-                                        selectedDay === item.dayLabel &&
-                                        selectedSlot === slot;
-                                      return (
-                                        <div
-                                          key={slot}
-                                          className="py-1 my-1 rbt-single-order-checkbox"
-                                        >
-                                          <button
-                                            type="button"
-                                            onClick={() =>
-                                              handleSelectSlot(item.dayLabel, slot)
-                                            }
-                                            className={`rbt-btn rbt-btn-xs w-100 transition-all ${
-                                              isSelected
-                                                ? "btn-primary text-white bg-primary border-primary fw-semibold shadow-sm"
-                                                : "rbt-btn-border rbt-btn-gray-light text-muted"
-                                            }`}
-                                            style={{
-                                              fontSize: "12px",
-                                              padding: "5px 8px",
-                                            }}
-                                          >
-                                            {isSelected && (
-                                              <i className="fa-solid fa-check me-1 fs-xs" />
-                                            )}
-                                            {slot}
-                                          </button>
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
-                                ))}
-                              </div>
-
-                              <div className="mt-3 p-2 bg-light rounded text-center fs-sm text-dark">
-                                Selected time slot:{" "}
-                                <strong className="text-primary">
-                                  {selectedDay} | {selectedSlot}
-                                </strong>
-                              </div>
-                            </div>
-                          )}
                         </div>
 
                         {/* Option 2: Pickup from store */}
@@ -316,30 +227,6 @@ export default function Checkout2() {
                               </span>
                             </label>
                           </div>
-
-                          {shippingMethod === "LOCAL_SHIPPING" && (
-                            <div className="rbt-local-shipping-area pb-4 ps-3 ms-2 ms-sm-3 border-top pt-3">
-                              <div
-                                className="alert rbt-alert-brand d-flex align-items-center alert-info mb-3 py-2"
-                                role="alert"
-                              >
-                                <i className="fa-regular fa-circle-info me-2 text-info" />
-                                <div className="fs-sm">
-                                  Local shipping takes approximately{" "}
-                                  <span className="text-info-emphasis fw-semibold">
-                                    1 - 2
-                                  </span>{" "}
-                                  business days.
-                                </div>
-                              </div>
-                              <p className="fs-sm mb-0">
-                                Estimated delivery window:{" "}
-                                <span className="text-body-emphasis fw-medium">
-                                  Within 48 Hours
-                                </span>
-                              </p>
-                            </div>
-                          )}
                         </div>
 
                         {/* Continue Order Process button */}

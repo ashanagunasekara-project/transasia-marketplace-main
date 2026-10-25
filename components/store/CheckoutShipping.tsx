@@ -7,7 +7,7 @@ import CheckoutShippingForm from "./CheckoutShippingForm";
 
 export default function CheckoutShipping() {
   const [postcode, setPostcode] = useState("00100");
-  const [estimatedDelivery, setEstimatedDelivery] = useState("Monday, 13 | 12:00 - 15:00");
+  const [estimatedDelivery, setEstimatedDelivery] = useState("Standard");
   const [deliveryMethod, setDeliveryMethod] = useState("Courier delivery");
 
   useEffect(() => {
@@ -17,7 +17,6 @@ export default function CheckoutShipping() {
         if (stored) {
           const parsed = JSON.parse(stored);
           if (parsed.postcode) setPostcode(parsed.postcode);
-          if (parsed.deliveryTimeSlot) setEstimatedDelivery(parsed.deliveryTimeSlot);
           if (parsed.deliveryMethod) {
             if (parsed.deliveryMethod === "DOMEX_COURIER") {
               setDeliveryMethod("Courier delivery");
@@ -26,6 +25,13 @@ export default function CheckoutShipping() {
             } else if (parsed.deliveryMethod === "LOCAL_SHIPPING") {
               setDeliveryMethod("Local shipping");
             }
+          }
+          if (parsed.estimatedDelivery) {
+            setEstimatedDelivery(parsed.estimatedDelivery);
+          } else if (parsed.deliveryMethod?.startsWith("STORE_PICKUP")) {
+            setEstimatedDelivery("Standard");
+          } else {
+            setEstimatedDelivery("Standard Delivery (1-3 Business Days)");
           }
         }
       } catch (err) {
@@ -41,7 +47,7 @@ export default function CheckoutShipping() {
           <div className="col-12 col-md-12 col-lg-8 mt--24">
             <div className="rbt-transparent-table-one-wrapper rbt-has-bg-gray">
               <div className="rbt-checkout-wrapper-box">
-                {/* Step 1 Summary: Delivery Details (Figure 03) */}
+                {/* Step 1 Summary: Delivery Details (Figure 05) */}
                 <div className="rbt-checkout-single-content">
                   <span className="rbt-checkout-step">
                     <i className="fa-regular fa-check" />
@@ -72,7 +78,7 @@ export default function CheckoutShipping() {
                   </div>
                 </div>
 
-                {/* Step 2 Form: Shipping Options (Figure 04) */}
+                {/* Step 2 Form: Shipping Options */}
                 <div className="rbt-checkout-single-content active">
                   <span className="rbt-checkout-step">2</span>
                   <div className="inners w-100">
