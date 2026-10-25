@@ -449,3 +449,27 @@ export function getCitiesForDistrict(districtId: string) {
     displayName: `${c.name} (${district.name})`,
   }));
 }
+
+export function findLocationByPostalCode(postalCode: string): {
+  district: string;
+  districtId: string;
+  city: string;
+  postalCode: string;
+} | null {
+  const code = postalCode.trim();
+  if (!code) return null;
+
+  for (const district of SRI_LANKA_DISTRICTS) {
+    for (const city of district.cities) {
+      if (city.postalCode === code) {
+        return {
+          district: district.name,
+          districtId: district.id,
+          city: city.name,
+          postalCode: city.postalCode,
+        };
+      }
+    }
+  }
+  return null;
+}

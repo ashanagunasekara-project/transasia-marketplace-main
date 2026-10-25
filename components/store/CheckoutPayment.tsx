@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import MiniCheckout from "./MiniCheckout";
 import CheckoutPaymentForm from "./CheckoutPaymentForm";
@@ -6,8 +9,69 @@ import ModalTriggerButton from "../action-buttons/ModalTriggerButton";
 import CouponSelectionModal from "@/components/modals/CouponSelectionModal";
 import SingleManagedModalLayer from "@/components/common/modals/SingleManagedModalLayer";
 import { ModalName } from "@/types/modal";
+import { useContextElement } from "@/context/Context";
+import { getCartSummary } from "@/lib/cartSummaryUtils";
+import { formatCurrency } from "@/lib/price";
 
 export default function CheckoutPayment() {
+  const { cartProducts, totalPrice } = useContextElement();
+  const { orderTotal } = getCartSummary(totalPrice, cartProducts.length);
+
+  // Dynamic delivery details from Step 1 & 2
+  const [deliveryInfo, setDeliveryInfo] = useState({
+    postcode: "00100",
+    deliveryTimeSlot: "Monday, 13 | 12:00 - 15:00",
+    deliveryMethod: "Courier delivery",
+  });
+
+  // Dynamic shipping contact details from Step 3
+  const [shippingInfo, setShippingInfo] = useState({
+    name: "Ashan Gunasekara",
+    email: "ashan@example.com",
+    mobile: "077 123 4567",
+    address: "No. 45, Galle Road",
+    city: "Colombo 03",
+    district: "Colombo",
+    postcode: "00300",
+  });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const storedDelivery = localStorage.getItem("transasia_checkout_delivery");
+        if (storedDelivery) {
+          const parsed = JSON.parse(storedDelivery);
+          setDeliveryInfo({
+            postcode: parsed.postcode || "00100",
+            deliveryTimeSlot: parsed.deliveryTimeSlot || "Monday, 13 | 12:00 - 15:00",
+            deliveryMethod:
+              parsed.deliveryMethod === "STORE_PICKUP_COLOMBO"
+                ? "Pickup from store"
+                : parsed.deliveryMethod === "LOCAL_SHIPPING"
+                ? "Local shipping"
+                : "Courier delivery",
+          });
+        }
+
+        const storedShipping = localStorage.getItem("transasia_checkout_shipping");
+        if (storedShipping) {
+          const parsed = JSON.parse(storedShipping);
+          setShippingInfo({
+            name: `${parsed.firstName || ""} ${parsed.lastName || ""}`.trim() || "Customer",
+            email: parsed.email || "customer@example.com",
+            mobile: parsed.mobile || "077 123 4567",
+            address: parsed.address || "Street Address",
+            city: parsed.city || "Colombo",
+            district: parsed.district || "Colombo",
+            postcode: parsed.postcode || "00100",
+          });
+        }
+      } catch (e) {
+        console.error("Failed to load checkout state in payment:", e);
+      }
+    }
+  }, []);
+
   return (
     <>
       <div className="rbt-component-area rbt-cart-page rbt-section-gapBottom rbt-bg-color-white">
@@ -16,55 +80,62 @@ export default function CheckoutPayment() {
             <div className="col-12 col-md-12 col-lg-8 mt--24">
               <div className="rbt-transparent-table-one-wrapper rbt-has-bg-gray">
                 <div className="rbt-checkout-wrapper-box">
-                  {/* ... other content ... */}
+                  {/* Step 1 Completed Summary */}
                   <div className="rbt-checkout-single-content">
                     <span className="rbt-checkout-step">
                       <i className="fa-regular fa-check" />
                     </span>
                     <div className="inner w-100">
                       <div className="d-flex justify-content-between align-items-center">
-                        <h5 className="title">Delivery Details</h5>
+                        <h5 className="title mb-0">Delivery Details</h5>
                         <div className="rbt-link-hover">
-                          <Link href="/checkout-delivery-step-two">Edit</Link>
+                          <Link href="/checkout-delivery-step-two" className="text-primary fw-semibold">
+                            Edit
+                          </Link>
                         </div>
                       </div>
-                      <div className="content">
-                        <h6 className="h6 mb-0">Postcode</h6>
-                        <p className="desc mt--12">15006</p>
-                        <h6 className="h6 mb-0 mt--12">
-                          Estimated delivery date
+                      <div className="content mt--12">
+                        <h6 className="h6 mb-0 text-muted fs-sm">Postcode</h6>
+                        <p className="desc mt--4 fw-semibold text-dark">{deliveryInfo.postcode}</p>
+                        <h6 className="h6 mb-0 mt--12 text-muted fs-sm">
+                          Estimated delivery date ({deliveryInfo.deliveryMethod})
                         </h6>
-                        <p className="desc mt--12">
-                          Monday, 13 | 12:00 - 16:00
+                        <p className="desc mt--4 fw-semibold text-dark">
+                          {deliveryInfo.deliveryTimeSlot}
                         </p>
                       </div>
                     </div>
                   </div>
+
+                  {/* Step 2 Completed Summary */}
                   <div className="rbt-checkout-single-content">
                     <span className="rbt-checkout-step">
                       <i className="fa-regular fa-check" />
                     </span>
-                    <div className="rbt-checkout-content-inner">
+                    <div className="rbt-checkout-content-inner w-100">
                       <div className="d-flex justify-content-between align-items-center">
-                        <h5 className="title">Shipping Options</h5>
+                        <h5 className="title mb-0">Shipping Options</h5>
                         <div className="rbt-link-hover">
-                          <Link href="/checkout-shipping">Edit</Link>
+                          <Link href="/checkout-shipping" className="text-primary fw-semibold">
+                            Edit
+                          </Link>
                         </div>
                       </div>
-                      <div className="content">
-                        <p className="desc mb-0">Michael Johnson</p>
-                        <p className="desc mt--12">michael.johnson@email.com</p>
-                        <p className="desc mt--12">(312) 555-7890</p>
-                        <p className="desc mt--12">Illinois 60601</p>
-                        <p className="desc mt--12">
-                          123 Oak Street Apt 45 Chicago
+                      <div className="content mt--12">
+                        <p className="desc mb-0 fw-semibold text-dark">{shippingInfo.name}</p>
+                        <p className="desc mt--4 text-muted">{shippingInfo.email}</p>
+                        <p className="desc mt--4 text-muted">{shippingInfo.mobile}</p>
+                        <p className="desc mt--4 text-muted">
+                          {shippingInfo.address}, {shippingInfo.city}, {shippingInfo.district} District ({shippingInfo.postcode})
                         </p>
                       </div>
                     </div>
                   </div>
+
+                  {/* Step 3 Active: Secure Payment */}
                   <div className="rbt-checkout-single-content active">
                     <span className="rbt-checkout-step">3</span>
-                    <div className="rbt-checkout-content-inner">
+                    <div className="rbt-checkout-content-inner w-100">
                       <h5 className="title">Secure Payment</h5>
                       <div className="mb-4" id="paymentMethod" role="list">
                         {/* Cash on delivery */}
@@ -93,18 +164,19 @@ export default function CheckoutPayment() {
                           >
                             <div className="d-sm-flex align-items-center pt-2 pt-sm-1 pb-2 ps-3 ms-2 ms-sm-3">
                               <span className="fs-sm me-3">
-                                I would require a change from:
+                                I would require change for (Rs.):
                               </span>
                               <div className="rbt-price-input-grp">
                                 <input
                                   type="number"
-                                  min={10}
-                                  placeholder="10$"
+                                  min={100}
+                                  placeholder="Rs. 5000"
                                 />
                               </div>
                             </div>
                           </div>
                         </div>
+
                         {/* Credit card */}
                         <div className="single-payment-methode mt-2 d-block">
                           <div
@@ -142,15 +214,16 @@ export default function CheckoutPayment() {
                             <CheckoutPaymentForm />
                           </div>
                         </div>
-                        {/* PayPal */}
+
+                        {/* Bank Transfer / Slip Upload */}
                         <div className="single-payment-methode mt-2">
                           <div
                             className="rbt-radio-accordion form-check mb-0"
                             role="button"
                             data-bs-toggle="collapse"
-                            data-bs-target="#paypal"
+                            data-bs-target="#bank"
                             aria-expanded="false"
-                            aria-controls="paypal"
+                            aria-controls="bank"
                           >
                             <label className="form-check-label d-flex align-items-center text-dark-emphasis fw-semibold">
                               <input
@@ -158,77 +231,29 @@ export default function CheckoutPayment() {
                                 className="rbt-form-check-input me-1 me-sm-2"
                                 name="payment-method"
                               />
-                              PayPal
-                              <Image
-                                className="ms-3"
-                                alt="PayPal"
-                                src="/assets/images/icons/paypal-icon.svg"
-                                width={16}
-                                height={19}
-                              />
+                              Bank Deposit / Wire Transfer
                             </label>
                           </div>
                           <div
                             className="collapse"
-                            id="paypal"
+                            id="bank"
                             data-bs-parent="#paymentMethod"
-                          />
-                        </div>
-                        {/* Google Pay */}
-                        <div className="single-payment-methode mt-2">
-                          <div
-                            className="rbt-radio-accordion form-check mb-0"
-                            role="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#googlepay"
-                            aria-expanded="false"
-                            aria-controls="googlepay"
                           >
-                            <label className="form-check-label d-flex align-items-center text-dark-emphasis fw-semibold">
-                              <input
-                                type="radio"
-                                className="rbt-form-check-input me-1 me-sm-2"
-                                name="payment-method"
-                              />
-                              Google Pay
-                              <Image
-                                className="ms-3"
-                                alt="Google Pay"
-                                src="/assets/images/icons/google-icon.svg"
-                                width={21}
-                                height={17}
-                              />
-                            </label>
+                            <div className="p-3 bg-light rounded mt-2 fs-sm">
+                              <p className="mb-1 fw-bold">Commercial Bank of Ceylon</p>
+                              <p className="mb-1 text-muted">Account Name: TransAsia International (Pvt) Ltd</p>
+                              <p className="mb-0 text-muted">Account No: 1000 2345 6789 (Bambalapitiya)</p>
+                            </div>
                           </div>
-                          <div
-                            className="collapse"
-                            id="googlepay"
-                            data-bs-parent="#paymentMethod"
-                          />
                         </div>
 
-                        <div className="nav pb-3 mb-2 mb-sm-3 rbt-link-hover mt-2">
-                          <ModalTriggerButton
-                            className="nav-link animate-underline rbt-text-color-gray-400 p-0 rbt-text-bold border-0 bg-transparent"
-                            openModalName={ModalName.couponSelectionModal}
-                          >
-                            <i className="fa-regular fa-circle-plus fs-xl ms-a me-2" />
-                            <span className="animate-target">
-                              Add a promo code or a gift card
-                            </span>
-                          </ModalTriggerButton>
-                        </div>
-                        <textarea
-                          className="mb-4"
-                          rows={3}
-                          placeholder="Additional comments"
-                          defaultValue={""}
-                        />
-                        <div className="form-check mb-lg-4">
+                        {/* Terms and conditions */}
+                        <div className="form-check mb-lg-4 mt--24">
                           <input
                             type="checkbox"
                             className="form-check-input"
                             id="accept-terms"
+                            defaultChecked
                           />
                           <label
                             htmlFor="accept-terms"
@@ -243,16 +268,17 @@ export default function CheckoutPayment() {
                             </Link>
                           </label>
                         </div>
+
+                        {/* Place Order & Pay Button - Strictly Single Tab navigation */}
                         <div className="text-center mt--12 text-center rbt-btn-area d-block">
                           <Link
                             href="/checkout-thankyou"
-                            className="rbt-btn splash-btn icon-reverse-left rbt-scroll-trigger fade_in animation-order-5 rbt-rounded--4 d-block"
-                            target="_blank"
+                            className="rbt-btn splash-btn icon-reverse-left rbt-scroll-trigger fade_in animation-order-5 rbt-rounded--4 d-block w-100"
                           >
                             <span className="icon-left">
                               <i className="fa-sharp fa-regular fa-arrow-right mr--4" />
                             </span>
-                            <span>Pay $5,650.00</span>
+                            <span>Pay {formatCurrency(orderTotal)}</span>
                             <span className="icon-right">
                               <i className="fa-solid fa-money-bill-1-wave ml--4" />
                             </span>
