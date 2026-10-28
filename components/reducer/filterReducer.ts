@@ -130,7 +130,7 @@ function matchesAllFilters(product: Product, state: FilterState): boolean {
 
   if (
     state.ratings.length &&
-    !state.ratings.some((minRating) => product.rating ?? 0 >= minRating)
+    !state.ratings.some((minRating) => (product.rating ?? 0) >= minRating)
   )
     return false;
 

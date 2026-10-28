@@ -12,6 +12,7 @@ import {
   toggleTag,
 } from "../reducer/filterActions";
 import { FilterState, FilterAction } from "@/types";
+import { DEFAULT_MAX_PRICE } from "../reducer/filterReducer";
 
 export default function FilterMeta({
   state,
@@ -20,7 +21,9 @@ export default function FilterMeta({
   state: FilterState;
   dispatch: Dispatch<FilterAction>;
 }) {
-  const isDefaultPrice = state.price[0] === 0 && state.price[1] === 1000;
+  const isDefaultPrice =
+    state.price[0] === 0 &&
+    (state.price[1] >= DEFAULT_MAX_PRICE || state.price[1] === Infinity);
 
   const isFilterActive = () => {
     return (
@@ -121,10 +124,13 @@ export default function FilterMeta({
           className="rbt-text-capitalize"
           onClick={(e) => {
             e.preventDefault();
-            setPriceRange([20, 300], dispatch);
+            setPriceRange([0, DEFAULT_MAX_PRICE], dispatch);
           }}
         >
-          ${state.price[0]} to ${state.price[1]}
+          Rs. {state.price[0].toLocaleString()} to{" "}
+          {state.price[1] >= DEFAULT_MAX_PRICE
+            ? "Above"
+            : `Rs. ${state.price[1].toLocaleString()}`}
           <i className="fa-solid fa-xmark" />
         </a>
       )}
@@ -150,6 +156,12 @@ export default function FilterMeta({
         onClick={(e) => {
           e.preventDefault();
           clearAllFilters(dispatch);
+          if (typeof window !== "undefined") {
+            const url = new URL(window.location.href);
+            if (url.search) {
+              window.history.pushState({}, "", "/shop");
+            }
+          }
         }}
       >
         Clear All

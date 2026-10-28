@@ -314,7 +314,15 @@ function ShopDefaultContent({
                     <button
                       type="button"
                       className="rbt-btn rbt-btn-sm"
-                      onClick={() => clearAllFilters(dispatch)}
+                      onClick={() => {
+                        clearAllFilters(dispatch);
+                        if (typeof window !== "undefined") {
+                          const url = new URL(window.location.href);
+                          if (url.search) {
+                            window.history.pushState({}, "", "/shop");
+                          }
+                        }
+                      }}
                     >
                       Clear Filters
                     </button>

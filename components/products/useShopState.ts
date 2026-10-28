@@ -58,7 +58,6 @@ export function useShopState({
 
   const sourceProducts = useMemo(() => {
     if (products && products.length > 0) return products;
-    if (products !== undefined) return products;
     return electronicsCardData;
   }, [products]);
 
