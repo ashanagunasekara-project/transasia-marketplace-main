@@ -630,6 +630,27 @@
   }
   .rbt-card-rating {
     gap: 8px;
+    align-items: center;
+
+    .rbt-rating-link {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      transition: opacity 0.2s ease;
+
+      &:hover {
+        opacity: 0.8;
+        .rating-digit {
+          color: var(--color-primary);
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .rbt-unrated-icon {
+      color: #d1d5db !important;
+    }
+
     @media #{$small-mobile} {
       gap: 4px;
     }

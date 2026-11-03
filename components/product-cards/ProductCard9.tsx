@@ -146,16 +146,34 @@ export default function ProductCard9({
               </Link>
             </h6>
             <div className="rbt-card-rating">
-              <ul className="rbt-rating-icon-list">
-                {Array.from({ length: 5 }, (_, index) => (
-                  <li key={index}>
-                    <i
-                      className={`fa-solid fa-star${index < (product.rating ?? 0) ? " rbt-rated-icon" : ""}`}
-                    />
-                  </li>
-                ))}
-              </ul>
-              <p className="rating-digit">({product.reviewCount})</p>
+              <Link
+                href={`${detailsPageLink}?tab=reviews#reviews`}
+                className="rbt-rating-link d-inline-flex align-items-center text-decoration-none"
+                title={`${product.rating ?? 5} out of 5 stars (${product.reviewCount ?? 0} reviews) - Click to view customer reviews`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <ul className="rbt-rating-icon-list mb-0">
+                  {Array.from({ length: 5 }, (_, index) => {
+                    const ratingValue = Number(product.rating ?? 5);
+                    const isFull = index + 1 <= Math.floor(ratingValue);
+                    const isHalf = !isFull && index < ratingValue;
+                    return (
+                      <li key={index}>
+                        <i
+                          className={`fa-solid ${
+                            isFull
+                              ? "fa-star rbt-rated-icon"
+                              : isHalf
+                              ? "fa-star-half-stroke rbt-rated-icon"
+                              : "fa-star rbt-unrated-icon"
+                          }`}
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
+                <p className="rating-digit ms-1 mb-0">({product.reviewCount ?? 0})</p>
+              </Link>
               {product.extraInfo && product.extraInfo.length > 0 && <Facts />}
             </div>
             <div className="pricing-part">

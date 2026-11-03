@@ -3,7 +3,7 @@
 import { GridMatrixIcon, WaveSquareIcon } from "../../svg-icons";
 import Image from "next/image";
 import AddReviewForm, { ReviewData } from "./AddReviewForm";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Product } from "@/types/product";
 
 interface ReviewItem {
@@ -49,6 +49,22 @@ export default function DescriptionTab1({
   >("description");
 
   const [reviews, setReviews] = useState<ReviewItem[]>(DEFAULT_REVIEWS);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hash = window.location.hash;
+      const params = new URLSearchParams(window.location.search);
+      if (hash === "#reviews" || params.get("tab") === "reviews") {
+        setActiveTab("reviews");
+        setTimeout(() => {
+          const el = document.getElementById("rbt-single-productTab");
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }, 150);
+      }
+    }
+  }, []);
 
   const handleAddReview = (newReview: ReviewData) => {
     const item: ReviewItem = {
