@@ -9,12 +9,11 @@ import Image from "next/image";
 import Slider4 from "../sliders/Slider4";
 import Facts from "@/components/common/other-components/Facts";
 import ProductActionPanel from "../ProductActionPanel";
-import ComboProducts from "../others/ComboProducts2";
 import RecomendedProducts from "../recommandedProducts/RecomendedProducts";
 
-import { recentlyViewed2, recommendedProducts2 } from "@/data/products/others";
 import ProductOptionsPanel6 from "../productOptionsPanels/ProductOptionsPanel6";
 import Tooltip from "@/components/common/ui/Tooltip";
+import { formatCurrency } from "@/lib/price";
 
 import { Product } from "@/types";
 import ModalTriggerButton from "@/components/action-buttons/ModalTriggerButton";
@@ -125,13 +124,13 @@ export default function DetailsAccessories({ product }: { product: Product }) {
                       <div className="pricing-part mt--0 d-flex align-items-center flex-wrap" style={{ gap: "8px" }}>
                         {displayProduct.oldPrice ? (
                           <del className="price-text">
-                            ${Number(displayProduct.oldPrice).toFixed(2)}
+                            {formatCurrency(displayProduct.oldPrice)}
                           </del>
                         ) : (
                           ""
                         )}
                         <span className="price-text">
-                          ${Number(displayProduct.price).toFixed(2)}
+                          {formatCurrency(displayProduct.price)}
                         </span>
                         {displayProduct.isWholesalePricingApplied && (
                           <span
@@ -248,22 +247,30 @@ export default function DetailsAccessories({ product }: { product: Product }) {
                   </div>
                   <hr className="rbt-separator rbt-separator-gray200 mt--24 mb--24" />
                   <div className="rbt-info-wrapper d-block mt--24">
-                    <div className="rbt-info-box rbt-bg-color-brand-50">
+                    <div className="rbt-info-box rbt-bg-color-brand-50 p--16 text-center" style={{ borderRadius: "10px" }}>
                       <div className="rbt-payment-info-container">
-                        <ul className="payment-img-link">
-                          <li>
-                            <Link href={`/product-single-accessories`}>
-                              <Image
-                                alt="Payment Brand Image"
-                                src="/assets/images/payment-brand/image-01.webp"
-                                width={812}
-                                height={64}
-                              />
-                            </Link>
+                        <ul className="payment-img-link d-flex align-items-center justify-content-center m-0 p-0" style={{ gap: "16px", listStyle: "none" }}>
+                          <li style={{ background: "#ffffff", padding: "6px 14px", borderRadius: "8px", border: "1px solid #e2e8f0", display: "inline-flex", alignItems: "center", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
+                            <Image
+                              alt="Visa"
+                              src="/assets/images/dashboard/visa-card.svg"
+                              width={48}
+                              height={30}
+                              style={{ objectFit: "contain" }}
+                            />
+                          </li>
+                          <li style={{ background: "#ffffff", padding: "6px 14px", borderRadius: "8px", border: "1px solid #e2e8f0", display: "inline-flex", alignItems: "center", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
+                            <Image
+                              alt="Mastercard"
+                              src="/assets/images/dashboard/mastercard.svg"
+                              width={48}
+                              height={30}
+                              style={{ objectFit: "contain" }}
+                            />
                           </li>
                         </ul>
-                        <span className="b2 rbt-text-medium text-center rbt-text-color-heading mt--12 d-block">
-                          Guaranteed safe &amp; secure checkout
+                        <span className="b3 rbt-text-medium text-center rbt-text-color-heading mt--8 d-block" style={{ fontWeight: 500, color: "#64748b" }}>
+                          <i className="fa-solid fa-lock mr--4" style={{ color: "#16a34a" }} /> Guaranteed safe &amp; secure checkout
                         </span>
                       </div>
                     </div>
@@ -271,34 +278,9 @@ export default function DetailsAccessories({ product }: { product: Product }) {
                 </div>
               </div>
             </div>
-            <div className="rbt-combo-prd-box rbt-bg-color-white mt--24">
-              <div className="row justify-content-between">
-                <div className="col-lg-12">
-                  <div className="rbt-combo-title-section flex-row">
-                    <i className="fa-regular fa-cube" />
-                    <h5 className="rbt-title">
-                      There&apos;s more in the complete bundle
-                    </h5>
-                  </div>
-                </div>
-
-                <ComboProducts />
-              </div>
-            </div>
           </div>
           <div className="col-xl-3 mt--24 rbt-single-mobile-view-sidebar">
-            <RecomendedProducts
-              recentlyViewedProducts={recentlyViewed2}
-              recommendedProducts={recommendedProducts2}
-            />
-            <div className="rbt-block-banner-img mt--32">
-              <Image
-                alt="Ecommerce Product Banner"
-                src="/assets/images/product-single/single-prd-banner/single-prd-banner-a-01.webp"
-                width={1696}
-                height={2708}
-              />
-            </div>
+            <RecomendedProducts currentProduct={displayProduct} />
           </div>
         </div>
       </div>

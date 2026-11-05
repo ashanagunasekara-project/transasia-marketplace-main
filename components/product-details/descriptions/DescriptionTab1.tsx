@@ -5,6 +5,7 @@ import Image from "next/image";
 import AddReviewForm, { ReviewData } from "./AddReviewForm";
 import { useState, useEffect } from "react";
 import { Product } from "@/types/product";
+import { formatCurrency } from "@/lib/price";
 
 interface ReviewItem {
   id: number | string;
@@ -16,26 +17,12 @@ interface ReviewItem {
   imgSrc?: string;
 }
 
-const DEFAULT_REVIEWS: ReviewItem[] = [
-  {
-    id: 1,
-    author: "Kamal Perera",
-    rating: 5,
-    date: "2 days ago",
-    title: "Excellent condition and authentic product",
-    desc: "Order was delivered quickly and in pristine packaging. Item matches description completely. Very pleased with Transasia service!",
-    imgSrc: "/assets/images/reviewer-img/reviewer-01.webp",
-  },
-  {
-    id: 2,
-    author: "Nimal Fernando",
-    rating: 5,
-    date: "1 week ago",
-    title: "Great value for money",
-    desc: "Top notch quality and responsive customer service. Definitely buying from here again.",
-    imgSrc: "/assets/images/reviewer-img/reviewer-02.webp",
-  },
-];
+function getInitials(name: string): string {
+  if (!name) return "U";
+  const parts = name.trim().split(" ");
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 export default function DescriptionTab1({
   product,
@@ -48,8 +35,30 @@ export default function DescriptionTab1({
     "description" | "specification" | "reviews" | "question"
   >("description");
 
-  const [reviews, setReviews] = useState<ReviewItem[]>(DEFAULT_REVIEWS);
+  const [reviews, setReviews] = useState<ReviewItem[]>([]);
 
+  const productId = product?.id ? String(product.id) : "general";
+
+  // Load reviews from localStorage for this specific product
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const stored = localStorage.getItem(`transasia_reviews_${productId}`);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setReviews(parsed);
+          return;
+        }
+      }
+      setReviews([]);
+    } catch (err) {
+      console.error("Error loading reviews:", err);
+      setReviews([]);
+    }
+  }, [productId]);
+
+  // Handle URL hash or param to activate reviews tab
   useEffect(() => {
     if (typeof window !== "undefined") {
       const hash = window.location.hash;
@@ -71,18 +80,29 @@ export default function DescriptionTab1({
       id: Date.now(),
       author: newReview.name || "Verified Customer",
       rating: newReview.rating,
-      date: "Just now",
+      date: new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }),
       title: newReview.title,
       desc: newReview.desc,
-      imgSrc: "/assets/images/reviewer-img/reviewer-01.webp",
     };
-    setReviews([item, ...reviews]);
+    const updated = [item, ...reviews];
+    setReviews(updated);
+    try {
+      localStorage.setItem(`transasia_reviews_${productId}`, JSON.stringify(updated));
+    } catch (err) {
+      console.error("Error saving review:", err);
+    }
   };
 
   const avgRating =
     reviews.length > 0
       ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
-      : "5.0";
+      : product?.rating
+      ? Number(product.rating).toFixed(1)
+      : "0.0";
 
   return (
     <>
@@ -166,7 +186,16 @@ export default function DescriptionTab1({
                 </p>
 
                 {product?.imgSrc && (
-                  <div className="rbt-block-banner-img mt--32 text-center" style={{ maxHeight: "400px", overflow: "hidden", borderRadius: "12px", background: "#f8f9fb", padding: "20px" }}>
+                  <div
+                    className="rbt-block-banner-img mt--32 text-center"
+                    style={{
+                      maxHeight: "400px",
+                      overflow: "hidden",
+                      borderRadius: "12px",
+                      background: "#f8f9fb",
+                      padding: "20px",
+                    }}
+                  >
                     <Image
                       alt={product.title || "Product Banner"}
                       src={product.imgSrc}
@@ -252,7 +281,7 @@ export default function DescriptionTab1({
                 <div className="rbt-single-specification">
                   <label className="b1 title">Price</label>
                   <div className="rbt-specification-content">
-                    <span className="desc font-weight-bold">${Number(product?.price || 0).toFixed(2)}</span>
+                    <span className="desc font-weight-bold">{formatCurrency(product?.price)}</span>
                   </div>
                 </div>
                 <div className="rbt-single-specification">
@@ -290,7 +319,11 @@ export default function DescriptionTab1({
                           <ul className="rbt-rating-icon-list">
                             {[1, 2, 3, 4, 5].map((i) => (
                               <li key={i}>
-                                <i className="fa-solid fa-star rbt-rated-icon" />
+                                <i
+                                  className={`fa-solid fa-star${
+                                    i <= Math.round(Number(avgRating)) ? " rbt-rated-icon" : " rbt-unrated-icon"
+                                  }`}
+                                />
                               </li>
                             ))}
                           </ul>
@@ -302,84 +335,115 @@ export default function DescriptionTab1({
                     </div>
                     <div className="col-md-6 mt--24">
                       <div className="rbt-rating-breakdown">
-                        {[
-                          { star: 5, val: 100, count: reviews.filter((r) => r.rating === 5).length },
-                          { star: 4, val: 20, count: reviews.filter((r) => r.rating === 4).length },
-                          { star: 3, val: 0, count: reviews.filter((r) => r.rating === 3).length },
-                          { star: 2, val: 0, count: reviews.filter((r) => r.rating === 2).length },
-                          { star: 1, val: 0, count: reviews.filter((r) => r.rating === 1).length },
-                        ].map((item) => (
-                          <div className="rbt-rating-item" key={item.star}>
-                            <span className="icon">
-                              <i className="fa-solid fa-star rbt-rated-icon" />
-                            </span>
-                            <span className="number-text">{item.star}</span>
-                            <div
-                              className="progress"
-                              role="progressbar"
-                              aria-label="Shipping-progress"
-                              aria-valuenow={item.count ? 80 : 0}
-                              aria-valuemin={0}
-                              aria-valuemax={100}
-                            >
+                        {[5, 4, 3, 2, 1].map((star) => {
+                          const count = reviews.filter((r) => Math.round(r.rating) === star).length;
+                          const percent = reviews.length > 0 ? (count / reviews.length) * 100 : 0;
+                          return (
+                            <div className="rbt-rating-item" key={star}>
+                              <span className="icon">
+                                <i className="fa-solid fa-star rbt-rated-icon" />
+                              </span>
+                              <span className="number-text">{star}</span>
                               <div
-                                className="progress-bar"
-                                style={{ width: `${item.count ? Math.min((item.count / reviews.length) * 100, 100) : 0}%` }}
-                              />
+                                className="progress"
+                                role="progressbar"
+                                aria-label={`${star} star reviews`}
+                                aria-valuenow={percent}
+                                aria-valuemin={0}
+                                aria-valuemax={100}
+                              >
+                                <div
+                                  className="progress-bar"
+                                  style={{ width: `${percent}%` }}
+                                />
+                              </div>
+                              <span className="number-text">{count}</span>
                             </div>
-                            <span className="number-text">{item.count}</span>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div className="rbt-prd-single-reviews-list-area mt--24">
-                  <ul className="rbt-comment-list">
-                    {reviews.map((review) => (
-                      <li className="comment" key={review.id}>
-                        <div className="comment-body">
-                          <div className="single-comment">
-                            <div className="comment-img">
-                              <Image
-                                alt="Author Avatar"
-                                src={review.imgSrc || "/assets/images/reviewer-img/reviewer-01.webp"}
-                                width={72}
-                                height={72}
-                                style={{ borderRadius: "50%" }}
-                              />
-                            </div>
-                            <div className="comment-inner">
-                              <div className="d-flex align-items-center justify-content-between">
-                                <h6 className="mb--4">{review.author}</h6>
-                                <div className="comment-meta">
-                                  <div className="time-spent text-muted" style={{ fontSize: "12px" }}>
-                                    {review.date}
-                                  </div>
+                  {reviews.length === 0 ? (
+                    <div
+                      className="rbt-no-reviews-box text-center p--32 mt--24 mb--24"
+                      style={{
+                        background: "#f8fafc",
+                        border: "1px dashed #cbd5e1",
+                        borderRadius: "12px",
+                        padding: "36px 20px",
+                      }}
+                    >
+                      <i
+                        className="fa-regular fa-comment-pen mb--12 d-block"
+                        style={{ fontSize: "32px", color: "#64748b" }}
+                      />
+                      <h6 className="mb--8" style={{ fontWeight: 600 }}>
+                        No Reviews Yet
+                      </h6>
+                      <p className="b2 text-muted mb--0" style={{ maxWidth: "420px", margin: "0 auto" }}>
+                        There are no customer reviews for this product yet. Have you purchased this item? Be the first to write a review below!
+                      </p>
+                    </div>
+                  ) : (
+                    <ul className="rbt-comment-list">
+                      {reviews.map((review) => (
+                        <li className="comment" key={review.id}>
+                          <div className="comment-body">
+                            <div className="single-comment">
+                              <div className="comment-img">
+                                <div
+                                  style={{
+                                    width: "56px",
+                                    height: "56px",
+                                    borderRadius: "50%",
+                                    background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
+                                    color: "#ffffff",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    fontWeight: 700,
+                                    fontSize: "18px",
+                                    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                                  }}
+                                >
+                                  {getInitials(review.author)}
                                 </div>
                               </div>
-                              <ul className="rbt-rating-icon-list mb--8">
-                                {[...Array(5)].map((_, i) => (
-                                  <li key={i}>
-                                    <i
-                                      className={`fa-solid fa-star${
-                                        i < review.rating ? " rbt-rated-icon" : ""
-                                      }`}
-                                    />
-                                  </li>
-                                ))}
-                              </ul>
-                              <div className="comment-text">
-                                <p className="title font-weight-bold mb--4">{review.title}</p>
-                                <p className="b1 text-muted">{review.desc}</p>
+                              <div className="comment-inner">
+                                <div className="d-flex align-items-center justify-content-between">
+                                  <h6 className="mb--4">{review.author}</h6>
+                                  <div className="comment-meta">
+                                    <div className="time-spent text-muted" style={{ fontSize: "12px" }}>
+                                      {review.date}
+                                    </div>
+                                  </div>
+                                </div>
+                                <ul className="rbt-rating-icon-list mb--8">
+                                  {[...Array(5)].map((_, i) => (
+                                    <li key={i}>
+                                      <i
+                                        className={`fa-solid fa-star${
+                                          i < review.rating ? " rbt-rated-icon" : " rbt-unrated-icon"
+                                        }`}
+                                      />
+                                    </li>
+                                  ))}
+                                </ul>
+                                <div className="comment-text">
+                                  <p className="title font-weight-bold mb--4">{review.title}</p>
+                                  <p className="b1 text-muted">{review.desc}</p>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
 
                 <AddReviewForm onAddReview={handleAddReview} />

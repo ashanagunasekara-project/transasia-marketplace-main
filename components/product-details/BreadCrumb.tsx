@@ -3,6 +3,7 @@ import ProductRating from "@/components/common/ui/ProductRating";
 import { allProducts } from "@/data/products";
 import Link from "next/link";
 import Tooltip from "@/components/common/ui/Tooltip";
+import { formatCurrency } from "@/lib/price";
 
 import { Product } from "@/types";
 export default function BreadCrumb({
@@ -92,11 +93,11 @@ export default function BreadCrumb({
                             <div className="pricing-part">
                               {prevProduct.oldPrice && (
                                 <del className="price-text">
-                                  ${prevProduct.oldPrice?.toFixed(2)}
+                                  {formatCurrency(prevProduct.oldPrice)}
                                 </del>
                               )}
                               <span className="price-text">
-                                ${prevProduct.price.toFixed(2)}
+                                {formatCurrency(prevProduct.price)}
                               </span>
                             </div>
                           </div>
@@ -145,11 +146,11 @@ export default function BreadCrumb({
                             <div className="pricing-part">
                               {nextProduct.oldPrice && (
                                 <del className="price-text">
-                                  ${nextProduct.oldPrice?.toFixed(2)}
+                                  {formatCurrency(nextProduct.oldPrice)}
                                 </del>
                               )}
                               <span className="price-text">
-                                 ${nextProduct.price.toFixed(2)}
+                                 {formatCurrency(nextProduct.price)}
                               </span>
                             </div>
                           </div>
