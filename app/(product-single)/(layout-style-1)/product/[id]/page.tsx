@@ -4,8 +4,6 @@ import { electronicsCardData } from "@/data/products/electronics";
 
 import DetailsAccessories from "@/components/product-details/details/DetailsAccessories";
 import Description2 from "@/components/product-details/descriptions/Description2";
-import VideoReview from "@/components/product-details/others/VideoReview";
-import BoughtTogether from "@/components/product-details/others/BoughtTogether3";
 import Footer1 from "@/components/footers/Footer1";
 import BreadCrumb from "@/components/product-details/BreadCrumb";
 import { Metadata } from "next";
@@ -35,8 +33,6 @@ export default async function Page({
       <BreadCrumb product={product} />
       <DetailsAccessories product={product} />
       <Description2 product={product} />
-      <VideoReview />
-      <BoughtTogether />
       <BottomStickyProduct product={product} />
       <Footer1 />
     </>

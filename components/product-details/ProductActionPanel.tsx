@@ -2,7 +2,6 @@
 
 import QuantitySelect from "../common/ui/QuantitySelect";
 import ModalTriggerButton from "@/components/action-buttons/ModalTriggerButton";
-import CompareQuickLinkTrigger from "@/components/action-buttons/CompareQuickLinkTrigger";
 import WishlistQuickLinkTrigger from "@/components/action-buttons/WishlistQuickLinkTrigger";
 import { useCartQuantityAction } from "@/hooks/useCartQuantityAction";
 
@@ -37,7 +36,6 @@ export default function ProductActionPanel({ product }: { product: Product }) {
         </a>
       </div>
       <div className="rbt-quick-link-grp ">
-        <CompareQuickLinkTrigger product={product} />
         <WishlistQuickLinkTrigger product={product} />
         <ModalTriggerButton
           openModalName="socialShareModal"

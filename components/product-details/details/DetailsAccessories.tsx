@@ -11,7 +11,6 @@ import Facts from "@/components/common/other-components/Facts";
 import ProductActionPanel from "../ProductActionPanel";
 import RecomendedProducts from "../recommandedProducts/RecomendedProducts";
 
-import ProductOptionsPanel6 from "../productOptionsPanels/ProductOptionsPanel6";
 import Tooltip from "@/components/common/ui/Tooltip";
 import { formatCurrency } from "@/lib/price";
 
@@ -173,10 +172,6 @@ export default function DetailsAccessories({ product }: { product: Product }) {
                       </a>
                     </div>
                   </div>
-                  {/* Start Dynamic Color Swatches Area */}
-                  <ProductOptionsPanel6 />
-
-                  {/* End Dynamic Color Swatches Area */}
                   <div className="rbt-info-wrapper d-block mt--24">
                     <div className="rbt-prd-qty-area">
                       <p className="prd-qty-txt">
