@@ -6,7 +6,7 @@ import InfoSection from "./footerSections/InfoSection";
 import Image from "next/image";
 import Link from "next/link";
 import ModalTriggerButton from "@/components/action-buttons/ModalTriggerButton";
-import { footerData, footerDataStores, socialLinks } from "../../data/footer";
+import { footerData, footerDataStores, socialLinks, contactInfo } from "../../data/footer";
 const instaPosts = [
   "/assets/images/insta-posts/insta-post-a-07.webp",
   "/assets/images/insta-posts/insta-post-a-08.webp",
@@ -183,9 +183,9 @@ export default function Footer3() {
                         <span className="rbt-text-bold mr--4"> Email:</span>
                         <a
                           className="contact-link"
-                          href="mailto:someone@example.com"
+                          href={`mailto:${contactInfo.email}`}
                         >
-                          info@rbtshop.com
+                          {contactInfo.email}
                         </a>
                       </span>
                     </li>
@@ -239,7 +239,7 @@ export default function Footer3() {
                   </li>
                 </ul>
               </div>
-              <div className="col-xl-4 col-lg-12 col-md-12 col-12 mt--24">
+              {/* <div className="col-xl-4 col-lg-12 col-md-12 col-12 mt--24">
                 <ul className="copyright-link rbt-link-hover justify-content-center justify-content-lg-start justify-content-xl-end mt_sm--12 mt_md--12 mt_lg--12">
                   <li>
                     <Link href={`/return-policy`}>Refund policy</Link>
@@ -251,7 +251,7 @@ export default function Footer3() {
                     <Link href={`/terms-policy`}>Terms &amp; conditions</Link>
                   </li>
                 </ul>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

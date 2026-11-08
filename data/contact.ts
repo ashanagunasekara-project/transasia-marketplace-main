@@ -19,10 +19,9 @@ export const contactInfo = {
   phoneRaw: "+94773392727",
   phoneHref: "tel:+94773392727",
   landline: "+94 112 332 162",
-  email: "info@transasiacellular.com",
-  emailHref: "mailto:info@transasiacellular.com",
-  telegram: "https://t.me/94773392727",
-  messenger: "https://m.me/transasia.lk",
+  email: "info@transasia.lk",
+  emailHref: "mailto:info@transasia.lk",
+  whatsapp: "https://wa.me/94773392727",
 };
 
 export const STORE_LOCATIONS: StoreLocation[] = [
@@ -36,7 +35,7 @@ export const STORE_LOCATIONS: StoreLocation[] = [
     city: "Colombo",
     phone: "+94773 392 727",
     phoneRaw: "+94773392727",
-    email: "info@transasiacellular.com",
+    email: "info@transasia.lk",
     mapUrl: "https://maps.app.goo.gl/Rmj9CMCfW6YYpfRV7",
     embedUrl:
       "https://maps.google.com/maps?q=Trans+Asia+Cellular+(Pvt)+Ltd,+61+1st+Cross+St,+Colombo+00110&t=&z=17&ie=UTF8&iwloc=&output=embed",
@@ -52,7 +51,7 @@ export const STORE_LOCATIONS: StoreLocation[] = [
     city: "Kurunegala",
     phone: "+94372 056 240",
     phoneRaw: "+94372056240",
-    email: "info@transasiacellular.com",
+    email: "info@transasia.lk",
     mapUrl: "https://maps.app.goo.gl/FG5XxKbbqLwswM758",
     embedUrl:
       "https://maps.google.com/maps?q=Trans+Asia+Cellular,+19+Katugastota-Kurunegala-Puttalam+Hwy,+Kurunegala&t=&z=17&ie=UTF8&iwloc=&output=embed",

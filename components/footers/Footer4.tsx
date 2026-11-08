@@ -259,7 +259,7 @@ export default function Footer4() {
                   </li>
                 </ul>
               </div>
-              <div className="col-xl-4 col-lg-12 col-md-12 col-12 mt--24 mt_sm--12 mt_md--12 mt_lg--12">
+              {/* <div className="col-xl-4 col-lg-12 col-md-12 col-12 mt--24 mt_sm--12 mt_md--12 mt_lg--12">
                 <ul className="copyright-link rbt-link-hover justify-content-center justify-content-lg-start justify-content-xl-end">
                   <li>
                     <Link href={`/return-policy`}>Refund policy</Link>
@@ -271,7 +271,7 @@ export default function Footer4() {
                     <Link href={`/terms-policy`}>Terms &amp; conditions</Link>
                   </li>
                 </ul>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

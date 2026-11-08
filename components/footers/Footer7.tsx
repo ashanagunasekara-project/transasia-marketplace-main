@@ -292,7 +292,7 @@ export default function Footer7() {
                   Nextjs Template.
                 </p>
               </div>
-              <div className="col-xxl-4 col-xl-4 col-lg-5 col-md-12 col-12 mt--24">
+              {/* <div className="col-xxl-4 col-xl-4 col-lg-5 col-md-12 col-12 mt--24">
                 <ul className="copyright-link rbt-link-hover justify-content-center justify-content-xl-end">
                   <li>
                     <Link href={`/return-policy`}>Refund policy</Link>
@@ -304,7 +304,7 @@ export default function Footer7() {
                     <Link href={`/terms-policy`}>Terms &amp; conditions</Link>
                   </li>
                 </ul>
-              </div>
+              </div> */}
             </div>
             {/* Start WaterMark */}
             <div className="row mt--12">

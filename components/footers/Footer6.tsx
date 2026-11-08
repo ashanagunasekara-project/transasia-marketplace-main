@@ -212,7 +212,7 @@ export default function Footer6() {
                   Copyright &copy; 2026 Transasia.
                 </p>
               </div>
-              <div className="col-md-6 col-12 mt--24 mt_sm--0">
+              {/* <div className="col-md-6 col-12 mt--24 mt_sm--0">
                 <ul className="copyright-link rbt-link-hover justify-content-center justify-content-xl-end mt_sm--12 mt_md--0 mt_lg--0">
                   <li>
                     <Link href={`/return-policy`}>Refund policy</Link>
@@ -224,7 +224,7 @@ export default function Footer6() {
                     <Link href={`/terms-policy`}>Terms &amp; conditions</Link>
                   </li>
                 </ul>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

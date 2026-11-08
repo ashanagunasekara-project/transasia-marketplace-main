@@ -37,7 +37,7 @@ export default function Contact({
                 <span className="rbt-bold--text">Contact Us</span>
               </h2>
               <p className="desc mb--0">
-                Email, call, or visit our stores to get in touch with the Trans Asia
+                Call or visit our stores to get in touch with the Trans Asia
                 Cellular team. We&apos;re here to help you find the best tech and accessories.
               </p>
             </div>
@@ -72,7 +72,7 @@ export default function Contact({
               {/* Telegram */}
               <Tooltip content="Chat on Telegram" placement="top">
                 <a
-                  href={contactInfo.telegram}
+                  href={contactInfo.whatsapp}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rbt-trns-modern-btn tooltips"
@@ -80,12 +80,12 @@ export default function Contact({
                   <span className="icon">
                     <PaperPlaneIcon />
                   </span>
-                  Telegram
+                  Whatsapp
                 </a>
               </Tooltip>
 
               {/* Messenger */}
-              <Tooltip content="Chat on Messenger" placement="top">
+              {/* <Tooltip content="Chat on Messenger" placement="top">
                 <a
                   href={contactInfo.messenger}
                   target="_blank"
@@ -97,7 +97,7 @@ export default function Contact({
                   </span>
                   Messenger
                 </a>
-              </Tooltip>
+              </Tooltip> */}
             </div>
 
             <div className="row row--16 mt--24 mt_sm--0 mt_md--0">
@@ -110,9 +110,8 @@ export default function Contact({
                     className="col-12 col-md-6 col-lg-6 mt--24"
                   >
                     <div
-                      className={`rbt-location-card style-two ${
-                        isSelected ? "is-active" : ""
-                      }`}
+                      className={`rbt-location-card style-two ${isSelected ? "is-active" : ""
+                        }`}
                       onClick={() => handleSelect(store.id)}
                       role="button"
                       tabIndex={0}
@@ -138,9 +137,8 @@ export default function Contact({
                             {store.name}
                           </span>
                           <span
-                            className={`rbt-card-badge ${
-                              store.isMain ? "main-badge" : ""
-                            }`}
+                            className={`rbt-card-badge ${store.isMain ? "main-badge" : ""
+                              }`}
                           >
                             {store.badge}
                           </span>
@@ -176,9 +174,8 @@ export default function Contact({
                         <div className="rbt-card-actions">
                           <button
                             type="button"
-                            className={`btn-pin-map ${
-                              isSelected ? "is-pinned" : ""
-                            }`}
+                            className={`btn-pin-map ${isSelected ? "is-pinned" : ""
+                              }`}
                             onClick={(e) => {
                               e.stopPropagation();
                               handleSelect(store.id);

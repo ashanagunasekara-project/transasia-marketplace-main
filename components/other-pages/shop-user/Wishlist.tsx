@@ -131,15 +131,6 @@ export default function Wishlist() {
           <ul className="rbt-social-icon-list mt_md--0 mt_sm--0">
             <li>
               <a
-                href="https://twitter.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i className="fa-brands fa-twitter" />
-              </a>
-            </li>
-            <li>
-              <a
                 href="https://www.youtube.com/"
                 target="_blank"
                 rel="noopener noreferrer"

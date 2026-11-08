@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { footerData, socialLinks } from "../../data/footer";
+import { footerData, socialLinks, contactInfo } from "../../data/footer";
 import StoreLogo from "@/components/common/StoreLogo";
 
 export default function Footer1() {
@@ -28,16 +28,16 @@ export default function Footer1() {
                     <div className="d-flex align-items-center flex-wrap gap-2">
                       <a
                         className="contact-link has-lg-fsize"
-                        href="tel:+94112332162"
+                        href={`tel:${contactInfo.phones[0]}`}
                       >
-                        +94 112 332 162
+                        {contactInfo.phones[0]}
                       </a>
                       <span className="contact-link has-lg-fsize text-muted">/</span>
                       <a
                         className="contact-link has-lg-fsize"
-                        href="tel:+94773392727"
+                        href={`tel:${contactInfo.phones[1]}`}
                       >
-                        +94 773 392 727
+                        {contactInfo.phones[1]}
                       </a>
                     </div>
                   </div>
@@ -49,9 +49,9 @@ export default function Footer1() {
                     <p className="b2 title mb--0">Email :</p>
                     <a
                       className="contact-link"
-                      href="mailto:someone@example.com"
+                      href={`mailto:${contactInfo.email}`}
                     >
-                      info@rbtshop.com
+                      {contactInfo.email}
                     </a>
                   </div>
                 </div>
@@ -166,7 +166,7 @@ export default function Footer1() {
                   </li>
                 </ul>
               </div>
-              <div className="col-xl-4 col-lg-12 col-md-12 col-12 mt--24 mt_sm--16 mt_md--20 mt_lg--20">
+              {/* <div className="col-xl-4 col-lg-12 col-md-12 col-12 mt--24 mt_sm--16 mt_md--20 mt_lg--20">
                 <ul className="copyright-link rbt-link-hover justify-content-center justify-content-lg-start justify-content-xl-end">
                   <li>
                     <Link href={`/return-policy`}>Refund policy</Link>
@@ -178,7 +178,7 @@ export default function Footer1() {
                     <Link href={`/terms-policy`}>Terms &amp; conditions</Link>
                   </li>
                 </ul>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

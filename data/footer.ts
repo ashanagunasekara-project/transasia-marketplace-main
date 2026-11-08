@@ -5,42 +5,42 @@ export const footerData = [
       { href: "/account-info", label: "Account Info" },
       { href: "/my-order-history", label: "Your Orders" },
       //{ href: "/return-policy", label: "Returns & Replacements" },
-      { href: "/my-order-history", label: "Shipping Rates & Policies" },
+      //{ href: "/my-order-history", label: "Shipping Rates & Policies" },
       { href: "/return-policy", label: "Refund and Returns Policy" },
       { href: "/privacy-policy", label: "Privacy Policy" },
       { href: "/terms-policy", label: "Terms and Conditions" },
       { href: "/account-notifications", label: "Cookie Settings" },
-      { href: "/help-center", label: "Help Center" },
+      //{ href: "/help-center", label: "Help Center" },
     ],
   },
   {
     title: "Make Money with Us",
     items: [
-      { href: "/shop", label: "Sell on Unimart" },
-      { href: "/shop", label: "Sell Your Services on Unimart" },
-      { href: "/shop", label: "Sell on Unimart Business" },
-      { href: "/shop", label: "Sell Your Apps on Unimart" },
-      { href: "/shop", label: "Become an Affiliate" },
-      { href: "/shop", label: "Advertise Your Products" },
+      { href: "/shop", label: "Sell on Transasia" },
+      //{ href: "/shop", label: "Sell Your Services on Unimart" },
+      //{ href: "/shop", label: "Sell on Unimart Business" },
+      //{ href: "/shop", label: "Sell Your Apps on Unimart" },
+      //{ href: "/shop", label: "Become an Affiliate" },
+      //{ href: "/shop", label: "Advertise Your Products" },
       { href: "/shop", label: "Sell-Publish with Us" },
       { href: "/shop", label: "Become an Unimart Vendor" },
       { href: "/shop", label: "Unimart Affiliation Program" },
     ],
   },
-  {
-    title: "Get to Know Us",
-    items: [
-      { href: "/about", label: "Careers for Unimart" },
-      { href: "/about", label: "About Unimart" },
-      { href: "/about", label: "Investor Relations" },
-      { href: "/about", label: "Unimart Devices" },
-      { href: "/about", label: "Customer Reviews" },
-      { href: "/about", label: "Social Responsibility" },
-      { href: "/find-store", label: "Store Locations" },
-      { href: "/find-store", label: "Unimart Near Me" },
-      { href: "/about", label: "Unimart Dealership" },
-    ],
-  },
+  // {
+  //   title: "Get to Know Us",
+  //   items: [
+  //     { href: "/about", label: "Careers for Unimart" },
+  //     { href: "/about", label: "About Unimart" },
+  //     { href: "/about", label: "Investor Relations" },
+  //     { href: "/about", label: "Unimart Devices" },
+  //     { href: "/about", label: "Customer Reviews" },
+  //     { href: "/about", label: "Social Responsibility" },
+  //     { href: "/find-store", label: "Store Locations" },
+  //     { href: "/find-store", label: "Unimart Near Me" },
+  //     { href: "/about", label: "Unimart Dealership" },
+  //   ],
+  // },
 ];
 
 export const footerDataB2B = [
@@ -108,5 +108,11 @@ export const socialLinks = [
   { icon: "fa-facebook-f", href: "https://web.facebook.com/transasia.lk?_rdc=1&_rdr" },
   { icon: "fa-instagram", href: "https://www.instagram.com/transasia.lk" },
   { icon: "fa-tiktok", href: "https://www.tiktok.com/@transasia.lk" },
-  { icon: "fa-telegram", href: "https://t.me/94773392727" },
+  //{ icon: "fa-telegram", href: "https://t.me/94773392727" },
 ];
+
+export const contactInfo = {
+  email: "info@transasia.lk",
+  phones: ["+94 112 332 162", "+94 773 392 727"],
+  hours: "Mon-Sun 09:00-19:00",
+};

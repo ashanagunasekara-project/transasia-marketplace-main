@@ -159,7 +159,7 @@ export default function Footer2() {
                 Nextjs Template.
               </p>
             </div>
-            <div className="col-xxl-4 col-xl-4 col-lg-6 col-md-12 col-12">
+            {/* <div className="col-xxl-4 col-xl-4 col-lg-6 col-md-12 col-12">
               <ul className="copyright-link rbt-link-hover justify-content-center justify-content-xl-end">
                 <li>
                   <Link href={`/return-policy`}>Refund policy</Link>
@@ -171,7 +171,7 @@ export default function Footer2() {
                   <Link href={`/terms-policy`}>Terms &amp; conditions</Link>
                 </li>
               </ul>
-            </div>
+            </div> */}
             <div className="col-xxl-4 col-xl-4 col-lg-12 col-md-12 col-12">
               <ul className="payment-img-link justify-content-lg-center justify-content-xl-end">
                 <li>

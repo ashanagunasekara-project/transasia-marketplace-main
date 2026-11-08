@@ -82,7 +82,7 @@ export default function DetailsAccessories({ product }: { product: Product }) {
                       <p className="rbt-quick-access-banner-title b3 mb-0">
                         {user?.isWholesaleApproved
                           ? `Wholesale Account (${user.wholesaleCustomerId || "Approved"}) • Active: ${activeView === "WHOLESALE" ? "Wholesale Pricing" : "Retail Pricing"}`
-                          : "Register to buy at wholesale prices for your shop."}
+                          : "Are you a wholesale buyer? Register with us and get the wholesale price."}
                       </p>
                     </div>
                     {!user?.isWholesaleApproved && (

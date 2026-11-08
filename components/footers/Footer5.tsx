@@ -251,7 +251,7 @@ export default function Footer5() {
                   Nextjs Template.
                 </p>
               </div>
-              <div className="col-xl-4 col-lg-5 col-md-12 col-12 mt--24 mt_sm--12 mt_md--12">
+              {/* <div className="col-xl-4 col-lg-5 col-md-12 col-12 mt--24 mt_sm--12 mt_md--12">
                 <ul className="copyright-link rbt-link-hover justify-content-center justify-content-xl-end">
                   <li>
                     <Link href={`/return-policy`}>Refund policy</Link>
@@ -263,7 +263,7 @@ export default function Footer5() {
                     <Link href={`/terms-policy`}>Terms &amp; conditions</Link>
                   </li>
                 </ul>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

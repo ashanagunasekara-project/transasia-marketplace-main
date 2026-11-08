@@ -181,7 +181,7 @@ export default function Footer8() {
                       </li>
                     </ul>
                   </div>
-                  <div className="col-xxl-4 col-xl-4 col-lg-12 col-md-12 col-12 mt--24">
+                  {/* <div className="col-xxl-4 col-xl-4 col-lg-12 col-md-12 col-12 mt--24">
                     <ul className="copyright-link rbt-link-hover variation-2 justify-content-center justify-content-lg-start justify-content-xl-end">
                       <li>
                         <Link href={`/return-policy`}>Refund policy</Link>
@@ -195,7 +195,7 @@ export default function Footer8() {
                         </Link>
                       </li>
                     </ul>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               {/* End Copyright Area  */}
