@@ -5,6 +5,7 @@ import { useContextElement } from "@/context/Context";
 import Tooltip from "@/components/common/ui/Tooltip";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { usePathname } from "next/navigation";
+import { formatCurrency } from "@/lib/price";
 
 export default function Wishlist() {
   const {
@@ -67,7 +68,7 @@ export default function Wishlist() {
                           </td>
                           <td className="product-thumbnail">
                             <Link
-                              href={`/product-single-default/${product.id}`}
+                              href={`/product/${product.id}`}
                             >
                               <Image
                                 alt={product.title}
@@ -80,13 +81,13 @@ export default function Wishlist() {
                           <td className="rbt-wish-product-info">
                             <h6 className="rbt-wish-product-name">
                               <Link
-                                href={`/product-single-default/${product.id}`}
+                                href={`/product/${product.id}`}
                               >
                                 {product.title}
                               </Link>
                             </h6>
                             <div className="rbt-product-price-text rbt-text-color-primary">
-                              <span>${product.price.toFixed(2)}</span>
+                              <span>{formatCurrency(product.price)}</span>
                             </div>
                             <span className="rbt-product-id">
                               <span className="rbt-text-semi-bold">SKU:</span>#

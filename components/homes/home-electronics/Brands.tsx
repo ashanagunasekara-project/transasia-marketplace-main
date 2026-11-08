@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { electronicsBrands } from "@/data/brands";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { Navigation, Autoplay } from "swiper/modules";
 
 export default function Brands() {
   return (
@@ -44,10 +44,15 @@ export default function Brands() {
 
               <Swiper
                 className="swiper rbt-brand-swiper-activation"
-                modules={[Navigation]}
+                modules={[Navigation, Autoplay]}
                 navigation={{
                   prevEl: ".brand-swiper-arrow-prev",
                   nextEl: ".brand-swiper-arrow-next",
+                }}
+                autoplay={{
+                  delay: 2500,
+                  disableOnInteraction: false,
+                  pauseOnMouseEnter: true,
                 }}
                 slidesPerView={5}
                 spaceBetween={16}

@@ -22,12 +22,25 @@
   opacity: 1;
   transform: unset;
 }
+.rbt-header-common-sticky-activation:not(.rbt-sticky) {
+  display: none !important;
+  pointer-events: none !important;
+}
+
 .logo,
 .payment-img-link {
   img {
     height: auto;
     width: auto;
   }
+}
+
+.logo a,
+.logo-link {
+  display: inline-block !important;
+  cursor: pointer !important;
+  position: relative;
+  z-index: 20;
 }
 
 /* Use on app store badge images to avoid global auto sizing side effects. */

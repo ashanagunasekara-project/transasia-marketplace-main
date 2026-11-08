@@ -8,9 +8,13 @@ import { DOCUMENTATION_CATEGORIES } from "@/data/documentationCategories";
 import { fetchStorefrontCategories } from "@/lib/api";
 import { Category } from "@/types/categories";
 
+const sortedDocCategories = [...DOCUMENTATION_CATEGORIES].sort((a, b) =>
+  a.title.localeCompare(b.title)
+);
+
 const FALLBACK_CATEGORY_OPTIONS = [
   "All Categories",
-  ...DOCUMENTATION_CATEGORIES.map((cat) => cat.title),
+  ...sortedDocCategories.map((cat) => cat.title),
 ];
 
 function SearchWithCategoryContent({
@@ -43,9 +47,12 @@ function SearchWithCategoryContent({
       try {
         const live = await fetchStorefrontCategories({ onlyParents: true });
         if (isMounted && live.length > 0) {
-          const titles = ["All Categories", ...live.map((c) => c.title)];
+          const sortedLive = [...live].sort((a, b) =>
+            a.title.localeCompare(b.title)
+          );
+          const titles = ["All Categories", ...sortedLive.map((c) => c.title)];
           const map: Record<string, string> = {};
-          live.forEach((c) => {
+          sortedLive.forEach((c) => {
             const slug =
               c.slug ||
               c.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -171,8 +178,13 @@ function SearchWithCategoryContent({
             className="rbt-round-btn search-btn"
             type="submit"
             aria-label="Submit search"
+            style={{
+              backgroundColor: "var(--color-primary, #0d6efd)",
+              color: "#ffffff",
+              border: "none",
+            }}
           >
-            <i className="fa-sharp fa-solid fa-magnifying-glass" />
+            <i className="fa-sharp fa-solid fa-magnifying-glass" style={{ color: "#ffffff" }} />
           </button>
         </div>
       </form>

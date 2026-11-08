@@ -8,6 +8,7 @@ import { Product } from "@/types/product";
 import { formatCurrency } from "@/lib/price";
 import { electronicsCardData } from "@/data/products/electronics";
 import { allProducts } from "@/data/products";
+import { fetchStorefrontProducts } from "@/lib/api";
 
 interface SimplifiedProduct {
   id: string | number;
@@ -106,47 +107,50 @@ export default function RecomendedProducts({
       console.error("Error managing recently viewed products:", err);
     }
 
-    // --- 2. Calculate Recommended Products from Real Inventory ---
-    try {
-      const pool = [...electronicsCardData, ...allProducts];
-      const currentCat = currentProduct?.category?.[0];
-      const currentId = currentProduct ? String(currentProduct.id) : "";
+    // --- 2. Calculate Recommended Products (from Live Admin API with static fallback) ---
+    async function loadRecommendations() {
+      try {
+        const live = await fetchStorefrontProducts();
+        const pool = live && live.length > 0 ? live : [...electronicsCardData, ...allProducts];
+        const currentCat = currentProduct?.category?.[0];
+        const currentId = currentProduct ? String(currentProduct.id) : "";
 
-      // Deduplicate pool by ID and exclude current product
-      const uniqueMap = new Map<string, Product>();
-      for (const p of pool) {
-        const pId = String(p.id);
-        if (pId && pId !== currentId && !uniqueMap.has(pId)) {
-          uniqueMap.set(pId, p);
+        const uniqueMap = new Map<string, Product>();
+        for (const p of pool) {
+          const pId = String(p.id);
+          if (pId && pId !== currentId && !uniqueMap.has(pId)) {
+            uniqueMap.set(pId, p);
+          }
         }
+
+        const available = Array.from(uniqueMap.values());
+
+        let matched = currentCat
+          ? available.filter((p) => p.category?.some((c) => c.toLowerCase() === currentCat.toLowerCase()))
+          : [];
+
+        if (matched.length < 4) {
+          const others = available.filter((p) => !matched.some((m) => String(m.id) === String(p.id)));
+          matched = [...matched, ...others];
+        }
+
+        const simplified: SimplifiedProduct[] = matched.slice(0, 4).map((p) => ({
+          id: p.id,
+          title: p.title,
+          price: Number(p.price),
+          oldPrice: p.oldPrice ? Number(p.oldPrice) : undefined,
+          imgSrc: p.imgSrc || "/assets/images/product-img/electronics/electronics-bg-trans-10-a-1.webp",
+          rating: p.rating ?? 5,
+          ratingCount: p.reviewCount ?? p.ratingCount ?? 12,
+        }));
+
+        setRecommended(simplified);
+      } catch (err) {
+        console.error("Error calculating recommendations:", err);
       }
-
-      const available = Array.from(uniqueMap.values());
-
-      // Prefer same category, then general
-      let matched = currentCat
-        ? available.filter((p) => p.category?.some((c) => c.toLowerCase() === currentCat.toLowerCase()))
-        : [];
-
-      if (matched.length < 4) {
-        const others = available.filter((p) => !matched.some((m) => String(m.id) === String(p.id)));
-        matched = [...matched, ...others];
-      }
-
-      const simplified: SimplifiedProduct[] = matched.slice(0, 4).map((p) => ({
-        id: p.id,
-        title: p.title,
-        price: Number(p.price),
-        oldPrice: p.oldPrice ? Number(p.oldPrice) : undefined,
-        imgSrc: p.imgSrc || "/assets/images/product-img/electronics/electronics-bg-trans-10-a-1.webp",
-        rating: p.rating ?? 5,
-        ratingCount: p.reviewCount ?? p.ratingCount ?? 12,
-      }));
-
-      setRecommended(simplified);
-    } catch (err) {
-      console.error("Error calculating recommendations:", err);
     }
+
+    loadRecommendations();
   }, [currentProduct, recentlyViewedProducts, propRecommendedProducts]);
 
   const renderProductList = (items: SimplifiedProduct[], emptyMessage: string) => {

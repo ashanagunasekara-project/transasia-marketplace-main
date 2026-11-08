@@ -4,8 +4,8 @@ import Breadcrumb from "@/components/common/other-components/Breadcrumb";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Wishlist || Unimart - eCommerce React Nextjs Bootstrap5 Template",
-  description: "Unimart - eCommerce React Nextjs Bootstrap5 Template",
+  title: "Wishlist || Transasia - Electronics Store",
+  description: "Transasia Electronics Store - View and manage your saved wishlist items.",
 };
 export default function page() {
   return (

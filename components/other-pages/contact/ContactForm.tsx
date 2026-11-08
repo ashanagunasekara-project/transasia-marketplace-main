@@ -103,18 +103,14 @@ export default function ContactForm() {
             <div className="col-md-6 col-12 mb--16">
               <div className="rbt-input-field-grp form-group">
                 <label htmlFor="l_name">
-                  Last Name <span className="text-danger">*</span>
+                  Last Name
                 </label>
                 <input
                   className="rbt-contact-input-field form-control"
                   type="text"
                   id="l_name"
                   name="lastName"
-                  required
                 />
-                <div className="invalid-feedback">
-                  Please enter your last name.
-                </div>
               </div>
             </div>
             <div className="col-12 mb--16">

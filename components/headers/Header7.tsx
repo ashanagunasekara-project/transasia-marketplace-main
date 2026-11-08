@@ -84,17 +84,9 @@ export default function Header7({ sticky = false }) {
                           <i className="fa-regular fa-phone" />
                           <p>Contact 24/7</p>
                         </div>
-                        <a href="tel:+800300-353-569" className="link-portion">
-                          +800 300-353-569
+                        <a href="tel:0773392727" className="link-portion">
+                          077 339 2727
                         </a>
-                      </li>
-                      <li className="rbt-access-box">
-                        <div className="header-info">
-                          <CurrencySelect />
-                        </div>
-                        <div className="header-info">
-                          <LanguageSelect />
-                        </div>
                       </li>
                     </ul>
                   </div>

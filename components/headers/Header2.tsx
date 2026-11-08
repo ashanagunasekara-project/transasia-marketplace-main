@@ -1,7 +1,6 @@
 "use client";
 import Nav from "./Nav";
 import Link from "next/link";
-import CompareItemLength from "../store/CompareItemLength";
 import CartItemsLength from "../store/CartItemsLength";
 import WishlistLength from "../store/WishlistLength";
 import CartItemsTotal from "../store/CartItemsTotal";
@@ -48,7 +47,12 @@ export default function Header2({
                 <div className="rbt-header-content">
                   <div className="header-info">
                     <div className="logo">
-                      <Link href={`/`}>
+                      <Link
+                        href={`/`}
+                        className="logo-link"
+                        style={{ display: "inline-block", cursor: "pointer", position: "relative", zIndex: 10 }}
+                        aria-label="Transasia Home"
+                      >
                         <StoreLogo />
                       </Link>
                     </div>
@@ -149,6 +153,7 @@ export default function Header2({
       {/* End Header Top */}
       <div
         className={`rbt-header-common-sticky-activation rbt-header-wrapper-common justify-content-between rbt-bg-color-white${stickyClass}`}
+        style={!isStickyActive ? { display: "none" } : undefined}
       >
         <div className="rbt-header-campaign rbt-header-campaign-1 rbt-header-top-news rbt-topbar-bg-img rbt-topbar-bg-one w-100">
           <div className="rbt-corner-portion-wrapper">
@@ -175,7 +180,12 @@ export default function Header2({
               <div className="rbt-header-content d-flex">
                 <div className="header-info d-xl-block d-none">
                   <div className="logo rbt-logo-height-sm">
-                    <Link href={`/`}>
+                    <Link
+                      href={`/`}
+                      className="logo-link"
+                      style={{ display: "inline-block", cursor: "pointer", position: "relative", zIndex: 10 }}
+                      aria-label="Transasia Home"
+                    >
                       <StoreLogo />
                     </Link>
                   </div>
@@ -191,7 +201,12 @@ export default function Header2({
             </div>
             <div className="header-info d-xl-none d-block">
               <div className="logo">
-                <Link href={`/`}>
+                <Link
+                  href={`/`}
+                  className="logo-link"
+                  style={{ display: "inline-block", cursor: "pointer", position: "relative", zIndex: 10 }}
+                  aria-label="Transasia Home"
+                >
                   <StoreLogo />
                 </Link>
               </div>
@@ -217,21 +232,6 @@ export default function Header2({
                 </li>
                 <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-3 d-none d-lg-flex">
                   <UserAccountMenu isIconOnly />
-                </li>
-                <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-4 d-none d-lg-flex">
-                  <Tooltip content="Compare" placement="bottom">
-                    <ModalTriggerButton
-                      as="div"
-                      className="rbt-round-btn has-rbt-md-fsize tooltips tooltip-distance-lg"
-                      openModalName="compareReviewModal"
-                    >
-                      <i className="fa-regular fa-code-compare" />
-                      <div className="access-box-count">
-                        {" "}
-                        <CompareItemLength />
-                      </div>
-                    </ModalTriggerButton>
-                  </Tooltip>
                 </li>
                 <li className="rbt-access-box rbt-scroll-trigger fade_in animation-order-5 rbt-wishlist d-none d-lg-flex">
                   <Tooltip content="Wishlist" placement="bottom">
